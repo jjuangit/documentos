@@ -1,0 +1,2 @@
+class GeneracionDeMinutaError(Exception):
+    pass
