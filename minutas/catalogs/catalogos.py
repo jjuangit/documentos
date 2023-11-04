@@ -1,17 +1,17 @@
 tipos_identificacion_ciudadano = {
-     "CEDULA_CIUDADANIA": {
-         "nombre": "Cédula de ciudadanía",
-         "abreviacion": "C.C.",
-     },
-     "CEDULA_EXTRANJERIA": {
-         "nombre": "Cédula de extranjería",
-         "abreviacion": "C.E.",
-     },
-     "PASAPORTE": {
-         "nombre": "Pasaporte",
-         "abreviacion": "Pasaporte",
-     }
- }
+    "CEDULA_CIUDADANIA": {
+        "nombre": "Cédula de ciudadanía",
+        "abreviacion": "C.C.",
+    },
+    "CEDULA_EXTRANJERIA": {
+        "nombre": "Cédula de extranjería",
+        "abreviacion": "C.E.",
+    },
+    "PASAPORTE": {
+        "nombre": "Pasaporte",
+        "abreviacion": "Pasaporte",
+    }
+}
 
 estado_civil = {
     "CASADO": "Casado",
@@ -26,4 +26,9 @@ estado_civil = {
 genero = {
     "MASCULINO": "Masculino",
     "FEMENINO": "Femenino"
+}
+
+respuesta_ficha_catastral = {
+    "INDIVIDUAL": "Individual",
+    "MAYOR_EXTENSION": "En Mayor Extensión"
 }
