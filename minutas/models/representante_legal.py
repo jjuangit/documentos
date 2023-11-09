@@ -1,31 +1,29 @@
 from typing import Optional
 from typing import Text
 
+class RepresentanteLegal:
 
-class Poderdante:
     nombre: Optional[Text]
     tipo_identificacion: Optional[Text]
     numero_identificacion: Optional[Text]
     ciudad_expedicion_identificacion: Optional[Text]
-    domicilio: Optional[Text]
-    estado_civil: Optional[Text]
+    ciudad_residencia: Optional[Text]
     genero: Optional[Text]
 
-    def __init__(self,
-                 nombre: str,
-                 tipo_identificacion: str,
-                 numero_identificacion: str,
-                 ciudad_expedicion_identificacion: str,
-                 domicilio: str,
-                 estado_civil: str,
-                 genero: str
-                 ):
+    def __init__(
+        self,
+        nombre: str,
+        tipo_identificacion: str,
+        numero_identificacion: str,
+        ciudad_expedicion_identificacion: str,
+        ciudad_residencia: str,
+        genero: str
+    ):
         self.nombre = nombre
         self.tipo_identificacion = tipo_identificacion
         self.numero_identificacion = numero_identificacion
         self.ciudad_expedicion_identificacion = ciudad_expedicion_identificacion
-        self.domicilio = domicilio
-        self.estado_civil = estado_civil
+        self.ciudad_residencia = ciudad_residencia
         self.genero = genero
 
     @property
@@ -34,17 +32,17 @@ class Poderdante:
             return 'identificado'
         elif self.genero == 'Femenino':
             return 'identificada'
-
+        
     @property
-    def domiciliado(self):
+    def vecino(self):
         if self.genero == 'Masculino':
-            return 'domiciliado'
+            return 'vecino'
         elif self.genero == 'Femenino':
-            return 'domiciliada'
-
+            return 'vecina'
+        
     @property
-    def residenciado(self):
+    def doctor(self):
         if self.genero == 'Masculino':
-            return 'residenciado'
+            return 'el doctor'
         elif self.genero == 'Femenino':
-            return 'residenciada'
+            return 'la doctora'
