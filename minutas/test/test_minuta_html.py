@@ -12,7 +12,6 @@ from models.representante_legal import RepresentanteLegal
 from catalogs.catalogos import tipos_identificacion_ciudadano
 from catalogs.catalogos import genero
 from catalogs.catalogos import estado_civil
-from catalogs.catalogos import respuesta_ficha_catastral
 
 
 class TestMinuta(TestCase):
@@ -66,21 +65,21 @@ class TestMinuta(TestCase):
             'numero': '123',
             'direccion': 'ETAPA II, PRATTO PH. CARRERA 78 #11 C - 58,',
             'matricula': '50C-45755',
-            'tipo_ficha_catastral': 'Mayor Extensión',
-            'numero_ficha_catastral': '0000001111111000000',
-            'linderos_especiales': 'PAQUEADERO DE USO EXCLUSIVO 123: tiene su acceso......'
-        },{
-            'nombre': 'parqueadero de uso exclusivo',
-            'numero': '123',
-            'direccion': 'ETAPA II, PRATTO PH. CARRERA 78 #11 C - 58,',
-            'matricula': '50C-45755',
-            'tipo_ficha_catastral': 'Mayor Extensión',
+            'tipo_ficha_catastral': 'Individual',
             'numero_ficha_catastral': '0000001111111000000',
             'linderos_especiales': 'PAQUEADERO DE USO EXCLUSIVO 123: tiene su acceso......'
         }
         ]
 
-        diccionario_depositos = [
+        diccionario_depositos = [{
+            'nombre': 'depósito',
+            'numero': '456',
+            'direccion': 'ETAPA II, PRATTO PH. CARRERA 78 #11 C - 58,',
+            'matricula': '50C-45999',
+            'tipo_ficha_catastral': 'Individual',
+            'numero_ficha_catastral': '0000003333333000000',
+            'linderos_especiales': 'DEPÓSITO 456: tiene su acceso......'
+        }
         ]
 
 

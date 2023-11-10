@@ -410,11 +410,11 @@ class DocumentoMinuta(Document):
             if self.depositos and deposito.matricula:
                 matriculas += [deposito.matricula]
         resultado = ''
-        resultado += f'<p>{t_inmuebles}  de matrícula inmobiliaria No. <b>{", ".join(matriculas)}'
+        resultado += f'<p>{t_inmuebles} de matrícula inmobiliaria No. <b>{", ".join(matriculas)}'
         resultado += '</b> de la Oficina de Registro de Instrumentos Públicos de '
         resultado += f'<b>{self.inmueble.municipio_de_registro_orip}</b> '
         return resultado
-    
+
     def generar_fichas_catastrales(self):
         resultado = ''
         if self.inmueble.tipo_ficha_catastral == "Mayor Extensión":
@@ -425,7 +425,7 @@ class DocumentoMinuta(Document):
             resultado += f'<b>{self.inmueble.numero_ficha_catastral} '
             fichas_catastrales = []
 
-            if self.parqueaderos :
+            if self.parqueaderos:
                 fichas_catastrales += [
                     parqueadero.numero_ficha_catastral for parqueadero in self.parqueaderos if parqueadero.numero_ficha_catastral]
             if self.depositos:
@@ -504,7 +504,7 @@ class DocumentoMinuta(Document):
         resultado += f'ni en anticresis y que se {hallan} de hipotecas, embargos, censos, '
         resultado += 'condiciones resolutorias, registro por demanda civil, servidumbres '
         resultado += 'pasivas, uso o usufructo y cualquier otra clase de gravámenes o '
-        resultado += 'desmembraciones; y que se obliga  a mantenerlo en este estado por todo '
+        resultado += 'desmembraciones; y que se obliga a mantenerlo en este estado por todo '
         resultado += 'el plazo otorgado para el pago de la deuda.<br>'
         return resultado
 
@@ -552,11 +552,10 @@ class DocumentoMinuta(Document):
         elif self.cantidad_poderdantes == 1:
             deudores = 'el deudor certifica que a la fecha no ha'
         resultado = ''
-        resultado += '<b>PARÁGRAFO PRIMERO:</b> El crédito inicialmente aprobado por '
-        resultado += f'<b>{self.banco.nombre.upper()}</b>, en favor de <b>LA PARTE '
-        resultado += 'HIPOTECANTE</b> asciende a la cantidad de <b>'
-        resultado += f'{number_to_word_hipotecante.upper()} PESOS MCTE ('
-        resultado += f'${number_format_hipotecante})</b> de los cuales la '
+        resultado += '<b>PARÁGRAFO PRIMERO:</b> El crédito inicialmente aprobado por <b> '
+        resultado += f'{self.banco.nombre.upper()}</b>, en favor de <b>LA PARTE HIPOTECANTE </b>'
+        resultado += f' asciende a la cantidad de <b>{number_to_word_hipotecante.upper()} '
+        resultado += f'PESOS MCTE (${number_format_hipotecante})</b> de los cuales la'
         resultado += f'suma de <b>{number_to_word_constructora.upper()} PESOS MCTE ('
         resultado += f'${number_format_constructora})</b> corresponden al '
         resultado += f'saldo del precio {t_inmuebles} objeto de esta hipoteca, que desembolsará '
@@ -572,7 +571,7 @@ class DocumentoMinuta(Document):
         resultado += 'y a lo establecido en la cláusula séptima y décima de esta hipoteca. '
         resultado += 'Esta liquidación es con el fin de determinar los derechos notariales y '
         resultado += 'de registro de la presente hipoteca. Adicionalmente, para dar '
-        resultado += 'cumplimiento a lo ordenado  por el artículo 58 de la ley 788 de 2002, '
+        resultado += 'cumplimiento a lo ordenado por el artículo 58 de la ley 788 de 2002, '
         resultado += f'{deudores} recibido desembolsos efectivos de créditos que estén '
         resultado += ' garantizados con la presente hipoteca. Es decir, que el desembolso '
         resultado += 'es cero (0). ----------<br>------<br>'
@@ -608,6 +607,11 @@ class DocumentoMinuta(Document):
             inmuebles_desmejoran = f'{inmuebles} mismo desmejora o sufre desprecio tal que no llegue'
             inmuebles_determinan = f'{inmuebles} que se determina en el presente contrato es gravado'
 
+        if self.cantidad_poderdantes > 1:
+            hipotecantes = 'Lo hipoteantes enajenan'
+        elif self.cantidad_poderdantes == 1:
+            hipotecantes = 'El hipoteante enajena'
+
         resultado = ''
         resultado += '<b>QUINTO. ACELERACIÓN DEL PLAZO:</b> Que <b> LA PARTE HIPOTECANTE</b> '
         resultado += f'reconoce y acepta el derecho de <b>{self.banco.nombre.upper()}</b> '
@@ -626,20 +630,19 @@ class DocumentoMinuta(Document):
         resultado += f'de un perito que designe <b>{self.banco.nombre.upper()}</b>, 4. Si '
         resultado += f'{inmuebles_determinan} con hipoteca(s) distinta(s) a la(s) constituida(s) '
         resultado += 'mediante esta escritura, sin previo, expreso y escrito consentimiento de '
-        resultado += f'<b>{self.banco.nombre.upper()}</b>; 5. Si el hipotecante(s) enajena(n) en '
+        resultado += f'<b>{self.banco.nombre.upper()}</b>; 5. Si {hipotecantes} en '
         resultado += f'todo o en parte {inmuebles} sin consentimiento previo, expreso y escrito de '
         resultado += f'<b>{self.banco.nombre.upper()}</b>; 6. <b>LA PARTE HIPOTECANTE</b> hubiere '
         resultado += 'invertido la suma adeudada en forma diversa a la disposición legal que '
         resultado += 'autoriza la línea de crédito; 7. Por inexactitud o falsedad en los '
         resultado += 'documentos en virtud de los cuales se haya obtenido la adjudicación del '
-        resultado += 'crédito. ------<br>'
-        resultado += '<b>PARÁGRAFO:</b> En todos los casos y para todos los efectos, será '
-        resultado += 'suficiente prueba de incumplimiento el simple dicho al respecto del '
-        resultado += f'representante legal de <b>{self.banco.nombre.upper()}</b>, por lo que se '
-        resultado += 'puede hacer efectiva la responsabilidad de <b>LA PARTE HIPOTECANTE</b> y la '
-        resultado += 'garantía hipotecaria con sólo presentar el o los títulos insolutos que se '
-        resultado += 'quieran hacer efectivos y copia de la presente escritura, sin necesidad de '
-        resultado += 'requerimiento judicial alguno. ------<br>'
+        resultado += 'crédito. ------<br> <b>PARÁGRAFO:</b> En todos los casos y para todos los '
+        resultado += 'efectos, será suficiente prueba de incumplimiento el simple dicho al '
+        resultado += f'respecto del representante legal de <b>{self.banco.nombre.upper()}</b>, '
+        resultado += 'por lo que se puede hacer efectiva la responsabilidad de <b>LA PARTE '
+        resultado += 'HIPOTECANTE</b> y la garantía hipotecaria con sólo presentar el o los '
+        resultado += 'títulos insolutos que se quieran hacer efectivos y copia de la presente '
+        resultado += 'escritura, sin necesidad de requerimiento judicial alguno. ------<br>'
         return resultado
 
     def generar_sexto_cesion_de_credito(self):
@@ -856,14 +859,14 @@ class DocumentoMinuta(Document):
         resultado += 'FINANCIAMIENTO S.A.</b>, sociedad constituida legalmente mediante Escritura '
         resultado += 'Escritura Pública No. 5938 del 05 de diciembre de 1963, otorgada en la '
         resultado += 'Notaria Cuarta (04) del Círculo de Bogotá, inscrita en la Cámara de '
-        resultado += 'Comercio de Cali,  el 7 de noviembre de 2000, bajo el número 7516 del Libro '
+        resultado += 'Comercio de Cali, el 7 de noviembre de 2000, bajo el número 7516 del Libro '
         resultado += 'IX, sociedad convertida a establecimiento Bancario y modificada su razón '
         resultado += 'social mediante Escritura Pública No. 3140 del 16 de Junio de 2022, otorgada '
         resultado += 'en la Notaría Cuarta del Círculo de Cali, inscrita en la Cámara de Comercio '
         resultado += 'de Cali el 28 de Junio de 2022, bajo el No. 12001 del Libro IX, entidad '
         resultado += 'vigilada por la Superintendencia Financiera, con permiso de funcionamiento '
         resultado += 'otorgado mediante Resolución número 549 del 31 de mayo de 2022, todo lo cual '
-        resultado += 'se acredita  con el Certificado de Existencia y Representación Legal '
+        resultado += 'se acredita con el Certificado de Existencia y Representación Legal '
         resultado += 'expedido por la Cámara de Comercio de Cali, y manifestó: Que acepta la '
         resultado += 'presente escritura por estar de acuerdo con todo lo expresado en ella, '
         resultado += 'especialmente la hipoteca que a favor de '
@@ -931,7 +934,7 @@ class DocumentoMinuta(Document):
         resultado += 'Se agregan comprobantes. Presentaron PAZ Y SALVO MUNICIPAL No.(s) ________, '
         resultado += 'por concepto de PREDIAL UNIFICADO, a nombre de ______________., '
         resultado += 'PREDIOS GLOBALES: ______________, ubicado(s) En: _________; AVALUO(S):$'
-        resultado += '________.oo, de fecha: ______________,   válido(s) hasta _______________. '
+        resultado += '________.oo, de fecha: ______________, válido(s) hasta _______________. '
         resultado += 'Presentaron PAZ Y SALVO(S) de VALORIZACION No.(s):___________, '
         resultado += 'correspondiente al (los) mismo(s) predio(s) y vigente(s) a la fecha. La '
         resultado += 'presente escritura se corrió en las hojas números:<br></div>'
@@ -979,8 +982,11 @@ class DocumentoMinuta(Document):
     def generar_estilos(self):
         resultado = ''
         resultado += '<style>'
-        resultado += 'div.titulo {text-align: center; font-weight: bold; font-size: 17px; font-family: Arial, Helvetica, sans-serif;}'
-        resultado += 'div.parrafos {text-align: justify; font-size: 16px; list-style: lower-alpha; font-family: Arial, Helvetica, sans-serif;}'
-        resultado += 'div.seccion_firmas {font-size: 16px; font-family: Arial, Helvetica, sans-serif;}'
-        resultado += 'div.padding {padding-top: 50px; padding-right: 50px; padding-bottom: 30px; padding-left: 50px;}</style>'
+        resultado += 'div.titulo {text-align: center; font-weight: bold; font-size: 17px; '
+        resultado += 'font-family: Arial, Helvetica, sans-serif;}'
+        resultado += 'div.parrafos {text-align: justify; font-size: 16px; list-style: '
+        resultado += 'lower-alpha; font-family: Arial, Helvetica, sans-serif;}'
+        resultado += 'div.seccion_firmas {font-size: 16px; font-family: Arial, Helvetica, '
+        resultado += 'sans-serif;}div.padding {padding-top: 50px; padding-right: 50px; '
+        resultado += 'padding-bottom: 30px; padding-left: 50px;}</style>'
         return resultado
