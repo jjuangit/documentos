@@ -61,6 +61,6 @@ class ApoderadoEspecial:
     @property
     def indole(self):
         if self.genero == 'Masculino':
-            return 'váron'
+            return 'varón'
         elif self.genero == 'Femenino':
             return 'mujer'

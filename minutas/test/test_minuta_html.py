@@ -56,18 +56,33 @@ class TestMinuta(TestCase):
             'ciudad_y_o_departamento': 'NUEVO TECHO BOGOTÁ D.C.',
             'matricula': '50C-2180229',
             'municipio_de_registro_orip': 'Bogotá Zona Centro',
-            'tipo_ficha_catastral': respuesta_ficha_catastral['MAYOR_EXTENSION'],
+            'tipo_ficha_catastral': 'Individual',
             'numero_ficha_catastral': '006507182000000000 y 006507181800000000',
             'linderos_especiales': 'TORRE 7 - APARTAMENTO 205: Tiene su acceso por la CARRERA 78 # 11 C - 58 de Bogotá D.C. de la actual nomenclatura urbana de Bogotá D.C. El Apartamento está ubicado en el Segundo Piso de la torre. Cuenta con un ÁREA CONSTRUIDA de treinta y siete punto cincuenta y siete metros cuadrados (37,57 M2); de los cuales, el ÁREA PRIVADA es de treinta y tres punto catorce metros cuadrados (33,14 M2) y cuenta con un Área Común de cuatro punto cuarenta y tres metros cuadrados (4,43 M2) que corresponden al área común de muros de fachada, muros divisorios, ductos, pantallas y muros estructurales los cuales aunque se encuentran en el interior de la unidad privada, no se pueden modificar ni demoler dado su carácter estructural. Son comunes los muros de fachada, muros divisorios, ductos, pantallas y muros estructurales de por medio: Partiendo del punto 1 al punto 2 en línea recta y en distancia de cinco punto veintitrés metros (5,23 mts) colinda parte con zona común de vacío interior, parte con el Apartamento 204 de ésta misma torre y parte con vacío sobre zona libre común. Del punto 2 al punto 3 en línea quebrada y en distancias sucesivas de tres punto quince metros (3,15 mts), dos punto cero ocho metros (2,08 mts), cero punto diez metros (0,10 mts), uno punto ochenta y siete metros (1,87 mts), dos punto ochenta y cinco metros (2,85 mts) colinda con vacío sobre zona libre común. Del punto 3 al punto 4 en línea quebrada y en distancias sucesivas de uno punto setenta y cinco metros (1,75 mts), dos punto cero cinco metros (2,05 mts), cero. punto doce metros (0,12 mts), tres punto veintidós metros (3, 22 mts), tres: punto. quince metros (3,15 mts) colinda parte con vacío sobre zona. libre común y circulación y parte con junta sísmica de dilatación contra la torre 6.  Del punto 4 al punto 1 y: cierra en línea: «quebrada y en distancias sucesivas de dos metros (2,00 mts), cero punto cincuenta y cuatro metros (0,54 mts), cero punto cincuenta -metros (0,50 mts), uno punto setenta y un metros (1,71 mts), cero punto quince metros (0,15 mts), dos punto veinticinco metros (2,25 mts), uno punto diecisiete metros (1,17 mts), dos punto veintitres metros (2,23 mts), uno punto cincuenta y cinco metros (1,55 mts), cero punto doce metros (0,12 mts), uno punto cuarenta metros (1,40 mts), uno punto cuarenta y nueve metros (1,49 mts), cero punto cuarenta y dos metros (0,42 mts), cero punto sesenta y dos metros (0,62 mts), dos punto ochenta y ocho metros (2,88 mts) colinda parte con vacío sobre zona libre común y parte con zonas comunes de ductos, escaleras, circulación y acceso al apartamento. LINDEROS VERTICALES APARTAMENTO: NADIR APARTAMENTO. Con placa común que lo separa del primer piso. CENIT APARTAMENTO. - Con placa común que lo separa del tercer piso. DEPENDENCIAS: Salón, Cocina, Ropas, Estudio, Una (1) Alcoba, Un (1) baño.'
         }
 
+        diccionario_parqueaderos = [{
+            'nombre': 'parqueadero de uso exclusivo',
+            'numero': '123',
+            'direccion': 'ETAPA II, PRATTO PH. CARRERA 78 #11 C - 58,',
+            'matricula': '50C-45755',
+            'tipo_ficha_catastral': 'Mayor Extensión',
+            'numero_ficha_catastral': '0000001111111000000',
+            'linderos_especiales': 'PAQUEADERO DE USO EXCLUSIVO 123: tiene su acceso......'
+        },{
+            'nombre': 'parqueadero de uso exclusivo',
+            'numero': '123',
+            'direccion': 'ETAPA II, PRATTO PH. CARRERA 78 #11 C - 58,',
+            'matricula': '50C-45755',
+            'tipo_ficha_catastral': 'Mayor Extensión',
+            'numero_ficha_catastral': '0000001111111000000',
+            'linderos_especiales': 'PAQUEADERO DE USO EXCLUSIVO 123: tiene su acceso......'
+        }
+        ]
+
         diccionario_depositos = [
-
         ]
 
-        diccionario_parqueaderos = [
-
-        ]
 
         diccionario_apoderado_especial = {
             'nombre': 'GERMÁN LEONARDO KALIL MÉNDEZ',
