@@ -421,9 +421,8 @@ class DocumentoMinuta(Document):
             resultado += 'y ficha catastral No. '
             resultado += f'<b>{self.inmueble.numero_ficha_catastral} En Mayor Extensión.</b> '
         elif self.inmueble.tipo_ficha_catastral == "Individual":
-            resultado += 'y fichas catastrales individuales No. '
-            resultado += f'<b>{self.inmueble.numero_ficha_catastral} '
-            fichas_catastrales = []
+            resultado += 'y fichas catastrales individuales No. <b>'
+            fichas_catastrales = [self.inmueble.numero_ficha_catastral]
 
             if self.parqueaderos:
                 fichas_catastrales += [
@@ -579,7 +578,7 @@ class DocumentoMinuta(Document):
 
     def generar_paragrafo_segundo_prestamos(self):
         resultado = ''
-        resultado += '<p><b>PARÁGRAFO SEGUNDO:</b> La entrega del(los) préstamo(s) se hará '
+        resultado += '<b>PARÁGRAFO SEGUNDO:</b> La entrega del(los) préstamo(s) se hará '
         resultado += 'de acuerdo con las disponibilidades de tesorería de <b> '
         resultado += f'{self.banco.nombre.upper()}</b> y el(los) contrato(s) de mutuo '
         resultado += 'constará(n) en el(los) documento(s) que contenga(n) la(s) '
