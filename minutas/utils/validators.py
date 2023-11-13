@@ -1,4 +1,5 @@
 import re
+
 from utils.exceptions import ValidationError
 
 
@@ -62,13 +63,14 @@ class Validator:
             raise ValueError(
                 f'Error: {value} contiene carácteres no permitidos.')
         return True
-    
+
     @staticmethod
     def validate_letters_with_accents_dots_and_spaces(value):
         '''Solo se permiten letras incluyendo tildes y puntos(.)'''
         pattern = r'^[a-zA-ZáéíóúüÁÉÍÓÚÜ.\s]+$'
         if not re.match(pattern, value):
-            raise ValueError(f"Error: {value} contiene carácteres no permitidos.")
+            raise ValueError(
+                f"Error: {value} contiene carácteres no permitidos.")
         return True
 
     @staticmethod
@@ -103,15 +105,17 @@ class Validator:
         '''Solo se permiten letras, números, almohadilla(#) y guion(-)'''
         pattern = r'^[a-zA-Z0-9,.\#\-\s]+$'
         if not re.match(pattern, value):
-            raise ValueError(f'Error: {value} contiene carácteres no permitidos.')
+            raise ValueError(
+                f'Error: {value} contiene carácteres no permitidos.')
         return True
-    
+
     @staticmethod
     def validate_letters_numbers_dash(value):
         '''Solo se permiten letras, números y guion'''
         pattern = r'^[a-zA-Z0-9\-]+$'
         if not re.match(pattern, value):
-            raise ValueError(f"Error: {value} contiene carácteres no permitidos.")
+            raise ValueError(
+                f"Error: {value} contiene carácteres no permitidos.")
         return True
 
     @staticmethod

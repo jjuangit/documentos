@@ -12,16 +12,8 @@ from models.representante_legal import RepresentanteLegal
 from catalogs.catalogos import tipos_identificacion_ciudadano
 from catalogs.catalogos import genero
 from catalogs.catalogos import estado_civil
+from utils.strip_spaces import strip_dict_or_list
 
-
-def strip_dict_or_list(data):
-    if isinstance(data, str):
-        return data.strip()
-    if isinstance(data, dict):
-        return {key: strip_dict_or_list(value) for key, value in data.items()}
-    if isinstance(data, list):
-        return [strip_dict_or_list(item) for item in data]
-    return data
 
 class TestMinuta(TestCase):
     """Iniciar Test"""

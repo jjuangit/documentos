@@ -1,0 +1,1 @@
+from controllers.minutas_flask import app_flask
