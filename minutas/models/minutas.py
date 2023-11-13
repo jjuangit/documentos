@@ -3,6 +3,7 @@ from typing import List
 import re
 from num2words import num2words
 from utils.exceptions import ValidationError
+from utils.validators import Validator
 
 from utils.document import Document
 from .apoderado import Apoderado
@@ -55,7 +56,7 @@ class DocumentoMinuta(Document):
         'generar_decimo_tercero_inputacion_de_pago',
         'generar_datos_apoderado_especial',
         'generar_datos_representante_legal',
-        'generar_banco_union',
+        'generar_constitucion_banco_union',
         'generar_aprobacion_credito_al_hipotecante',
         'generar_afectacion_vivienda_familiar',
         'generar_lectura_escritura_por_otorgantes',
@@ -93,6 +94,8 @@ class DocumentoMinuta(Document):
         self.validar_apoderado_especial()
         self.validar_representante_legal()
         self.validar_inmueble()
+        self.validar_parqueaderos()
+        self.validar_depositos()
 
     def validar_poderdantes(self):
         if self.cantidad_poderdantes == 0 and self.cantidad_poderdantes > 2:
@@ -118,12 +121,44 @@ class DocumentoMinuta(Document):
                 if not get_valor:
                     raise ValidationError(
                         f'Dato faltante de poderdante: {value}')
-        atributos = poderdante.__dict__
-        patron = r'[@_!#$%^&*()<>?/\|}{~:]'
-        for atributo in atributos:
-            if re.search(patron, atributos[atributo]):
-                raise ValidationError(
-                    f'Error en poderdantes: "{atributos[atributo]}" no puede contener carácteres especiales.')
+
+        dictionary_validator = {
+            'nombre': [
+                Validator.validate_string,
+                Validator.validate_no_numbers,
+                Validator.validate_special_characters
+            ],
+            'tipo_identificacion': [
+                Validator.validate_string,
+                Validator.validate_special_characters
+            ],
+            'numero_identificacion': [
+                Validator.validate_numeric_string,
+                Validator.validate_special_characters
+            ],
+            'ciudad_expedicion_identificacion': [
+                Validator.validate_no_numbers,
+                Validator.validate_special_characters
+            ],
+            'domicilio': [
+                Validator.validate_alphanumeric_with_spaces_and_hyphen
+            ],
+            'estado_civil': [
+                Validator.validate_no_numbers,
+                Validator.validate_string,
+                Validator.validate_letters_with_spaces
+            ],
+            'genero': [
+                Validator.validate_string,
+                Validator.validate_no_numbers,
+                Validator.validate_only_letters,
+            ]
+        }
+
+        for poderdante in self.poderdantes:
+            atributos_poderdante = poderdante.__dict__
+            Validator.validate_dict(
+                atributos_poderdante, dictionary_validator)
 
     def validar_apoderado(self):
         if self.apoderado is None:
@@ -141,12 +176,35 @@ class DocumentoMinuta(Document):
             valor = getattr(self.apoderado, obligatorio)
             if not valor:
                 raise ValidationError(f'Dato faltante de apoderado: {value}')
-        atributos = self.apoderado.__dict__
-        patron = r'[@_!#$%^&*()<>?/\|}{~:-]'
-        for atributo in atributos:
-            if re.search(patron, atributos[atributo]):
-                raise ValidationError(
-                    f'Error en apoderado: "{atributos[atributo]}" no puede contener carácteres especiales.')
+
+        dictionary_validator = {
+            'nombre': [
+                Validator.validate_string,
+                Validator.validate_no_numbers,
+                Validator.validate_special_characters
+            ],
+            'tipo_identificacion': [
+                Validator.validate_string,
+                Validator.validate_special_characters
+            ],
+            'numero_identificacion': [
+                Validator.validate_numeric_string,
+                Validator.validate_special_characters
+            ],
+            'ciudad_expedicion_identificacion': [
+                Validator.validate_no_numbers,
+                Validator.validate_special_characters
+            ],
+            'genero': [
+                Validator.validate_string,
+                Validator.validate_no_numbers,
+                Validator.validate_only_letters,
+            ]
+        }
+
+        atributos_apoderado = self.apoderado.__dict__
+        Validator.validate_dict(
+            atributos_apoderado, dictionary_validator)
 
     def validar_apoderado_especial(self):
         if self.apoderado_especial is None:
@@ -166,12 +224,40 @@ class DocumentoMinuta(Document):
             if not valor:
                 raise ValidationError(
                     f'Dato faltante de apoderado especial: {value}')
-        atributos = self.apoderado_especial.__dict__
-        patron = r'[@_!#$%^&*()<>?/\|}{~:-]'
-        for atributo in atributos:
-            if re.search(patron, atributos[atributo]):
-                raise ValidationError(
-                    f'Error en apoderado especial: "{atributos[atributo]}" no puede contener carácteres especiales.')
+
+        dictionary_validator = {
+            'nombre': [
+                Validator.validate_string,
+                Validator.validate_no_numbers,
+                Validator.validate_special_characters
+            ],
+            'tipo_identificacion': [
+                Validator.validate_string,
+                Validator.validate_special_characters
+            ],
+            'numero_identificacion': [
+                Validator.validate_numeric_string,
+                Validator.validate_special_characters
+            ],
+            'ciudad_expedicion_identificacion': [
+                Validator.validate_no_numbers,
+                Validator.validate_special_characters
+            ],
+            'ciudad_residencia': [
+                Validator.validate_string,
+                Validator.validate_no_numbers,
+                Validator.validate_special_characters
+            ],
+            'genero': [
+                Validator.validate_string,
+                Validator.validate_no_numbers,
+                Validator.validate_only_letters
+            ]
+        }
+
+        atributos_apoderado_especial = self.apoderado_especial.__dict__
+        Validator.validate_dict(
+            atributos_apoderado_especial, dictionary_validator)
 
     def validar_representante_legal(self):
         if self.representante_legal is None:
@@ -191,12 +277,40 @@ class DocumentoMinuta(Document):
             if not valor:
                 raise ValidationError(
                     f'Dato faltante de representante legal: {value}')
-        atributos = self.representante_legal.__dict__
-        patron = r'[@_!#$%^&*()<>?/\|}{~:-]'
-        for atributo in atributos:
-            if re.search(patron, atributos[atributo]):
-                raise ValidationError(
-                    f'Error en representante legal: "{atributos[atributo]}" no puede contener carácteres especiales.')
+
+        dictionary_validator = {
+            'nombre': [
+                Validator.validate_string,
+                Validator.validate_no_numbers,
+                Validator.validate_special_characters
+            ],
+            'tipo_identificacion': [
+                Validator.validate_string,
+                Validator.validate_special_characters
+            ],
+            'numero_identificacion': [
+                Validator.validate_numeric_string,
+                Validator.validate_special_characters
+            ],
+            'ciudad_expedicion_identificacion': [
+                Validator.validate_no_numbers,
+                Validator.validate_special_characters
+            ],
+            'ciudad_residencia': [
+                Validator.validate_string,
+                Validator.validate_no_numbers,
+                Validator.validate_special_characters
+            ],
+            'genero': [
+                Validator.validate_string,
+                Validator.validate_no_numbers,
+                Validator.validate_only_letters
+            ]
+        }
+
+        atributos_representante_legal = self.representante_legal.__dict__
+        Validator.validate_dict(
+            atributos_representante_legal, dictionary_validator)
 
     def validar_inmueble(self):
         if self.inmueble is None:
@@ -218,14 +332,48 @@ class DocumentoMinuta(Document):
             valor = getattr(self.inmueble, obligatorio)
             if not valor:
                 raise ValidationError(f'Dato faltante de inmueble: {value}')
-        atributos = self.inmueble.__dict__
-        # TODO revisar porque en linderos_especiales se ocupan -> (, ) y :
-        # TODO revisar en dirección se ocupan -> # y -
-        patron = r'[@_!$%^&*<>?/\|}{~+=]'
-        for atributo in atributos:
-            if re.search(patron, atributos[atributo]):
-                raise ValidationError(
-                    f'Error en inmueble: "{atributos[atributo]}" no puede contener carácteres especiales.')
+        # TODO revisar linderos especiales
+        dictionary_validator = {
+            'nombre': [
+                Validator.validate_string,
+                Validator.validate_no_numbers,
+                Validator.validate_special_characters
+            ],
+            'numero': [
+                Validator.validate_only_numbers
+            ],
+            'direccion': [
+                Validator.validate_letters_numbers_comma_dot_hash_dash
+            ],
+            'ciudad_y_o_departamento': [
+                Validator.validate_string,
+                Validator.validate_letters_with_accents_dots_and_spaces
+            ],
+            'matricula': [
+                Validator.validate_string,
+                Validator.validate_letters_numbers_dash
+            ],
+            'municipio_de_registro_orip': [
+                Validator.validate_string,
+                Validator.validate_no_numbers,
+                Validator.validate_letters_with_spaces
+            ],
+            'tipo_ficha_catastral': [
+                Validator.validate_string,
+                Validator.validate_special_characters,
+                Validator.validate_no_numbers
+            ],
+            'numero_ficha_catastral': [
+                Validator.validate_special_characters,
+                Validator.validate_only_numbers
+            ],
+            'linderos_especiales': [
+                Validator.validate_string
+            ]
+        }
+
+        atributos_inmueble = self.inmueble.__dict__
+        Validator.validate_dict(atributos_inmueble, dictionary_validator)
 
     def validar_parqueaderos(self):
         if len(self.parqueaderos) > 2:
@@ -247,14 +395,38 @@ class DocumentoMinuta(Document):
                     if not valor:
                         raise ValidationError(
                             f'Dato faltante de depósito: {value}')
-        atributos = parqueadero.__dict__
-        # TODO revisar porque en linderos_especiales se ocupan -> (, ) y :
-        # TODO revisar en dirección se ocupan -> # y -
-        patron = r'[@_!#$%^&*()<>?/\|}{~:]'
-        for atributo in atributos:
-            if re.search(patron, atributos[atributo]):
-                raise ValidationError(
-                    f'Error en depósito: "{atributos[atributo]}" no puede contener carácteres especiales.')
+        dictionary_validator = {
+            'nombre': [
+                Validator.validate_string,
+                Validator.validate_no_numbers,
+                Validator.validate_special_characters
+            ],
+            'numero': [
+                Validator.validate_only_numbers
+            ],
+            'direccion': [
+                Validator.validate_letters_numbers_comma_dot_hash_dash
+            ],
+            'matricula': [
+                Validator.validate_string,
+                Validator.validate_letters_numbers_dash
+            ],
+            'tipo_ficha_catastral': [
+                Validator.validate_string,
+                Validator.validate_special_characters,
+                Validator.validate_no_numbers
+            ],
+            'numero_ficha_catastral': [
+                Validator.validate_special_characters,
+                Validator.validate_only_numbers
+            ],
+            'linderos_especiales': [
+                Validator.validate_string
+            ]
+        }
+        for parqueadero in self.parqueaderos:
+            atributos_parqueaderos = parqueadero.__dict__
+            Validator.validate_dict(atributos_parqueaderos, dictionary_validator)
 
     def validar_depositos(self):
         if len(self.depositos) > 2:
@@ -276,14 +448,38 @@ class DocumentoMinuta(Document):
                     if not valor:
                         raise ValidationError(
                             f'Dato faltante de depósito: {value}')
-        atributos = deposito.__dict__
-        # TODO revisar porque en linderos_especiales se ocupan -> (, ) y :
-        # TODO revisar en dirección se ocupan -> # y -
-        patron = r'[@_!#$%^&*()<>?/\|}{~:]'
-        for atributo in atributos:
-            if re.search(patron, atributos[atributo]):
-                raise ValidationError(
-                    f'Error en depósito: "{atributos[atributo]}" no puede contener carácteres especiales.')
+        dictionary_validator = {
+            'nombre': [
+                Validator.validate_string,
+                Validator.validate_no_numbers,
+                Validator.validate_special_characters
+            ],
+            'numero': [
+                Validator.validate_only_numbers
+            ],
+            'direccion': [
+                Validator.validate_letters_numbers_comma_dot_hash_dash
+            ],
+            'matricula': [
+                Validator.validate_string,
+                Validator.validate_letters_numbers_dash
+            ],
+            'tipo_ficha_catastral': [
+                Validator.validate_string,
+                Validator.validate_special_characters,
+                Validator.validate_no_numbers
+            ],
+            'numero_ficha_catastral': [
+                Validator.validate_special_characters,
+                Validator.validate_only_numbers
+            ],
+            'linderos_especiales': [
+                Validator.validate_string
+            ]
+        }
+        for deposito in self.depositos:
+            atributos_depositos = deposito.__dict__
+            Validator.validate_dict(atributos_depositos, dictionary_validator)
 
     def estado_civil_es_union(self, estado_civil):
         estados_civiles_union = [
@@ -316,7 +512,7 @@ class DocumentoMinuta(Document):
         resultado += 'CONTRATO DE HIPOTECA---------------------------------</b></p></div>'
         return resultado
 
-    # TODO Pendiente en relación a la escritura, de momento se queda abierto linea 161
+    # TODO Pendiente en relación a la escritura, de momento se queda abierto linea 523
     def generar_parrafo_apoderado(self):
         resultado = ''
         resultado += '<div class="parrafos"><p>'
@@ -395,7 +591,6 @@ class DocumentoMinuta(Document):
                 resultado += f'<p>{deposito.linderos_especiales}</p>'
         return resultado
 
-    # TODO refactorizar
     def generar_matriculas_inmobiliarias(self):
         if self.multiples_inmuebles():
             t_inmuebles = 'Inmuebles identificados con los folios'
@@ -434,7 +629,7 @@ class DocumentoMinuta(Document):
             resultado += f'{", ".join(fichas_catastrales)}</b> respectivamente.</p>'
         return resultado
 
-    # TODO pendiente el tema de las escrituras, de momento se queda abierto linea 251
+    # TODO pendiente el tema de las escrituras, de momento se queda abierto linea 643
 
     def generar_regimen_propiedad_horizontal(self):
         if self.multiples_inmuebles():
@@ -819,7 +1014,7 @@ class DocumentoMinuta(Document):
         resultado += ' obligación. ------<br>'
         return resultado
 
-    # TODO Agregar datos de escritura linea 555
+    # TODO Agregar datos de escritura linea 1030
     def generar_datos_apoderado_especial(self):
         resultado = ''
         resultado += f'Presente {self.apoderado_especial.doctor}, '
@@ -850,8 +1045,7 @@ class DocumentoMinuta(Document):
         resultado += f'de {self.representante_legal.ciudad_expedicion_identificacion}</b>, '
         return resultado
 
-    # TODO cambiar nombre de la función
-    def generar_banco_union(self):
+    def generar_constitucion_banco_union(self):
         resultado = ''
         resultado += 'quien comparece en este acto en calidad de representante legal de '
         resultado += f'<b>{self.banco.nombre.upper()}</b> antes <b>GIROS & FINANZAS COMPAÑÍA DE '

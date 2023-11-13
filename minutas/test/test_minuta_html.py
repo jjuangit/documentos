@@ -14,6 +14,15 @@ from catalogs.catalogos import genero
 from catalogs.catalogos import estado_civil
 
 
+def strip_dict_or_list(data):
+    if isinstance(data, str):
+        return data.strip()
+    if isinstance(data, dict):
+        return {key: strip_dict_or_list(value) for key, value in data.items()}
+    if isinstance(data, list):
+        return [strip_dict_or_list(item) for item in data]
+    return data
+
 class TestMinuta(TestCase):
     """Iniciar Test"""
 
@@ -29,7 +38,7 @@ class TestMinuta(TestCase):
         }
 
         diccionario_poderdantes = [{
-            'nombre': 'KATHERINN BARBOSA MARIN',
+            'nombre': 'KATHERINN BARBOSA MARIN  ',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
             'tipo_identificacion_abreviacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['abreviacion'],
             'numero_identificacion': '1.022.399.153',
@@ -82,7 +91,6 @@ class TestMinuta(TestCase):
         }
         ]
 
-
         diccionario_apoderado_especial = {
             'nombre': 'GERMÁN LEONARDO KALIL MÉNDEZ',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
@@ -94,13 +102,22 @@ class TestMinuta(TestCase):
         }
 
         diccionario_representante_legal = {
-            'nombre': 'JUAN PABLO CRUZ LÓPEZ',
+            'nombre': 'JUAN PABLO CRUZ LÓPEZ  ',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
             'numero_identificacion': '16.724.519',
             'ciudad_expedicion_identificacion': 'Cali',
             'ciudad_residencia': 'Cali',
             'genero': genero['MASCULINO'],
         }
+
+        diccionario_apoderado = strip_dict_or_list(diccionario_apoderado)
+        diccionario_poderdantes = strip_dict_or_list(diccionario_poderdantes)
+        diccionario_banco = strip_dict_or_list(diccionario_banco)
+        diccionario_inmueble = strip_dict_or_list(diccionario_inmueble)
+        diccionario_parqueaderos = strip_dict_or_list(diccionario_parqueaderos)
+        diccionario_depositos = strip_dict_or_list(diccionario_depositos)
+        diccionario_apoderado_especial = strip_dict_or_list(diccionario_apoderado_especial)
+        diccionario_representante_legal = strip_dict_or_list(diccionario_representante_legal)
 
         apoderado = Apoderado(**diccionario_apoderado)
         poderdantes = [Poderdante(**poderdante)

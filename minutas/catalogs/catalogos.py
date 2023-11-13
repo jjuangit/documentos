@@ -30,5 +30,5 @@ genero = {
 
 respuesta_ficha_catastral = {
     "INDIVIDUAL": "Individual",
-    "MAYOR_EXTENSION": "En Mayor Extensión"
+    "MAYOR_EXTENSION": "Mayor Extensión"
 }
