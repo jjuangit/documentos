@@ -50,7 +50,7 @@ class TestMinuta(TestCase):
         }
 
         diccionario_inmueble = {
-            'nombre': 'APARTAMENTO9',
+            'nombre': 'APARTAMENTO',
             'numero': '205',
             'direccion': 'TORRE 7 ETAPA II, PRATTO PH. CARRERA 78 #11 C - 58,',
             'ciudad_y_o_departamento': 'NUEVO TECHO BOGOTÁ D.C.',
