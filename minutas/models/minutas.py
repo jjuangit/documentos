@@ -1,18 +1,18 @@
+import re
 from typing import List
 
-import re
 from num2words import num2words
+from utils.document import Document
 from utils.exceptions import ValidationError
 from utils.validators import Validator
 
-from utils.document import Document
 from .apoderado import Apoderado
+from .apoderado_especial import ApoderadoEspecial
 from .banco import Banco
 from .depositos import Deposito
 from .inmueble import InmueblePrincipal
 from .parqueaderos import Parqueadero
 from .poderdantes import Poderdante
-from .apoderado_especial import ApoderadoEspecial
 from .representante_legal import RepresentanteLegal
 
 
@@ -96,6 +96,7 @@ class DocumentoMinuta(Document):
         self.validar_inmueble()
         self.validar_parqueaderos()
         self.validar_depositos()
+        self.validar_banco()
 
     def validar_poderdantes(self):
         if self.cantidad_poderdantes == 0 and self.cantidad_poderdantes > 2:
@@ -312,6 +313,44 @@ class DocumentoMinuta(Document):
         Validator.validate_dict(
             atributos_representante_legal, dictionary_validator)
 
+    def validar_banco(self):
+        if self.banco is None:
+            raise ValidationError(
+                'No hay datos de banco. Favor de agregar datos')
+
+        obligatorios = {
+            'nombre': 'nombre',
+            'nit': 'NIT',
+            'prestamo_banco_a_hipotecante_en_numero': 'prestamo otorgado por el banco a la parte hipotecante',
+            'cantidad_dada_a_constructora_en_numero': 'precio otorgado por el banco a la constructora',
+            'gastos_de_gestion_en_numero': 'gastos de gestión y trámite del crédito'
+        }
+        for obligatorio, value in obligatorios.items():
+            valor = getattr(self.banco, obligatorio)
+            if not valor:
+                raise ValidationError(f'Dato faltante de banco: {value}')
+        dictionary_validator = {
+            'nombre': [
+                Validator.validate_string,
+                Validator.validate_no_numbers,
+                Validator.validate_special_characters
+            ],
+            'nit': [
+                Validator.validate_numbers_dots_hyphens
+            ],
+            'prestamo_banco_a_hipotecante_en_numero': [
+                Validator.validate_number,
+            ],
+            'cantidad_dada_a_constructora_en_numero': [
+                Validator.validate_number,
+            ],
+            'gastos_de_gestion_en_numero': [
+                Validator.validate_number,
+            ]
+        }
+        atributos_banco = self.banco.__dict__
+        Validator.validate_dict(atributos_banco, dictionary_validator)
+
     def validar_inmueble(self):
         if self.inmueble is None:
             raise ValidationError(
@@ -372,8 +411,9 @@ class DocumentoMinuta(Document):
             ]
         }
 
-        atributos_inmueble = self.inmueble.__dict__
+        atributos_inmueble = self.inmueble.__dict__        
         Validator.validate_dict(atributos_inmueble, dictionary_validator)
+
 
     def validar_parqueaderos(self):
         if len(self.parqueaderos) > 2:

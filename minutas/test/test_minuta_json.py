@@ -35,11 +35,11 @@ class TestMinuta(TestCase):
             try:
                 apoderado = Apoderado(**json_apoderado)
                 poderdantes = [Poderdante(**poderdante)
-                            for poderdante in json_poderdantes]
+                               for poderdante in json_poderdantes]
                 banco = Banco(**json_banco)
                 inmueble = InmueblePrincipal(**json_inmueble)
                 depositos = [Deposito(**deposito)
-                            for deposito in json_depositos]
+                             for deposito in json_depositos]
                 parqueaderos = [Parqueadero(**parqueadero)
                                 for parqueadero in json_parqueaderos]
                 apoderado_especial = ApoderadoEspecial(
@@ -47,12 +47,12 @@ class TestMinuta(TestCase):
                 representante_legal = RepresentanteLegal(
                     **json_representante_legal)
                 minuta = DocumentoMinuta(apoderado, poderdantes, banco, inmueble, depositos,
-                                        parqueaderos, apoderado_especial, representante_legal)
+                                         parqueaderos, apoderado_especial, representante_legal)
             except Exception as error:
                 print(f'Error al crear la minuta: {error}')
                 raise GeneracionDeMinutaError(
                     'No se pudo generar el html de la minuta') from error
-            
+
             minuta.generate_html()
             print(minuta.html)
 

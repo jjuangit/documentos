@@ -23,15 +23,6 @@ class Validator:
         return True
 
     @staticmethod
-    def validate_string_length(value, max_length=3):
-        if not isinstance(value, str):
-            raise ValidationError(f'Error: {value} no es una cadena.')
-        if len(value) > max_length:
-            raise ValidationError(
-                f'Error: La longitud de {value} supera el máximo permitido ({max_length}).')
-        return True
-
-    @staticmethod
     def validate_number(value):
         '''Solo números enteros son permitidos'''
         if not isinstance(value, int):
@@ -111,11 +102,19 @@ class Validator:
 
     @staticmethod
     def validate_letters_numbers_dash(value):
-        '''Solo se permiten letras, números y guion'''
+        '''Solo se permiten letras, números y guion(-)'''
         pattern = r'^[a-zA-Z0-9\-]+$'
         if not re.match(pattern, value):
             raise ValueError(
                 f"Error: {value} contiene carácteres no permitidos.")
+        return True
+
+    @staticmethod
+    def validate_numbers_dots_hyphens(value):
+        '''Solo se permiten numeros, puntos(.) y guión(-)'''
+        pattern = r'^[\d\.-]+$'
+        if not re.match(pattern, value):
+            raise ValueError(f"Error: {value} contiene caracteres no permitidos.")
         return True
 
     @staticmethod
