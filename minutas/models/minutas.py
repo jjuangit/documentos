@@ -959,7 +959,12 @@ class DocumentoMinuta(Document):
         resultado += 'EL COMPRADOR E HIPOTECANTE<br><br><br><br>'
         resultado += '_______________________________<br>'
         resultado += f'<b>{self.apoderado.nombre.upper()}<br>'
-        resultado += f'{self.apoderado.tipo_identificacion_abreviacion} '
+        if self.apoderado.tipo_identificacion == 'Cédula de ciudadanía':
+            resultado += 'C.C. '
+        elif self.apoderado.tipo_identificacion == 'Cédula de extranjería':
+            resultado += 'C.E '
+        elif self.apoderado.tipo_identificacion == 'Pasaporte':
+            resultado += 'Pasaporte '
         resultado += f'{self.apoderado.numero_identificacion} de '
         resultado += f'{self.apoderado.ciudad_expedicion_identificacion}</b><br>'
         resultado += 'En representación de<br>'
@@ -969,7 +974,12 @@ class DocumentoMinuta(Document):
         resultado = ''
         for index, poderdante in enumerate(self.poderdantes):
             resultado += f'<b>{poderdante.nombre.upper()}</b><br>'
-            resultado += f'<b>{poderdante.tipo_identificacion_abreviacion}'
+            if poderdante.tipo_identificacion == 'Cédula de ciudadanía':
+                resultado += 'C.C. '
+            elif poderdante.tipo_identificacion == 'Cédula de extranjería':
+                resultado += 'C.E '
+            elif poderdante.tipo_identificacion == 'Pasaporte':
+                resultado += 'Pasaporte '
             resultado += f'{poderdante.numero_identificacion} de '
             resultado += f'{poderdante.ciudad_expedicion_identificacion}</b><br><br>'
             if index < len(self.poderdantes) - 1:
@@ -981,7 +991,12 @@ class DocumentoMinuta(Document):
         resultado += 'EL ACREEDOR,<br><br><br><br>'
         resultado += '____________________________<br>'
         resultado += f'<b>{self.apoderado_especial.nombre.upper()}<br>'
-        resultado += f'{self.apoderado_especial.tipo_identificacion_abreviacion} '
+        if self.apoderado_especial.tipo_identificacion == 'Cédula de ciudadanía':
+            resultado += 'C.C. '
+        elif self.apoderado_especial.tipo_identificacion == 'Cédula de extranjería':
+            resultado += 'C.E '
+        elif self.apoderado_especial.tipo_identificacion == 'Pasaporte':
+            resultado += 'Pasaporte '
         resultado += f'{self.apoderado_especial.numero_identificacion} expedida en '
         resultado += f'{self.apoderado_especial.ciudad_expedicion_identificacion}</b><br>'
         resultado += f'{self.apoderado_especial.apoderado} Especial de<br>'
