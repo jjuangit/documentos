@@ -135,7 +135,7 @@ class DocumentoMinuta(Document):
         for poderdante in self.poderdantes:
             atributos_poderdante = poderdante.__dict__
             Validator.validate_dict(
-                atributos_poderdante, dictionary_validator_poderdantes)
+                atributos_poderdante, dictionary_validator_poderdantes, 'Poderdantes')
 
     def validar_apoderado(self):
         if self.apoderado is None:
@@ -156,7 +156,7 @@ class DocumentoMinuta(Document):
 
         atributos_apoderado = self.apoderado.__dict__
         Validator.validate_dict(
-            atributos_apoderado, dictionary_validator_apoderado)
+            atributos_apoderado, dictionary_validator_apoderado, 'Apoderado')
 
     def validar_apoderado_especial(self):
         if self.apoderado_especial is None:
@@ -179,7 +179,7 @@ class DocumentoMinuta(Document):
 
         atributos_apoderado_especial = self.apoderado_especial.__dict__
         Validator.validate_dict(
-            atributos_apoderado_especial, dictionary_validator_apoderado_especial)
+            atributos_apoderado_especial, dictionary_validator_apoderado_especial, 'Apoderado especial')
 
     def validar_representante_legal(self):
         if self.representante_legal is None:
@@ -202,7 +202,7 @@ class DocumentoMinuta(Document):
 
         atributos_representante_legal = self.representante_legal.__dict__
         Validator.validate_dict(
-            atributos_representante_legal, dictionary_validator_representante_legal)
+            atributos_representante_legal, dictionary_validator_representante_legal, 'Representante legal')
 
     def validar_banco(self):
         if self.banco is None:
@@ -221,7 +221,7 @@ class DocumentoMinuta(Document):
             if not valor:
                 raise ValidationError(f'Dato faltante de banco: {value}')
         atributos_banco = self.banco.__dict__
-        Validator.validate_dict(atributos_banco, dictionary_validator_banco)
+        Validator.validate_dict(atributos_banco, dictionary_validator_banco, 'Banco')
 
     def validar_inmueble(self):
         if self.inmueble is None:
@@ -246,7 +246,7 @@ class DocumentoMinuta(Document):
         # TODO revisar linderos especiales
 
         atributos_inmueble = self.inmueble.__dict__
-        Validator.validate_dict(atributos_inmueble, dictionary_validator_inmueble)
+        Validator.validate_dict(atributos_inmueble, dictionary_validator_inmueble, 'Inmueble')
 
     def validar_parqueaderos(self):
         if len(self.parqueaderos) > 2:
@@ -272,7 +272,7 @@ class DocumentoMinuta(Document):
         for parqueadero in self.parqueaderos:
             atributos_parqueaderos = parqueadero.__dict__
             Validator.validate_dict(
-                atributos_parqueaderos, dictionary_validator_parqueaderos)
+                atributos_parqueaderos, dictionary_validator_parqueaderos, 'Parqueaderos')
 
     def validar_depositos(self):
         if len(self.depositos) > 2:
@@ -297,7 +297,7 @@ class DocumentoMinuta(Document):
 
         for deposito in self.depositos:
             atributos_depositos = deposito.__dict__
-            Validator.validate_dict(atributos_depositos, dictionary_validator_depositos)
+            Validator.validate_dict(atributos_depositos, dictionary_validator_depositos, 'Depósitos')
 
     def estado_civil_es_union(self, estado_civil):
         estados_civiles_union = [

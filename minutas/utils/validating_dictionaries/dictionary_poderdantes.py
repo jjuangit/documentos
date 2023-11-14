@@ -29,6 +29,6 @@ dictionary_validator_poderdantes = {
     'genero': [
         Validator.validate_string,
         Validator.validate_no_numbers,
-        Validator.validate_only_letters,
+        Validator.validate_special_characters,
     ]
 }
