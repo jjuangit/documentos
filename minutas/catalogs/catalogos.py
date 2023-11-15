@@ -28,7 +28,12 @@ genero = {
     "FEMENINO": "Femenino"
 }
 
-respuesta_ficha_catastral = {
-    "INDIVIDUAL": "Individual",
-    "MAYOR_EXTENSION": "Mayor Extensión"
+tipo_apoderado_banco = {
+    'ESPECIAL': 'Especial',
+    'GENERAL': 'General'
+}
+
+tipo_representante_banco = {
+    'LEGAL': 'Representante Legal',
+    'Suplente': 'Suplente del Presidente'
 }

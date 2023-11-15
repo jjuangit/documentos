@@ -1,6 +1,6 @@
 from utils.validators import Validator
 
-dictionary_validator_apoderado_especial = {
+dictionary_validator_apoderado_banco = {
     'nombre': [
         Validator.validate_string,
         Validator.validate_no_numbers,

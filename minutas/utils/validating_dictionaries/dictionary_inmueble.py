@@ -7,7 +7,7 @@ dictionary_validator_inmueble = {
         Validator.validate_special_characters
     ],
     'numero': [
-        Validator.validate_only_numbers
+        Validator.validate_numbers_letters_spaces
     ],
     'direccion': [
         Validator.validate_letters_numbers_comma_dot_hash_dash
@@ -31,8 +31,7 @@ dictionary_validator_inmueble = {
         Validator.validate_no_numbers
     ],
     'numero_ficha_catastral': [
-        Validator.validate_special_characters,
-        Validator.validate_only_numbers
+        Validator.validate_numbers_dashes_spaces_and_y
     ],
     'linderos_especiales': [
         Validator.validate_string

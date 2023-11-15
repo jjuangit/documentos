@@ -7,11 +7,13 @@ from models.banco import Banco
 from models.inmueble import InmueblePrincipal
 from models.depositos import Deposito
 from models.parqueaderos import Parqueadero
-from models.apoderado_especial import ApoderadoEspecial
-from models.representante_legal import RepresentanteLegal
+from models.apoderado_banco import ApoderadoBanco
+from models.representante_banco import RepresentanteBanco
 from catalogs.catalogos import tipos_identificacion_ciudadano
 from catalogs.catalogos import genero
 from catalogs.catalogos import estado_civil
+from catalogs.catalogos import tipo_apoderado_banco
+from catalogs.catalogos import tipo_representante_banco
 from utils.strip_spaces import strip_dict_or_list
 
 
@@ -83,9 +85,10 @@ class TestMinuta(TestCase):
         }
         ]
 
-        diccionario_apoderado_especial = {
+        diccionario_apoderado_banco = {
             'nombre': 'GERMÁN LEONARDO KALIL MÉNDEZ',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
+            'tipo_apoderado': tipo_apoderado_banco['ESPECIAL'],
             'tipo_identificacion_abreviacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['abreviacion'],
             'numero_identificacion': '79.489.351',
             'ciudad_expedicion_identificacion': 'Bogotá',
@@ -93,10 +96,11 @@ class TestMinuta(TestCase):
             'genero': genero['MASCULINO'],
         }
 
-        diccionario_representante_legal = {
-            'nombre': 'JUAN PABLO CRUZ LÓPEZ  ',
+        diccionario_representante_banco = {
+            'nombre': 'JUAN PABLO CRUZ LÓPEZ',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
             'numero_identificacion': '16.724.519',
+            'tipo_representante': tipo_representante_banco['LEGAL'],
             'ciudad_expedicion_identificacion': 'Cali',
             'ciudad_residencia': 'Cali',
             'genero': genero['MASCULINO'],
@@ -108,8 +112,8 @@ class TestMinuta(TestCase):
         diccionario_inmueble = strip_dict_or_list(diccionario_inmueble)
         diccionario_parqueaderos = strip_dict_or_list(diccionario_parqueaderos)
         diccionario_depositos = strip_dict_or_list(diccionario_depositos)
-        diccionario_apoderado_especial = strip_dict_or_list(diccionario_apoderado_especial)
-        diccionario_representante_legal = strip_dict_or_list(diccionario_representante_legal)
+        diccionario_apoderado_banco = strip_dict_or_list(diccionario_apoderado_banco)
+        diccionario_representante_banco = strip_dict_or_list(diccionario_representante_banco)
 
         apoderado = Apoderado(**diccionario_apoderado)
         poderdantes = [Poderdante(**poderdante)
@@ -120,12 +124,12 @@ class TestMinuta(TestCase):
                      for deposito in diccionario_depositos]
         parqueaderos = [Parqueadero(**parqueadero)
                         for parqueadero in diccionario_parqueaderos]
-        apoderado_especial = ApoderadoEspecial(
-            **diccionario_apoderado_especial)
-        representante_legal = RepresentanteLegal(
-            **diccionario_representante_legal)
+        apoderado_banco = ApoderadoBanco(
+            **diccionario_apoderado_banco)
+        representante_banco = RepresentanteBanco(
+            **diccionario_representante_banco)
         minuta = DocumentoMinuta(apoderado, poderdantes, banco, inmueble, depositos,
-                                 parqueaderos, apoderado_especial, representante_legal)
+                                 parqueaderos, apoderado_banco, representante_banco)
         minuta.generate_html()
         print(minuta.html)
 

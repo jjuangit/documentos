@@ -1,6 +1,6 @@
 from utils.validators import Validator
 
-dictionary_validator_representante_legal = {
+dictionary_validator_representante_banco = {
     'nombre': [
         Validator.validate_string,
         Validator.validate_no_numbers,
@@ -12,6 +12,11 @@ dictionary_validator_representante_legal = {
     ],
     'numero_identificacion': [
         Validator.validate_numeric_string,
+        Validator.validate_special_characters
+    ],
+    'tipo_representante': [
+        Validator.validate_string,
+        Validator.validate_no_numbers,
         Validator.validate_special_characters
     ],
     'ciudad_expedicion_identificacion': [

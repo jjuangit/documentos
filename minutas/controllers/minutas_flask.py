@@ -3,9 +3,9 @@ from pydantic import BaseModel
 
 from controllers.config import config
 from models.apoderado import Apoderado
-from models.apoderado_especial import ApoderadoEspecial
+from models.apoderado_banco import ApoderadoBanco
 from models.poderdantes import Poderdante
-from models.representante_legal import RepresentanteLegal
+from models.representante_banco import RepresentanteBanco
 from models.inmueble import InmueblePrincipal
 from models.parqueaderos import Parqueadero
 from models.depositos import Deposito
@@ -24,8 +24,8 @@ class MinutaBM(BaseModel):
     json_inmueble: dict
     json_parqueaderos: list
     json_depositos: list
-    json_apoderado_especial: dict
-    json_representante_legal: dict
+    json_apoderado_banco: dict
+    json_representante_banco: dict
 
 
 @app_flask.route('/minuta/create/flask', methods=['POST'])
@@ -39,8 +39,8 @@ def create_minuta_html():
         json_inmueble = request_data['inmueble']
         json_parqueaderos = request_data['parqueaderos']
         json_depositos = request_data['depositos']
-        json_apoderado_especial = request_data['apoderado_especial']
-        json_representante_legal = request_data['representante_legal']
+        json_apoderado_banco = request_data['apoderado_banco']
+        json_representante_banco = request_data['representante_banco']
 
         apoderado = Apoderado(**json_apoderado)
         poderdantes = [Poderdante(**poderdante)
@@ -51,12 +51,12 @@ def create_minuta_html():
                      for deposito in json_depositos]
         parqueaderos = [Parqueadero(**parqueadero)
                         for parqueadero in json_parqueaderos]
-        apoderado_especial = ApoderadoEspecial(
-            **json_apoderado_especial)
-        representante_legal = RepresentanteLegal(
-            **json_representante_legal)
+        apoderado_banco = ApoderadoBanco(
+            **json_apoderado_banco)
+        representante_banco = RepresentanteBanco(
+            **json_representante_banco)
         minuta = DocumentoMinuta(apoderado, poderdantes, banco, inmueble, depositos,
-                                 parqueaderos, apoderado_especial, representante_legal)
+                                 parqueaderos, apoderado_banco, representante_banco)
         minuta.generate_html()
         print(minuta.html)
         return minuta.html

@@ -1,0 +1,80 @@
+{
+    "apoderado": {
+        "nombre": "JEYMY NATALIA RICO IDARRAGA",
+        "tipo_identificacion": "Cédula de ciudadanía",
+        "tipo_identificacion_abreviacion": "C.C",
+        "numero_identificacion": "1.088.247.516",
+        "ciudad_expedicion_identificacion": "Pereira",
+        "genero": "Femenino"
+    },
+
+    "poderdantes": [{ 
+        "nombre": "MARIA YULIET IDARRAGA CASTAÑO",
+        "tipo_identificacion": "Cédula de ciudadanía",
+        "tipo_identificacion_abreviacion": "C.C",
+        "numero_identificacion": "24.789.195",
+        "ciudad_expedicion_identificacion": "Mistrato",
+        "domicilio": "535 CENTRAL AV NEW PROVIDENCE NEW JERSEY",
+        "estado_civil": "Soltero sin unión marital de hecho",
+        "genero": "Femenino"
+    }
+    ],
+
+    "banco": {
+        "nombre": "banco unión s.a",
+        "nit": "860.006.797-9",
+        "prestamo_banco_a_hipotecante_en_numero": 105719956,
+        "cantidad_dada_a_constructora_en_numero": 102144885,
+        "gastos_de_gestion_en_numero": 3575071
+    },
+
+    "inmueble": {
+        "nombre": "APARTAMENTO",
+        "numero": "202 PISO 2 TORRE A ETAPA 4",
+        "direccion": "CONJUNTO RESIDENCIAL 'BOSQUES DE BAMBÚ' P.H. AVENIDA EL CAUCHO, CALLE 82 # 37 - 68",
+        "ciudad_y_o_departamento": "SECTOR CONDINA EN PEREIRA RISARALDA",
+        "matricula": "290-247045",
+        "municipio_de_registro_orip": "Pereira",
+        "tipo_ficha_catastral": "Mayor Extensión",
+        "numero_ficha_catastral": [
+            {"ficha": "00-03-00-00- 0001-259-5-00-00-0000-0"},
+            {"ficha": "00-03-00-00- 0001-259-6-00-00-0000-0"}
+        ],
+        "linderos_especiales": ""
+    },
+
+    "parqueaderos": [{
+        "nombre": "PARQUEADERO",
+        "numero": "447",
+        "direccion": "CONJUNTO RESIDENCIAL 'BOSQUES DE BAMBÚ' P.H. AVENIDA EL CAUCHO, CALLE 82 # 37 - 68, SECTOR CONDINA EN PEREIRA RISARALDA",
+        "matricula": "290-246969",
+        "tipo_ficha_catastral": "",
+        "numero_ficha_catastral": "",
+        "linderos_especiales": ""
+    }
+    ],
+
+    "depositos": [
+    ],
+
+    "apoderado_banco": {
+        "nombre": "CARLOS ALBERTO AGUDELO ZAPATA",
+        "tipo_identificacion": "Cédula de ciudadanía",
+        "tipo_apoderado": "General",
+        "tipo_identificacion_abreviacion": "C.C",
+        "numero_identificacion": "10.089.944",
+        "ciudad_expedicion_identificacion": "Pereira",
+        "ciudad_residencia": "Pereira",
+        "genero": "Masculino"
+    },
+
+    "representante_banco": {
+        "nombre": "JUAN PABLO CRUZ LÓPEZ  ",
+        "tipo_identificacion": "Cédula de ciudadanía",
+        "numero_identificacion": "16.724.519",
+        "tipo_representante": "Legal",
+        "ciudad_expedicion_identificacion": "Cali",
+        "ciudad_residencia": "Cali",
+        "genero": "Masculino"
+    }
+}

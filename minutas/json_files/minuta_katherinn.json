@@ -62,20 +62,22 @@
     }
     ],
 
-    "apoderado_especial": {
+    "apoderado_banco": {
         "nombre": "GERMÁN LEONARDO KALIL MÉNDEZ",
         "tipo_identificacion": "Cédula de ciudadanía",
-        "tipo_identificacion_abreviacion": "C.C",
         "numero_identificacion": "79.489.351",
+        "tipo_apoderado": "Especial",
+        "tipo_identificacion_abreviacion": "C.C",
         "ciudad_expedicion_identificacion": "Bogotá",
         "ciudad_residencia": "Bogotá",
         "genero": "Masculino"
     },
 
-    "representante_legal": {
+    "representante_banco": {
         "nombre": "JUAN PABLO CRUZ LÓPEZ  ",
         "tipo_identificacion": "Cédula de ciudadanía",
         "numero_identificacion": "16.724.519",
+        "tipo_representante": "Legal",
         "ciudad_expedicion_identificacion": "Cali",
         "ciudad_residencia": "Cali",
         "genero": "Masculino"

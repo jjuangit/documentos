@@ -32,3 +32,10 @@ class Apoderado:
             return 'el Apoderado'
         elif self.genero == 'Femenino':
             return 'la Apoderada'
+        
+    @property
+    def identificado(self):
+        if self.genero == 'Masculino':
+            return 'identificado'
+        elif self.genero == 'Femenino':
+            return 'identificada'

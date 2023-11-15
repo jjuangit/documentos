@@ -1,4 +1,3 @@
-import re
 from typing import List
 
 from num2words import num2words
@@ -7,22 +6,22 @@ from utils.exceptions import ValidationError
 from utils.validators import Validator
 from utils.validating_dictionaries.dictionary_poderdantes import dictionary_validator_poderdantes
 from utils.validating_dictionaries.dictionary_apoderado import dictionary_validator_apoderado
-from utils.validating_dictionaries.dictionary_apoderado_especial import dictionary_validator_apoderado_especial
-from utils.validating_dictionaries.dictionary_representante_legal import dictionary_validator_representante_legal
+from utils.validating_dictionaries.dictionary_representante_banco import dictionary_validator_representante_banco
 from utils.validating_dictionaries.dictionary_banco import dictionary_validator_banco
 from utils.validating_dictionaries.dictionary_inmueble import dictionary_validator_inmueble
 from utils.validating_dictionaries.dictionary_parqueaderos import dictionary_validator_parqueaderos
 from utils.validating_dictionaries.dictionary_depositos import dictionary_validator_depositos
+from utils.validating_dictionaries.dictionary_apoderado_banco import dictionary_validator_apoderado_banco
 
 
 from .apoderado import Apoderado
-from .apoderado_especial import ApoderadoEspecial
+from .apoderado_banco import ApoderadoBanco
 from .banco import Banco
 from .depositos import Deposito
 from .inmueble import InmueblePrincipal
 from .parqueaderos import Parqueadero
 from .poderdantes import Poderdante
-from .representante_legal import RepresentanteLegal
+from .representante_banco import RepresentanteBanco
 
 
 class DocumentoMinuta(Document):
@@ -32,8 +31,8 @@ class DocumentoMinuta(Document):
     inmueble: InmueblePrincipal
     depositos: List[Deposito]
     parqueaderos: List[Parqueadero]
-    apoderado_especial: ApoderadoEspecial
-    representante_legal: RepresentanteLegal
+    apoderado_banco: ApoderadoBanco
+    representante_banco: RepresentanteBanco
 
     generate_html_functions = [
         'generar_titulo_documento',
@@ -56,15 +55,15 @@ class DocumentoMinuta(Document):
         'generar_paragrafo_tercero_no_se_extingue_hipoteca',
         'generar_quinto_aceleracion_del_plazo',
         'generar_sexto_cesion_de_credito',
-        'generar_septimo_costos_y_gastos_judicianles',
+        'generar_septimo_costos_y_gastos_judiciales',
         'generar_octavo_secuestre',
         'generar_noveno_vigencia_de_hipoteca',
         'generar_decimo_seguros',
         'generar_decimo_primero_convenio',
         'generar_decimo_segundo_poder',
         'generar_decimo_tercero_inputacion_de_pago',
-        'generar_datos_apoderado_especial',
-        'generar_datos_representante_legal',
+        'generar_datos_apoderado_banco',
+        'generar_datos_representante_banco',
         'generar_constitucion_banco_union',
         'generar_aprobacion_credito_al_hipotecante',
         'generar_afectacion_vivienda_familiar',
@@ -72,7 +71,7 @@ class DocumentoMinuta(Document):
         'generar_paz_y_salvo',
         'generar_firma_comprador',
         'generar_firma_hipotecante',
-        'generar_firma_apoderado_especial',
+        'generar_firma_apoderado_banco',
         'generar_estilos'
     ]
 
@@ -84,8 +83,8 @@ class DocumentoMinuta(Document):
         inmueble: InmueblePrincipal,
         depositos: List[Deposito],
         parqueaderos: List[Parqueadero],
-        apoderado_especial: ApoderadoEspecial,
-        representante_legal: RepresentanteLegal
+        apoderado_banco: ApoderadoBanco,
+        representante_banco: RepresentanteBanco
     ):
         self.apoderado = apoderado
         self.poderdantes = poderdantes
@@ -93,15 +92,15 @@ class DocumentoMinuta(Document):
         self.inmueble = inmueble
         self.depositos = depositos
         self.parqueaderos = parqueaderos
-        self.apoderado_especial = apoderado_especial
-        self.representante_legal = representante_legal
+        self.apoderado_banco = apoderado_banco
+        self.representante_banco = representante_banco
         self.validate_data()
 
     def validate_data(self):
         self.validar_poderdantes()
         self.validar_apoderado()
-        self.validar_apoderado_especial()
-        self.validar_representante_legal()
+        self.validar_apoderado_banco()
+        self.validar_representante_banco()
         self.validar_inmueble()
         self.validar_parqueaderos()
         self.validar_depositos()
@@ -158,8 +157,8 @@ class DocumentoMinuta(Document):
         Validator.validate_dict(
             atributos_apoderado, dictionary_validator_apoderado, 'Apoderado')
 
-    def validar_apoderado_especial(self):
-        if self.apoderado_especial is None:
+    def validar_apoderado_banco(self):
+        if self.apoderado_banco is None:
             raise ValidationError(
                 'No hay datos de apoderado especial. Favor de agregar datos')
 
@@ -172,17 +171,17 @@ class DocumentoMinuta(Document):
             "genero": "genero",
         }
         for obligatorio, value in obligatorios.items():
-            valor = getattr(self.apoderado_especial, obligatorio)
+            valor = getattr(self.apoderado_banco, obligatorio)
             if not valor:
                 raise ValidationError(
                     f'Dato faltante de apoderado especial: {value}')
 
-        atributos_apoderado_especial = self.apoderado_especial.__dict__
+        atributos_apoderado_banco = self.apoderado_banco.__dict__
         Validator.validate_dict(
-            atributos_apoderado_especial, dictionary_validator_apoderado_especial, 'Apoderado especial')
+            atributos_apoderado_banco, dictionary_validator_apoderado_banco, 'Apoderado especial')
 
-    def validar_representante_legal(self):
-        if self.representante_legal is None:
+    def validar_representante_banco(self):
+        if self.representante_banco is None:
             raise ValidationError(
                 'No hay datos de representante legal. Favor de agregar datos')
 
@@ -195,14 +194,14 @@ class DocumentoMinuta(Document):
             "genero": "genero",
         }
         for obligatorio, value in obligatorios.items():
-            valor = getattr(self.representante_legal, obligatorio)
+            valor = getattr(self.representante_banco, obligatorio)
             if not valor:
                 raise ValidationError(
                     f'Dato faltante de representante legal: {value}')
 
-        atributos_representante_legal = self.representante_legal.__dict__
+        atributos_representante_banco = self.representante_banco.__dict__
         Validator.validate_dict(
-            atributos_representante_legal, dictionary_validator_representante_legal, 'Representante legal')
+            atributos_representante_banco, dictionary_validator_representante_banco, 'Representante legal')
 
     def validar_banco(self):
         if self.banco is None:
@@ -221,7 +220,8 @@ class DocumentoMinuta(Document):
             if not valor:
                 raise ValidationError(f'Dato faltante de banco: {value}')
         atributos_banco = self.banco.__dict__
-        Validator.validate_dict(atributos_banco, dictionary_validator_banco, 'Banco')
+        Validator.validate_dict(
+            atributos_banco, dictionary_validator_banco, 'Banco')
 
     def validar_inmueble(self):
         if self.inmueble is None:
@@ -237,7 +237,7 @@ class DocumentoMinuta(Document):
             'municipio_de_registro_orip': 'municipio de registro de la Orip',
             'tipo_ficha_catastral': 'tipo de ficha catastral',
             'numero_ficha_catastral': 'número de ficha catastral',
-            'linderos_especiales': 'linderos especiales',
+            # 'linderos_especiales': 'linderos especiales',
         }
         for obligatorio, value in obligatorios.items():
             valor = getattr(self.inmueble, obligatorio)
@@ -246,7 +246,8 @@ class DocumentoMinuta(Document):
         # TODO revisar linderos especiales
 
         atributos_inmueble = self.inmueble.__dict__
-        Validator.validate_dict(atributos_inmueble, dictionary_validator_inmueble, 'Inmueble')
+        Validator.validate_dict(
+            atributos_inmueble, dictionary_validator_inmueble, 'Inmueble')
 
     def validar_parqueaderos(self):
         if len(self.parqueaderos) > 2:
@@ -257,9 +258,9 @@ class DocumentoMinuta(Document):
             'numero': 'número',
             'direccion': 'dirección',
             'matricula': 'matrícula inmobiliaria',
-            'tipo_ficha_catastral': 'tipo de ficha catastral',
-            'numero_ficha_catastral': 'número de ficha catastral',
-            'linderos_especiales': 'linderos especiales'
+            # 'tipo_ficha_catastral': 'tipo de ficha catastral',
+            # 'numero_ficha_catastral': 'número de ficha catastral',
+            # 'linderos_especiales': 'linderos especiales'
         }
         if self.parqueaderos:
             for parqueadero in self.parqueaderos:
@@ -297,7 +298,8 @@ class DocumentoMinuta(Document):
 
         for deposito in self.depositos:
             atributos_depositos = deposito.__dict__
-            Validator.validate_dict(atributos_depositos, dictionary_validator_depositos, 'Depósitos')
+            Validator.validate_dict(
+                atributos_depositos, dictionary_validator_depositos, 'Depósitos')
 
     def estado_civil_es_union(self, estado_civil):
         estados_civiles_union = [
@@ -334,11 +336,11 @@ class DocumentoMinuta(Document):
     def generar_parrafo_apoderado(self):
         resultado = ''
         resultado += '<div class="parrafos"><p>'
-        resultado += f'Presente nuevamente <b>{self.apoderado.nombre},</b> mayor de edad, '
-        resultado += f'identificado con <b>{self.apoderado.tipo_identificacion}</b> '
-        resultado += f'No. <b>{self.apoderado.numero_identificacion}</b> de '
-        resultado += f'<b>{self.apoderado.ciudad_expedicion_identificacion}</b>, quien conforme '
-        resultado += 'al Poder General a él otorgado por medio de la __________________ '
+        resultado += f'Presente nuevamente <b><u>{self.apoderado.nombre}</u>,</b> mayor de edad, '
+        resultado += f'{self.apoderado.identificado} con <b><u>{self.apoderado.tipo_identificacion}'
+        resultado += f'</u></b> No. <b><u>{self.apoderado.numero_identificacion}</u></b> de '
+        resultado += f'<b><u>{self.apoderado.ciudad_expedicion_identificacion}</u></b>, quien '
+        resultado += 'conforme al Poder General a él otorgado por medio de la __________________ '
         resultado += 'el cual se protocoliza con la presente escritura para los fines legales, '
         resultado += 'cuya vigencia, autenticidad y alcance se hace responsable; actúa en nombre y '
         resultado += 'representación de '
@@ -351,14 +353,14 @@ class DocumentoMinuta(Document):
             if index == len(self.poderdantes) - \
                     1 and len(self.poderdantes) > 1:
                 resultado += ' y '
-            resultado += f'<b>{poderdante.nombre},</b> mayor de edad, '
+            resultado += f'<b><u>{poderdante.nombre}</u>,</b> mayor de edad, '
             resultado += f'{poderdante.identificado} con '
-            resultado += f'<b>{poderdante.tipo_identificacion}</b> No. '
-            resultado += f'<b>{poderdante.numero_identificacion}</b> de '
-            resultado += f'<b>{poderdante.ciudad_expedicion_identificacion},</b> de '
-            resultado += f'estado civil <b>{poderdante.estado_civil_genero.upper()},</b> '
+            resultado += f'<b><u>{poderdante.tipo_identificacion}</u></b> No. '
+            resultado += f'<b><u>{poderdante.numero_identificacion}</u></b> de '
+            resultado += f'<b><u>{poderdante.ciudad_expedicion_identificacion}</u>,</b> de '
+            resultado += f'estado civil <b><u>{poderdante.estado_civil_genero.upper()}</u>,</b> '
             resultado += f'{poderdante.domiciliado} y {poderdante.residenciado} en '
-            resultado += f'<b>{poderdante.domicilio}</b>'
+            resultado += f'<b><u>{poderdante.domicilio}</u></b>'
         if len(self.poderdantes) == 1:
             resultado += '. Quien en el presente contrato se denominará '
         elif len(self.poderdantes) > 1:
@@ -383,30 +385,33 @@ class DocumentoMinuta(Document):
 
     def generar_direccion_inmueble(self):
         resultado = ''
-        resultado += f'<b>{self.inmueble.nombre.upper()} {self.inmueble.numero.upper()} '
+        resultado += f'<p><b><u>{self.inmueble.nombre.upper()} {self.inmueble.numero.upper()} '
         resultado += f'{self.inmueble.direccion.upper()} '
-        resultado += f'{self.inmueble.ciudad_y_o_departamento.upper()}</b>'
-        resultado += f'<p>{self.inmueble.linderos_especiales}</p>'
+        resultado += f'{self.inmueble.ciudad_y_o_departamento.upper()}</u></b></p>'
+        if self.inmueble.linderos_especiales:
+            resultado += f'<p>{self.inmueble.linderos_especiales}</p>'
         return resultado
 
     def generar_direccion_parqueaderos(self):
         resultado = ''
         if self.parqueaderos:
             for parqueadero in self.parqueaderos:
-                resultado += f'<b>{parqueadero.nombre.upper()} {parqueadero.numero} '
+                resultado += f'<b><u>{parqueadero.nombre.upper()} {parqueadero.numero} '
                 resultado += f'{self.inmueble.direccion.upper()} '
-                resultado += f'{self.inmueble.ciudad_y_o_departamento.upper()}</b>'
-                resultado += f'<p>{parqueadero.linderos_especiales}</p>'
+                resultado += f'{self.inmueble.ciudad_y_o_departamento.upper()}</u></b>'
+                if parqueadero.linderos_especiales:
+                    resultado += f'<p>{parqueadero.linderos_especiales}</p>'
         return resultado
 
     def generar_direccion_depositos(self):
         resultado = ''
         if self.depositos:
             for deposito in self.depositos:
-                resultado += f'<b>{deposito.nombre.upper()} {deposito.numero} '
+                resultado += f'<b><u>{deposito.nombre.upper()} {deposito.numero} '
                 resultado += f'{self.inmueble.direccion.upper()} '
-                resultado += f'{self.inmueble.ciudad_y_o_departamento.upper()}</b>'
-                resultado += f'<p>{deposito.linderos_especiales}</p>'
+                resultado += f'{self.inmueble.ciudad_y_o_departamento.upper()}</u></b>'
+                if deposito.linderos_especiales:
+                    resultado += f'<p>{deposito.linderos_especiales}</p>'
         return resultado
 
     def generar_matriculas_inmobiliarias(self):
@@ -423,18 +428,21 @@ class DocumentoMinuta(Document):
             if self.depositos and deposito.matricula:
                 matriculas += [deposito.matricula]
         resultado = ''
-        resultado += f'<p>{t_inmuebles} de matrícula inmobiliaria No. <b>{", ".join(matriculas)}'
-        resultado += '</b> de la Oficina de Registro de Instrumentos Públicos de '
-        resultado += f'<b>{self.inmueble.municipio_de_registro_orip}</b> '
+        resultado += f'<p>{t_inmuebles} de matrícula inmobiliaria No. <b><u>{", ".join(matriculas)}'
+        resultado += '</u></b> de la Oficina de Registro de Instrumentos Públicos de '
+        resultado += f'<b><u>{self.inmueble.municipio_de_registro_orip}</u></b> '
         return resultado
 
     def generar_fichas_catastrales(self):
         resultado = ''
         if self.inmueble.tipo_ficha_catastral == "Mayor Extensión":
-            resultado += 'y ficha catastral No. '
-            resultado += f'<b>{self.inmueble.numero_ficha_catastral} En Mayor Extensión.</b> '
+            fichas = getattr(self.inmueble, 'numero_ficha_catastral', None)
+            if isinstance(fichas, list) and all(isinstance(ficha, dict) for ficha in fichas):
+                resultado += 'y ficha catastral No. <b><u>'
+                resultado += ' y '.join([value for ficha in fichas for value in ficha.values()])
+                resultado += ' En Mayor Extensión.</u></b> '
         elif self.inmueble.tipo_ficha_catastral == "Individual":
-            resultado += 'y fichas catastrales individuales No. <b>'
+            resultado += 'y fichas catastrales individuales No. <b><u>'
             fichas_catastrales = [self.inmueble.numero_ficha_catastral]
 
             if self.parqueaderos:
@@ -444,7 +452,7 @@ class DocumentoMinuta(Document):
                 fichas_catastrales += [
                     deposito.numero_ficha_catastral for deposito in self.depositos if deposito.numero_ficha_catastral]
 
-            resultado += f'{", ".join(fichas_catastrales)}</b> respectivamente.</p>'
+            resultado += f'{", ".join(fichas_catastrales)}</u></b> respectivamente.</p>'
         return resultado
 
     # TODO pendiente el tema de las escrituras, de momento se queda abierto linea 643
@@ -459,9 +467,9 @@ class DocumentoMinuta(Document):
         resultado += 'legal de propiedad horizontal, de conformidad con la Ley 675 de '
         resultado += 'agosto 3 de 2001 por medio de _______________________________ , '
         resultado += 'debidamente registrada en el Folio de Matrícula Inmobiliaria No. '
-        resultado += f'<b>{self.inmueble.matricula}</b> de la Oficina de Registro '
-        resultado += 'de Instrumentos Públicos de <b>'
-        resultado += f'{self.inmueble.municipio_de_registro_orip}.</b></p>'
+        resultado += f'<b><u>{self.inmueble.matricula}</u></b> de la Oficina de Registro '
+        resultado += 'de Instrumentos Públicos de <b><u>'
+        resultado += f'{self.inmueble.municipio_de_registro_orip}.</u></b></p>'
         return resultado
 
     def generar_paragrafo_primero(self):
@@ -564,17 +572,17 @@ class DocumentoMinuta(Document):
         elif self.cantidad_poderdantes == 1:
             deudores = 'el deudor certifica que a la fecha no ha'
         resultado = ''
-        resultado += '<b>PARÁGRAFO PRIMERO:</b> El crédito inicialmente aprobado por <b> '
-        resultado += f'{self.banco.nombre.upper()}</b>, en favor de <b>LA PARTE HIPOTECANTE </b>'
-        resultado += f' asciende a la cantidad de <b>{number_to_word_hipotecante.upper()} '
-        resultado += f'PESOS MCTE (${number_format_hipotecante})</b> de los cuales la'
-        resultado += f'suma de <b>{number_to_word_constructora.upper()} PESOS MCTE ('
-        resultado += f'${number_format_constructora})</b> corresponden al '
+        resultado += '<b>PARÁGRAFO PRIMERO:</b> El crédito inicialmente aprobado por <b>'
+        resultado += f'{self.banco.nombre.upper()}</b>, en favor de <b>LA PARTE HIPOTECANTE'
+        resultado += f'</b> asciende a la cantidad de <b><u>{number_to_word_hipotecante.upper()} '
+        resultado += f'PESOS MCTE (${number_format_hipotecante})</u></b> de los cuales la '
+        resultado += f'suma de <b><u>{number_to_word_constructora.upper()} PESOS MCTE ('
+        resultado += f'${number_format_constructora})</u></b> corresponden al '
         resultado += f'saldo del precio {t_inmuebles} objeto de esta hipoteca, que desembolsará '
         resultado += f'<b>{self.banco.nombre.upper()}</b>, a la parte vendedora, por cuenta del '
         resultado += 'deudor hipotecante y la diferencia es decir la suma de <b> '
-        resultado += f'{number_to_word_gastos.upper()} PESOS MCTE ('
-        resultado += f'${number_format_gastos})</b> corresponden a los gastos de gestión y '
+        resultado += f'<u>{number_to_word_gastos.upper()} PESOS MCTE ('
+        resultado += f'${number_format_gastos})</u></b> corresponden a los gastos de gestión y '
         resultado += 'trámite del crédito en el exterior que se giran por instrucción del '
         resultado += 'cliente directamente al Bróker. La garantía cubre también toda clase '
         resultado += 'de obligaciones que <b>LA PARTE HIPOTECANTE</b> conjunta o '
@@ -610,19 +618,19 @@ class DocumentoMinuta(Document):
     def generar_quinto_aceleracion_del_plazo(self):
         if self.multiples_inmuebles():
             inmuebles = 'los inmuebles'
-            inmuebles_hipotecados = f'{inmuebles} hipotecados son'
+            inmuebles_hipotecados = f'{inmuebles} hipotecados son perseguidos'
             inmuebles_desmejoran = f'{inmuebles} mismos desmejoran o sufren desprecios tales que no lleguen'
             inmuebles_determinan = f'{inmuebles} que se determinan en el presente contrato son gravados'
         else:
             inmuebles = 'el inmueble'
-            inmuebles_hipotecados = f'{inmuebles} hipotecado es'
+            inmuebles_hipotecados = f'{inmuebles} hipotecado es perseguido'
             inmuebles_desmejoran = f'{inmuebles} mismo desmejora o sufre desprecio tal que no llegue'
             inmuebles_determinan = f'{inmuebles} que se determina en el presente contrato es gravado'
 
         if self.cantidad_poderdantes > 1:
-            hipotecantes = 'Lo hipoteantes enajenan'
+            hipotecantes = 'Lo hipotecantes enajenan'
         elif self.cantidad_poderdantes == 1:
-            hipotecantes = 'El hipoteante enajena'
+            hipotecantes = 'El hipotecante enajena'
 
         resultado = ''
         resultado += '<b>QUINTO. ACELERACIÓN DEL PLAZO:</b> Que <b> LA PARTE HIPOTECANTE</b> '
@@ -636,7 +644,7 @@ class DocumentoMinuta(Document):
         resultado += f'separadamente a favor de <b>{self.banco.nombre.upper()}</b>, de acuerdo '
         resultado += 'con los documentos o títulos-valores respectivos; o no satisface las '
         resultado += ' cuotas de amortización o los intereses en los términos previstos en los '
-        resultado += f'documentos respectivos; 2. Si {inmuebles_hipotecados} perseguido en '
+        resultado += f'documentos respectivos; 2. Si {inmuebles_hipotecados} en '
         resultado += 'todo o en parte por un tercero o en ejercicio de cualquier acción legal; 3. '
         resultado += f'Si {inmuebles_desmejoran} a ser garantía suficiente del crédito, a juicio '
         resultado += f'de un perito que designe <b>{self.banco.nombre.upper()}</b>, 4. Si '
@@ -676,7 +684,7 @@ class DocumentoMinuta(Document):
         resultado += 'nuevo acreedor. ------<br>'
         return resultado
 
-    def generar_septimo_costos_y_gastos_judicianles(self):
+    def generar_septimo_costos_y_gastos_judiciales(self):
         resultado = ''
         resultado += '<b>SÉPTIMO. COSTAS Y GASTOS JUDICIALES:</b> Que serán de cargo de '
         resultado += '<b>LA PARTE HIPOTECANTE</b> el valor de las costas y gastos judiciales '
@@ -800,12 +808,12 @@ class DocumentoMinuta(Document):
         resultado += 'entregar suma alguna en virtud del presente documento. Si en el '
         resultado += 'lapso entre la aprobación del crédito y su probable perfeccionamiento, '
         resultado += f'<b>{self.banco.nombre.upper()}</b> conoce de hechos sucedidos antes '
-        resultado += 'o después de aquella, los cuales la hubieren impedido aprobar el '
+        resultado += 'o después de aquella, los cuales la hubieren impedido aprobar '
         resultado += 'el crédito, podrá darlo por desistido.<br>'
         resultado += '<b>PARÁGRAFO.</b> Con la constitución de la presente hipoteca se '
         resultado += ' garantizan exclusivamente los créditos ya otorgados o los que '
         resultado += f'voluntariamente quiera otorgarle(s) <b>{self.banco.nombre.upper()}'
-        resultado += '</b>,comprendiendo además los intereses, costas, gastos, seguros, '
+        resultado += '</b>, comprendiendo además los intereses, costas, gastos, seguros, '
         resultado += 'comisiones, etc. ------<br>'
         return resultado
 
@@ -833,40 +841,44 @@ class DocumentoMinuta(Document):
         return resultado
 
     # TODO Agregar datos de escritura linea 1030
-    def generar_datos_apoderado_especial(self):
+    def generar_datos_apoderado_banco(self):
         resultado = ''
-        resultado += f'Presente {self.apoderado_especial.doctor}, '
-        resultado += f'<b>{self.apoderado_especial.nombre.upper()}</b> '
-        resultado += f'{self.apoderado_especial.indole}, mayor de edad, '
-        resultado += f'{self.apoderado_especial.vecino} de '
-        resultado += f'{self.apoderado_especial.ciudad_residencia}, '
-        resultado += f'{self.apoderado_especial.identificado} con '
-        resultado += f'{self.apoderado_especial.tipo_identificacion} '
-        resultado += f'No. <b>{self.apoderado_especial.numero_identificacion}</b> quien '
+        resultado += f'Presente {self.apoderado_banco.doctor}, '
+        resultado += f'<b><u>{self.apoderado_banco.nombre.upper()}</u></b> '
+        resultado += f'{self.apoderado_banco.indole}, mayor de edad, '
+        resultado += f'{self.apoderado_banco.vecino} de '
+        resultado += f'<u>{self.apoderado_banco.ciudad_residencia}</u>, '
+        resultado += f'{self.apoderado_banco.identificado} con '
+        resultado += f'<u>{self.apoderado_banco.tipo_identificacion}</u> '
+        resultado += f'No. <b><u>{self.apoderado_banco.numero_identificacion}</u></b> quien '
         resultado += 'comparece en este acto en su calidad de <b>'
-        resultado += f'{self.apoderado_especial.apoderado} Especial</b> '
+        resultado += f'{self.apoderado_banco.apoderado} {self.apoderado_banco.tipo_apoderado}</b> '
         resultado += 'acorde con el Poder constituido por ______________________________ '
-        resultado += 'debidamente inscrito en la Cámara de Comercio de '
+        resultado += 'debidamente inscrito en la Cámara de Comercio de Cali '
         resultado += 'según certificado de la Existencia y Representación legal que '
         resultado += 'se protocoliza con este instrumento, conferido por '
         return resultado
 
-    def generar_datos_representante_legal(self):
+    def generar_datos_representante_banco(self):
         resultado = ''
-        resultado += f'{self.representante_legal.doctor} '
-        resultado += f'<b>{self.representante_legal.nombre.upper()}</b>, '
-        resultado += f'mayor de edad, {self.representante_legal.vecino} de '
-        resultado += f'{self.representante_legal.ciudad_residencia}, '
-        resultado += f'{self.representante_legal.identificado} con '
-        resultado += f'{self.representante_legal.tipo_identificacion} '
-        resultado += f'No. <b>{self.representante_legal.numero_identificacion} '
-        resultado += f'de {self.representante_legal.ciudad_expedicion_identificacion}</b>, '
+        resultado += f'{self.representante_banco.doctor} '
+        resultado += f'<b><u>{self.representante_banco.nombre.upper()}</u></b>, '
+        resultado += f'mayor de edad, {self.representante_banco.vecino} de '
+        resultado += f'<u>{self.representante_banco.ciudad_residencia}</u>, '
+        resultado += f'{self.representante_banco.identificado} con '
+        resultado += f'<u>{self.representante_banco.tipo_identificacion}</u> '
+        resultado += f'No. <b><u>{self.representante_banco.numero_identificacion}</u> '
+        resultado += f'de <u>{self.representante_banco.ciudad_expedicion_identificacion}</u></b>, '
+        resultado += 'quien comparece en este acto en calidad de '
+        if self.representante_banco.tipo_representante == 'Representante Legal':
+            resultado += 'Representante legal '
+        elif self.representante_banco.tipo_representante == 'Suplente suplente del presidente':
+            resultado += 'Suplente del presidente '
         return resultado
 
     def generar_constitucion_banco_union(self):
         resultado = ''
-        resultado += 'quien comparece en este acto en calidad de representante legal de '
-        resultado += f'<b>{self.banco.nombre.upper()}</b> antes <b>GIROS & FINANZAS COMPAÑÍA DE '
+        resultado += f'de <b>{self.banco.nombre.upper()}</b> antes <b>GIROS & FINANZAS COMPAÑÍA DE '
         resultado += 'FINANCIAMIENTO S.A.</b>, sociedad constituida legalmente mediante Escritura '
         resultado += 'Escritura Pública No. 5938 del 05 de diciembre de 1963, otorgada en la '
         resultado += 'Notaria Cuarta (04) del Círculo de Bogotá, inscrita en la Cámara de '
@@ -897,8 +909,8 @@ class DocumentoMinuta(Document):
         resultado += 'proferida por la Superintendencia de Notariado y Registro, se adjunta con '
         resultado += f'esta escritura la carta expedida por <b>"{self.banco.nombre.upper()}"</b>, '
         resultado += 'donde aprueba un crédito al Hipotecante por la suma de '
-        resultado += f'<b>{number_to_word_hipotecante.upper()} PESOS MCTE '
-        resultado += f'(${number_format_hipotecante})</b>, la misma que '
+        resultado += f'<b><u>{number_to_word_hipotecante.upper()} PESOS MCTE '
+        resultado += f'(${number_format_hipotecante})</u></b>, la misma que '
         resultado += 'tomará el Notario para la liquidación de los derechos notariales. ---------'
         resultado += '------------------------------------------------------------------<br>'
         return resultado
@@ -975,32 +987,32 @@ class DocumentoMinuta(Document):
         for index, poderdante in enumerate(self.poderdantes):
             resultado += f'<b>{poderdante.nombre.upper()}</b><br>'
             if poderdante.tipo_identificacion == 'Cédula de ciudadanía':
-                resultado += 'C.C. '
+                resultado += '<b>C.C. '
             elif poderdante.tipo_identificacion == 'Cédula de extranjería':
-                resultado += 'C.E '
+                resultado += '<b>C.E '
             elif poderdante.tipo_identificacion == 'Pasaporte':
-                resultado += 'Pasaporte '
+                resultado += '<b>Pasaporte '
             resultado += f'{poderdante.numero_identificacion} de '
             resultado += f'{poderdante.ciudad_expedicion_identificacion}</b><br><br>'
             if index < len(self.poderdantes) - 1:
                 resultado += 'y<br><br>'
         return resultado
 
-    def generar_firma_apoderado_especial(self):
+    def generar_firma_apoderado_banco(self):
         resultado = ''
         resultado += 'EL ACREEDOR,<br><br><br><br>'
         resultado += '____________________________<br>'
-        resultado += f'<b>{self.apoderado_especial.nombre.upper()}<br>'
-        if self.apoderado_especial.tipo_identificacion == 'Cédula de ciudadanía':
+        resultado += f'<b>{self.apoderado_banco.nombre.upper()}<br>'
+        if self.apoderado_banco.tipo_identificacion == 'Cédula de ciudadanía':
             resultado += 'C.C. '
-        elif self.apoderado_especial.tipo_identificacion == 'Cédula de extranjería':
+        elif self.apoderado_banco.tipo_identificacion == 'Cédula de extranjería':
             resultado += 'C.E '
-        elif self.apoderado_especial.tipo_identificacion == 'Pasaporte':
+        elif self.apoderado_banco.tipo_identificacion == 'Pasaporte':
             resultado += 'Pasaporte '
-        resultado += f'{self.apoderado_especial.numero_identificacion} expedida en '
-        resultado += f'{self.apoderado_especial.ciudad_expedicion_identificacion}</b><br>'
-        resultado += f'{self.apoderado_especial.apoderado} Especial de<br>'
-        resultado += f'<b>{self.banco.nombre.upper()}<br>'
+        resultado += f'{self.apoderado_banco.numero_identificacion} expedida en '
+        resultado += f'{self.apoderado_banco.ciudad_expedicion_identificacion}</b><br>'
+        resultado += f'{self.apoderado_banco.apoderado} {self.apoderado_banco.tipo_apoderado} de'
+        resultado += f'<br><b>{self.banco.nombre.upper()}<br>'
         resultado += f'NIT. {self.banco.nit}</b><br><br><br><br>'
         resultado += 'LA NOTARÍA.<br><br><br><br>____________________</div>'
         return resultado

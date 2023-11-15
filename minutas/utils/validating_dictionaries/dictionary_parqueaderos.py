@@ -17,15 +17,9 @@ dictionary_validator_parqueaderos = {
         Validator.validate_letters_numbers_dash
     ],
     'tipo_ficha_catastral': [
-        Validator.validate_string,
-        Validator.validate_special_characters,
-        Validator.validate_no_numbers
     ],
     'numero_ficha_catastral': [
-        Validator.validate_special_characters,
-        Validator.validate_only_numbers
     ],
     'linderos_especiales': [
-        Validator.validate_string
     ]
 }

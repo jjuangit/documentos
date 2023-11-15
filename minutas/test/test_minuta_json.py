@@ -9,8 +9,8 @@ from models.banco import Banco
 from models.inmueble import InmueblePrincipal
 from models.depositos import Deposito
 from models.parqueaderos import Parqueadero
-from models.apoderado_especial import ApoderadoEspecial
-from models.representante_legal import RepresentanteLegal
+from models.apoderado_banco import ApoderadoBanco
+from models.representante_banco import RepresentanteBanco
 from utils.strip_spaces import strip_dict_or_list
 from utils.exceptions import GeneracionDeMinutaError
 
@@ -29,8 +29,8 @@ class TestMinuta(TestCase):
             json_inmueble = cases['inmueble']
             json_parqueaderos = cases['parqueaderos']
             json_depositos = cases['depositos']
-            json_apoderado_especial = cases['apoderado_especial']
-            json_representante_legal = cases['representante_legal']
+            json_apoderado_banco = cases['apoderado_banco']
+            json_representante_banco = cases['representante_banco']
 
             try:
                 apoderado = Apoderado(**json_apoderado)
@@ -42,12 +42,12 @@ class TestMinuta(TestCase):
                              for deposito in json_depositos]
                 parqueaderos = [Parqueadero(**parqueadero)
                                 for parqueadero in json_parqueaderos]
-                apoderado_especial = ApoderadoEspecial(
-                    **json_apoderado_especial)
-                representante_legal = RepresentanteLegal(
-                    **json_representante_legal)
+                apoderado_banco = ApoderadoBanco(
+                    **json_apoderado_banco)
+                representante_banco = RepresentanteBanco(
+                    **json_representante_banco)
                 minuta = DocumentoMinuta(apoderado, poderdantes, banco, inmueble, depositos,
-                                         parqueaderos, apoderado_especial, representante_legal)
+                                         parqueaderos, apoderado_banco, representante_banco)
             except Exception as error:
                 print(f'Error al crear la minuta: {error}')
                 raise GeneracionDeMinutaError(
