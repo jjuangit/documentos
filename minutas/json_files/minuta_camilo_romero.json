@@ -2,7 +2,6 @@
     "apoderado": {
         "nombre": "LIGIA MILENA ROMERO PARRA",
         "tipo_identificacion": "Cédula de ciudadanía",
-        "tipo_identificacion_abreviacion": "C.C",
         "numero_identificacion": "52.823.286",
         "ciudad_expedicion_identificacion": "Bogotá D.C.",
         "genero": "Femenino"
@@ -11,7 +10,6 @@
     "poderdantes": [{ 
         "nombre": "CAMILO ROMERO PARRA",
         "tipo_identificacion": "Cédula de ciudadanía",
-        "tipo_identificacion_abreviacion": "C.C",
         "numero_identificacion": "1.110.446.328",
         "ciudad_expedicion_identificacion": "Ibague",
         "domicilio": "131 SPINDLE RD HICKSVILLE- NEW YORK",
@@ -19,14 +17,6 @@
         "genero": "Masculino"
     }
     ],
-
-    "banco": {
-        "nombre": "banco unión s.a",
-        "nit": "860.006.797-9",
-        "prestamo_banco_a_hipotecante_en_numero": 93150000,
-        "cantidad_dada_a_constructora_en_numero": 90000000,
-        "gastos_de_gestion_en_numero": 3150000
-    },
 
     "inmueble": {
         "nombre": "APARTAMENTO",
@@ -49,23 +39,35 @@
     ],
 
     "apoderado_banco": {
-        "nombre": "GERMÁN LEONARDO KALIL MÉNDEZ",
-        "tipo_identificacion": "Cédula de ciudadanía",
-        "numero_identificacion": "79.489.351",
-        "tipo_apoderado": "Especial",
-        "tipo_identificacion_abreviacion": "C.C",
-        "ciudad_expedicion_identificacion": "Bogotá D.C.",
-        "ciudad_residencia": "Bogotá D.C.",
-        "genero": "Masculino"
+        "nombre": "Germán Leonardo Kalil Méndez",
+        "tipo_identificacion": "",
+        "numero_identificacion": "",
+        "ciudad_expedicion_identificacion": "",
+        "ciudad_residencia": "",
+        "genero": "",
+        "tipo_apoderado": "",
+        "tipo_poder": "" ,
+        "escritura": ""
     },
 
     "representante_banco": {
-        "nombre": "JUAN PABLO CRUZ LÓPEZ",
-        "tipo_identificacion": "Cédula de ciudadanía",
-        "numero_identificacion": "16.724.519",
-        "tipo_representante": "Legal",
-        "ciudad_expedicion_identificacion": "Cali",
-        "ciudad_residencia": "Cali",
-        "genero": "Masculino"
+        "nombre": "Juan Pablo Cruz López",
+        "tipo_identificacion": "",
+        "numero_identificacion": "",
+        "ciudad_expedicion_identificacion": "",
+        "ciudad_residencia": "",
+        "genero": "",
+        "tipo_representante": ""
+    },
+
+    "banco": {
+        "nombre": "banco unión s.a",
+        "nit": "860.006.797-9"
+    },
+    
+    "prestamo": {
+        "cantidad_banco_a_hipotecante": 93150000,
+        "cantidad_dada_a_constructora": 90000000,
+        "gastos_de_gestion": 3150000
     }
 }

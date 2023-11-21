@@ -8,15 +8,11 @@ dictionary_validator_representante_banco = {
     ],
     'tipo_identificacion': [
         Validator.validate_string,
+        Validator.validate_letters_with_spaces,
         Validator.validate_special_characters
     ],
     'numero_identificacion': [
         Validator.validate_numeric_string,
-        Validator.validate_special_characters
-    ],
-    'tipo_representante': [
-        Validator.validate_string,
-        Validator.validate_no_numbers,
         Validator.validate_special_characters
     ],
     'ciudad_expedicion_identificacion': [
@@ -32,5 +28,10 @@ dictionary_validator_representante_banco = {
         Validator.validate_string,
         Validator.validate_no_numbers,
         Validator.validate_special_characters
-    ]
+    ],
+    'tipo_representante': [
+        Validator.validate_string,
+        Validator.validate_no_numbers,
+        Validator.validate_special_characters
+    ],
 }

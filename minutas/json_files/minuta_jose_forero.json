@@ -1,0 +1,90 @@
+ {
+    "apoderado": {
+        "nombre": "JHONNY ENRIQUE BOLIVAR RANGEL",
+        "tipo_identificacion": "Cédula de Ciudadanía",
+        "numero_identificacion": "8.711.967",
+        "ciudad_expedicion_identificacion": "Barranquilla",
+        "genero": "Masculino"
+    },
+
+    "poderdantes": [{
+        "nombre": "JOSE LUIS FORERO RODRIGUEZ",
+        "tipo_identificacion": "Cédula de Ciudadanía",
+        "numero_identificacion": "72.245.316",
+        "ciudad_expedicion_identificacion": "Barranquilla",
+        "domicilio": "HAWTHORNE-NEW JERSEY",
+        "estado_civil": "Casado con sociedad conyugal vigente",
+        "genero": "Masculino"
+    },{
+        "nombre": "TANIA ALEXANDRA BOLIVAR JINETE",
+        "tipo_identificacion": "Cédula de Ciudadanía",
+        "numero_identificacion": "22.550.970",
+        "ciudad_expedicion_identificacion": "Barranquilla",
+        "domicilio": "HAWTHORNE-NEW JERSEY",
+        "estado_civil": "Casado con sociedad conyugal vigente",
+        "genero": "Femenino"
+    }
+    ],
+
+    "inmueble": {
+        "nombre": "APARTAMENTO",
+        "numero": "520",
+        "direccion": "CALLE 122 9G-105 CONJUNTO CARIBE PLAZA 2 ETAPA I",
+        "ciudad_y_o_departamento": "BARRANQUILLA, ATLÁNTICO",
+        "matricula": "040-623000",
+        "municipio_de_registro_orip": "BARRANQUILLA",
+        "tipo_ficha_catastral": "Individual",
+        "numero_ficha_catastral": [
+            {"ficha": "01-27-00-00-0108-0001-9-01-05-0020"}
+        ],
+        "linderos_especiales": "APARTAMENTO 520: Apartamento cuenta con un área construida de 67.60m²y un área privada construida de 60.52m²; los siguientes bienes comunes de uso exclusivo: dos (2) balcones de manejadora de aire acondicionado de 0.63m² y 1.05m² de área construida; con una altura de 2.40m a la losa de entrepiso; consta de un (1) hall de acceso, una (1) sala, un (1) comedor, un (1) estar de TV, una (1) cocina, un (1) área de labores, un (1) hall Intimo, un (1) baño social, una (1) alcoba principal con un (1) baño interno, dos (2) alcobas. Con las siguientes medidas y linderos: Norte: Entre los vértices N° 499 y 504; mide 7.20m. En línea recta; linda con muro divisorio alcoba y alcoba principal de apartamento 519. Sur: Entre los vértices N° 502 y 503; mide 8.70m. En linea recta, linda con hall común. Este: Entre los vértices N° 499 al 502, mide 13.70m. En linea quebrada; (1,05m + 1.00m + 2.35m + 2.05m + 2.25m + 2,05m + 2.95m) linda con vacio y hall común. Oeste: Entre los vértices N° 503 y 504 de 9. 10m. En linea quebrada; (0.75m + 0.10m + 2.05m+ 0.40m + 5.80m); linda con vacio Nadir; con losa de entrepiso que lo separan del apartamento. 420. Conit: con losa de entrepiso que lo separan del apartamento 620 del sexto piso."
+    },
+
+    "parqueaderos": [
+    {
+        "nombre": "PARQUEADERO COMÚN DE USO EXCLUSIVO",
+        "numero": "228",
+        "direccion": "CALLE 122 9G-105 CONJUNTO CARIBE PLAZA 2 ETAPA I",
+        "matricula": "",
+        "tipo_ficha_catastral": "",
+        "numero_ficha_catastral": "",
+        "linderos_especiales": ""
+    }
+    ],
+
+    "depositos": [
+    ],
+
+    "apoderado_banco": {
+        "nombre": "Viviana del Pilar Olaciregui Escalante",
+        "tipo_identificacion": "",
+        "numero_identificacion": "",
+        "ciudad_expedicion_identificacion": "",
+        "ciudad_residencia": "",
+        "genero": "",
+        "tipo_apoderado": "",
+        "tipo_poder": "" ,
+        "escritura": ""
+    },
+
+    "representante_banco": {
+        "nombre": "Juan Pablo Cruz López",
+        "tipo_identificacion": "Pasaporte",
+        "numero_identificacion": "55.221.406",
+        "tipo_representante": "Suplente del Presidente",
+        "ciudad_expedicion_identificacion": "México",
+        "ciudad_residencia": "México",
+        "genero": "Masculino"
+    },
+
+    "banco": {
+        "nombre": "banco unión s.a",
+        "nit": ""
+    },
+
+    "prestamo": {
+        "cantidad_banco_a_hipotecante": 91390000,
+        "cantidad_dada_a_constructora": 88299517,
+        "gastos_de_gestion": 3090483
+    }
+}

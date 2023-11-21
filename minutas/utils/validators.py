@@ -61,7 +61,7 @@ class Validator:
     @staticmethod
     def validate_letters_with_accents_dots_and_spaces(value):
         '''Solo se permiten letras incluyendo tildes y puntos(.)'''
-        pattern = r'^[a-zA-ZáéíóúüÁÉÍÓÚÜ.\s]+$'
+        pattern = r'^[a-zA-ZáéíóúüÁÉÍÓÚÜ.,\s]+$'
         if not re.match(pattern, value):
             raise ValueError(
                 f'"{value}" contiene carácteres no permitidos.')
@@ -124,19 +124,29 @@ class Validator:
     @staticmethod
     def validate_numbers_letters_spaces(value):
         '''Solo se permiten numeros, letras y espacios'''
-        pattern = r'^[a-zA-Z0-9\s]+$'
+        pattern = r'^[a-zA-Z0-9\s\áéíóúÁÉÍÓÚüÜ]+$'
         if not re.match(pattern, value):
-            raise ValueError(f"Error: {value} contiene caracteres no permitidos.")
+            raise ValueError(
+                f"Error: {value} contiene caracteres no permitidos.")
         return True
 
     @staticmethod
     def validate_numbers_dashes_spaces_and_y(value):
-        '''Solo se permiten números, guiones, espacios intermedios y el carácter "y".'''
+        '''Solo se permiten números, guiones(-), espacios intermedios y el carácter "y".'''
         if isinstance(value, list) and all(isinstance(item, dict) for item in value):
             value = ' '.join(str(v) for item in value for v in item.values())
         pattern = r'^[0-9\- Y]+$'
         if not re.match(pattern, value):
-            raise ValidationError(f"Error: {value} contiene caracteres no permitidos.")
+            raise ValidationError(
+                f"Error: {value} contiene caracteres no permitidos.")
+        return True
+    
+    @staticmethod
+    def validate_numbers_and_hyphens(value):
+        '''Solo se permiten números y guines(-)'''
+        pattern = r'^[0-9]+(-[0-9]+)*$'
+        if not re.match(pattern, value):
+            raise ValueError(f"Error: {value} contiene caracteres no permitidos.")
         return True
 
     @staticmethod
@@ -145,7 +155,7 @@ class Validator:
         try:
             for key, validators in dictionary_validator.items():
                 for validator in validators:
-                    validator(dictionary[key])  
+                    validator(dictionary[key])
             return True
         except ValidationError as error:
             raise ValidationError(f'{dictionary_name}: {str(error)}')

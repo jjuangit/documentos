@@ -14,14 +14,12 @@ class Apoderado:
         self,
         nombre: str,
         tipo_identificacion: str,
-        tipo_identificacion_abreviacion: str,
         numero_identificacion: str,
         ciudad_expedicion_identificacion: str,
         genero: str
     ):
         self.nombre = nombre
         self.tipo_identificacion = tipo_identificacion
-        self.tipo_identificacion_abreviacion = tipo_identificacion_abreviacion
         self.numero_identificacion = numero_identificacion
         self.ciudad_expedicion_identificacion = ciudad_expedicion_identificacion
         self.genero = genero

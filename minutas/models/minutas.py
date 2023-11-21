@@ -7,32 +7,43 @@ from utils.validators import Validator
 from utils.validating_dictionaries.dictionary_poderdantes import dictionary_validator_poderdantes
 from utils.validating_dictionaries.dictionary_apoderado import dictionary_validator_apoderado
 from utils.validating_dictionaries.dictionary_representante_banco import dictionary_validator_representante_banco
-from utils.validating_dictionaries.dictionary_banco import dictionary_validator_banco
 from utils.validating_dictionaries.dictionary_inmueble import dictionary_validator_inmueble
 from utils.validating_dictionaries.dictionary_parqueaderos import dictionary_validator_parqueaderos
 from utils.validating_dictionaries.dictionary_depositos import dictionary_validator_depositos
 from utils.validating_dictionaries.dictionary_apoderado_banco import dictionary_validator_apoderado_banco
+from utils.validating_dictionaries.dictionary_banco import dictionary_validator_banco
+from utils.validating_dictionaries.dictionary_prestamo import dictionary_validator_prestamo
+from utils.validating_dictionaries.dictionary_parqueaderos import dictionary_validator_direccion
+from utils.validating_dictionaries.dictionary_parqueaderos import dictionary_validator_matricula
+from utils.validating_dictionaries.dictionary_parqueaderos import dictionary_validator_tipo_ficha_catastral
+from utils.validating_dictionaries.dictionary_parqueaderos import dictionary_validator_numero_ficha_catastral
+from utils.validating_dictionaries.dictionary_apoderado_banco import dictionary_validator_escritura
 
+from catalogs.catalogos import apoderados_banco
+from catalogs.catalogos import representantes_banco
+from catalogs.catalogos import bancos
 
 from .apoderado import Apoderado
 from .apoderado_banco import ApoderadoBanco
-from .banco import Banco
 from .depositos import Deposito
 from .inmueble import InmueblePrincipal
 from .parqueaderos import Parqueadero
 from .poderdantes import Poderdante
 from .representante_banco import RepresentanteBanco
+from .banco import Banco
+from .prestamo import Prestamo
 
 
 class DocumentoMinuta(Document):
     apoderado: Apoderado
     poderdantes: List[Poderdante]
-    banco: Banco
     inmueble: InmueblePrincipal
     depositos: List[Deposito]
     parqueaderos: List[Parqueadero]
     apoderado_banco: ApoderadoBanco
     representante_banco: RepresentanteBanco
+    banco: Banco
+    prestamo: Prestamo
 
     generate_html_functions = [
         'generar_titulo_documento',
@@ -79,21 +90,23 @@ class DocumentoMinuta(Document):
         self,
         apoderado: Apoderado,
         poderdantes: List[Poderdante],
-        banco: Banco,
         inmueble: InmueblePrincipal,
         depositos: List[Deposito],
         parqueaderos: List[Parqueadero],
         apoderado_banco: ApoderadoBanco,
-        representante_banco: RepresentanteBanco
+        representante_banco: RepresentanteBanco,
+        banco: Banco,
+        prestamo: Prestamo
     ):
         self.apoderado = apoderado
         self.poderdantes = poderdantes
-        self.banco = banco
         self.inmueble = inmueble
         self.depositos = depositos
         self.parqueaderos = parqueaderos
         self.apoderado_banco = apoderado_banco
         self.representante_banco = representante_banco
+        self.banco = banco
+        self.prestamo = prestamo
         self.validate_data()
 
     def validate_data(self):
@@ -105,6 +118,7 @@ class DocumentoMinuta(Document):
         self.validar_parqueaderos()
         self.validar_depositos()
         self.validar_banco()
+        self.validar_prestamo()
 
     def validar_poderdantes(self):
         if self.cantidad_poderdantes == 0 and self.cantidad_poderdantes > 2:
@@ -113,7 +127,6 @@ class DocumentoMinuta(Document):
         obligatorios = {
             "nombre": "nombre",
             "tipo_identificacion": "tipo de identificación",
-            'tipo_identificacion_abreviacion': 'abreviación de tipo de identificación',
             "numero_identificacion": "número de identificación",
             "ciudad_expedicion_identificacion": "ciudad de expedición de identificación",
             "domicilio": "domicilio",
@@ -162,71 +175,126 @@ class DocumentoMinuta(Document):
             raise ValidationError(
                 'No hay datos de apoderado especial. Favor de agregar datos')
 
-        obligatorios = {
-            "nombre": "nombre",
-            "tipo_identificacion": "tipo de identificación",
-            "numero_identificacion": "número de identificación",
-            "ciudad_expedicion_identificacion": "ciudad de expedición de identificación",
-            'ciudad_residencia': 'ciudad de residencia',
-            "genero": "genero",
-        }
-        for obligatorio, value in obligatorios.items():
-            valor = getattr(self.apoderado_banco, obligatorio)
-            if not valor:
-                raise ValidationError(
-                    f'Dato faltante de apoderado especial: {value}')
+        if self.apoderado_banco.nombre not in [apoderado['nombre'] for apoderado in apoderados_banco]:
+            obligatorios = {
+                "nombre": "nombre",
+                "tipo_identificacion": "tipo de identificación",
+                "numero_identificacion": "número de identificación",
+                "ciudad_expedicion_identificacion": "ciudad de expedición de identificación",
+                'ciudad_residencia': 'ciudad de residencia',
+                "genero": "genero",
+                'tipo_apoderado': 'tipo de apoderado',
+                'tipo_poder': 'tipo de poder'
+            }
+            for obligatorio, value in obligatorios.items():
+                valor = getattr(self.apoderado_banco, obligatorio)
+                if not valor:
+                    raise ValidationError(
+                        f'Dato faltante de Apoderado del banco: {value}')
 
-        atributos_apoderado_banco = self.apoderado_banco.__dict__
-        Validator.validate_dict(
-            atributos_apoderado_banco, dictionary_validator_apoderado_banco, 'Apoderado especial')
+            atributos_apoderado_banco = self.apoderado_banco.__dict__
+            atributos_a_evaluar = {
+                'nombre': atributos_apoderado_banco.get('nombre'),
+                'tipo_identificacion': atributos_apoderado_banco.get('tipo_identificacion'),
+                'numero_identificacion': atributos_apoderado_banco.get('numero_identificacion'),
+                'ciudad_expedicion_identificacion': atributos_apoderado_banco.get('ciudad_expedicion_identificacion'),
+                'ciudad_residencia': atributos_apoderado_banco.get('ciudad_residencia'),
+                'genero': atributos_apoderado_banco.get('genero'),
+                'tipo_apoderado': atributos_apoderado_banco.get('tipo_apoderado'),
+                'tipo_poder': atributos_apoderado_banco.get('tipo_poder')
+            }
+
+            Validator.validate_dict(
+                atributos_a_evaluar, dictionary_validator_apoderado_banco, 'Apoderado del banco')
+
+            if self.apoderado_banco.tipo_poder == 'Escriturado':
+                valor = getattr(self.apoderado_banco, 'escritura')
+                if not valor:
+                    raise ValidationError(
+                        f'Dato faltante de Apoderado del banco: Escritura pública')
+
+                atributo_escritura = {
+                    'escritura': atributos_apoderado_banco.get('escritura')
+                }
+                Validator.validate_dict(
+                    atributo_escritura, dictionary_validator_escritura, 'Apoderado del banco')
 
     def validar_representante_banco(self):
         if self.representante_banco is None:
             raise ValidationError(
                 'No hay datos de representante legal. Favor de agregar datos')
 
-        obligatorios = {
-            "nombre": "nombre",
-            "tipo_identificacion": "tipo de identificación",
-            "numero_identificacion": "número de identificación",
-            "ciudad_expedicion_identificacion": "ciudad de expedición de identificación",
-            'ciudad_residencia': 'ciudad de residencia',
-            "genero": "genero",
-        }
-        for obligatorio, value in obligatorios.items():
-            valor = getattr(self.representante_banco, obligatorio)
-            if not valor:
-                raise ValidationError(
-                    f'Dato faltante de representante legal: {value}')
+        if self.representante_banco.nombre not in [representante['nombre'] for representante in representantes_banco]:
+            obligatorios = {
+                'nombre': 'nombre',
+                'tipo_identificacion': 'tipo de identificación',
+                'numero_identificacion': 'número de identificación',
+                'ciudad_expedicion_identificacion': 'ciudad de expedición de identificación',
+                'ciudad_residencia': 'ciudad de residencia',
+                'genero': 'genero',
+                'tipo_representante': 'tipo de representante'
+            }
+            for obligatorio, value in obligatorios.items():
+                valor = getattr(self.representante_banco, obligatorio)
+                if not valor:
+                    raise ValidationError(
+                        f'Dato faltante de representante del banco: {value}')
 
-        atributos_representante_banco = self.representante_banco.__dict__
-        Validator.validate_dict(
-            atributos_representante_banco, dictionary_validator_representante_banco, 'Representante legal')
+            atributos_representante_banco = self.representante_banco.__dict__
+            Validator.validate_dict(
+                atributos_representante_banco, dictionary_validator_representante_banco, 'Representante del banco')
 
     def validar_banco(self):
         if self.banco is None:
             raise ValidationError(
                 'No hay datos de banco. Favor de agregar datos')
 
+        if self.banco.nombre not in [banco['nombre'] for banco in bancos]:
+            obligatorios = {
+                'nombre': 'nombre',
+                'nit': 'NIT',
+            }
+            for obligatorio, value in obligatorios.items():
+                valor = getattr(self.banco, obligatorio)
+                if not valor:
+                    raise ValidationError(f'Dato faltante de banco: {value}')
+            atributos_banco = self.banco.__dict__
+            Validator.validate_dict(
+                atributos_banco, dictionary_validator_banco, 'Banco')
+
+    def validar_prestamo(self):
+        if self.prestamo is None:
+            raise ValidationError(
+                'No hay datos del prestamo. Favor de agregar datos')
         obligatorios = {
-            'nombre': 'nombre',
-            'nit': 'NIT',
-            'prestamo_banco_a_hipotecante_en_numero': 'prestamo otorgado por el banco a la parte hipotecante',
-            'cantidad_dada_a_constructora_en_numero': 'precio otorgado por el banco a la constructora',
-            'gastos_de_gestion_en_numero': 'gastos de gestión y trámite del crédito'
+            'cantidad_banco_a_hipotecante': 'prestamo otorgado por el banco a la parte hipotecante',
+            'cantidad_dada_a_constructora': 'precio otorgado por el banco a la constructora',
+            'gastos_de_gestion': 'gastos de gestión y trámite del crédito'
         }
         for obligatorio, value in obligatorios.items():
-            valor = getattr(self.banco, obligatorio)
+            valor = getattr(self.prestamo, obligatorio)
             if not valor:
-                raise ValidationError(f'Dato faltante de banco: {value}')
-        atributos_banco = self.banco.__dict__
+                raise ValidationError(f'Dato faltante de prestamo: {value}')
+        atributos_prestamo = self.prestamo.__dict__
         Validator.validate_dict(
-            atributos_banco, dictionary_validator_banco, 'Banco')
+            atributos_prestamo, dictionary_validator_prestamo, 'Prestamo')
 
     def validar_inmueble(self):
         if self.inmueble is None:
             raise ValidationError(
                 'No hay datos de inmueble. Favor de agregar datos')
+        obligatorios = {
+            'cantidad_banco_a_hipotecante': 'prestamo otorgado por el banco a la parte hipotecante',
+            'cantidad_dada_a_constructora': 'precio otorgado por el banco a la constructora',
+            'gastos_de_gestion': 'gastos de gestión y trámite del crédito'
+        }
+        for obligatorio, value in obligatorios.items():
+            valor = getattr(self.prestamo, obligatorio)
+            if not valor:
+                raise ValidationError(f'Dato faltante del prestamo: {value}')
+        atributos_prestamo = self.prestamo.__dict__
+        Validator.validate_dict(
+            atributos_prestamo, dictionary_validator_prestamo, 'Prestamo')
 
         obligatorios = {
             'nombre': 'nombre',
@@ -256,24 +324,60 @@ class DocumentoMinuta(Document):
         obligatorios = {
             'nombre': 'nombre',
             'numero': 'número',
-            'direccion': 'dirección',
-            'matricula': 'matrícula inmobiliaria',
-            # 'tipo_ficha_catastral': 'tipo de ficha catastral',
-            # 'numero_ficha_catastral': 'número de ficha catastral',
             # 'linderos_especiales': 'linderos especiales'
         }
+
         if self.parqueaderos:
             for parqueadero in self.parqueaderos:
+                atributos_parqueaderos = parqueadero.__dict__
                 for obligatorio, value in obligatorios.items():
                     valor = getattr(parqueadero, obligatorio)
                     if not valor:
                         raise ValidationError(
-                            f'Dato faltante de depósito: {value}')
+                            f'Dato faltante de parqueadero: {value}')
+                atributo_nombre_y_numero = {
+                    'nombre': atributos_parqueaderos.get('nombre'),
+                    'numero': atributos_parqueaderos.get('numero')
+                }
+                Validator.validate_dict(
+                    atributo_nombre_y_numero, dictionary_validator_parqueaderos, 'Parqueaderos')
 
-        for parqueadero in self.parqueaderos:
-            atributos_parqueaderos = parqueadero.__dict__
-            Validator.validate_dict(
-                atributos_parqueaderos, dictionary_validator_parqueaderos, 'Parqueaderos')
+                if parqueadero.direccion:
+                    atributo_direccion = {
+                        'direccion': atributos_parqueaderos.get('direccion')
+                    }
+                    Validator.validate_dict(
+                        atributo_direccion, dictionary_validator_direccion, 'Parqueaderos')
+
+                if parqueadero.matricula:
+                    matricula = getattr(parqueadero, 'matricula')
+                    if not matricula:
+                        raise ValidationError(
+                            'Dato faltante de parqueadero: matrícula inmobiliaria')
+                    atributo_matricula = {
+                        'matricula': atributos_parqueaderos.get('matricula')
+                    }
+                    Validator.validate_dict(
+                        atributo_matricula, dictionary_validator_matricula, 'Parqueaderos')
+
+                if parqueadero.tipo_ficha_catastral:
+                    atributo_tipo_ficha_catastral = {
+                        'tipo_ficha_catastral': atributos_parqueaderos.get('tipo_ficha_catastral')
+                    }
+                    Validator.validate_dict(
+                        atributo_tipo_ficha_catastral, dictionary_validator_tipo_ficha_catastral, 'Parqueaderos')
+
+                if parqueadero.numero_ficha_catastral:
+                    ficha_catastral = getattr(
+                        parqueadero, 'numero_ficha_catastral')
+                    if not ficha_catastral:
+                        raise ValidationError(
+                            'Dato faltante de parqueadero: número de ficha catastral')
+                    atributo_ficha_catastral = {
+                        'numero_ficha_catastral': atributos_parqueaderos.get('numero_ficha_catastral')
+                    }
+                    Validator.validate_dict(
+                        atributo_ficha_catastral, dictionary_validator_numero_ficha_catastral, 'Parqueaderos')
 
     def validar_depositos(self):
         if len(self.depositos) > 2:
@@ -282,24 +386,60 @@ class DocumentoMinuta(Document):
         obligatorios = {
             'nombre': 'nombre',
             'numero': 'número',
-            'direccion': 'dirección',
-            'matricula': 'matrícula inmobiliaria',
-            'tipo_ficha_catastral': 'tipo de ficha catastral',
-            'numero_ficha_catastral': 'número de ficha catastral',
             'linderos_especiales': 'linderos especiales'
         }
         if self.depositos:
             for deposito in self.depositos:
+                atributos_parqueaderos = deposito.__dict__
                 for obligatorio, value in obligatorios.items():
                     valor = getattr(deposito, obligatorio)
                     if not valor:
                         raise ValidationError(
                             f'Dato faltante de depósito: {value}')
 
-        for deposito in self.depositos:
-            atributos_depositos = deposito.__dict__
-            Validator.validate_dict(
-                atributos_depositos, dictionary_validator_depositos, 'Depósitos')
+                atributo_nombre_y_numero = {
+                    'nombre': atributos_parqueaderos.get('nombre'),
+                    'numero': atributos_parqueaderos.get('numero')
+                }
+                Validator.validate_dict(
+                    atributo_nombre_y_numero, dictionary_validator_parqueaderos, 'Depósitos')
+
+                if deposito.direccion:
+                    atributo_direccion = {
+                        'direccion': atributos_parqueaderos.get('direccion')
+                    }
+                    Validator.validate_dict(
+                        atributo_direccion, dictionary_validator_direccion, 'Depósitos')
+
+                if deposito.matricula:
+                    matricula = getattr(deposito, 'matricula')
+                    if not matricula:
+                        raise ValidationError(
+                            'Dato faltante de deposito: matrícula inmobiliaria')
+                    atributo_matricula = {
+                        'matricula': atributos_parqueaderos.get('matricula')
+                    }
+                    Validator.validate_dict(
+                        atributo_matricula, dictionary_validator_matricula, 'Depósitos')
+
+                if deposito.tipo_ficha_catastral:
+                    atributo_tipo_ficha_catastral = {
+                        'tipo_ficha_catastral': atributos_parqueaderos.get('tipo_ficha_catastral')
+                    }
+                    Validator.validate_dict(
+                        atributo_tipo_ficha_catastral, dictionary_validator_tipo_ficha_catastral, 'Depósitos')
+
+                if deposito.numero_ficha_catastral:
+                    ficha_catastral = getattr(
+                        deposito, 'numero_ficha_catastral')
+                    if not ficha_catastral:
+                        raise ValidationError(
+                            'Dato faltante de deposito: número de ficha catastral')
+                    atributo_ficha_catastral = {
+                        'numero_ficha_catastral': atributos_parqueaderos.get('numero_ficha_catastral')
+                    }
+                    Validator.validate_dict(
+                        atributo_ficha_catastral, dictionary_validator_numero_ficha_catastral, 'Depósitos')
 
     def estado_civil_es_union(self, estado_civil):
         estados_civiles_union = [
@@ -415,10 +555,13 @@ class DocumentoMinuta(Document):
         return resultado
 
     def generar_matriculas_inmobiliarias(self):
-        if self.multiples_inmuebles():
-            t_inmuebles = 'Inmuebles identificados con los folios'
+        if self.parqueaderos or self.depositos:
+            if any(parqueadero.matricula or deposito.matricula for parqueadero in self.parqueaderos for deposito in self.depositos):
+                inmuebles = 'Inmuebles identificados con los folios de matrículas inmobiliarias'
+            else:
+                inmuebles = 'Inmueble identificado con el folio de matrícula inmobiliaria'
         else:
-            t_inmuebles = 'Inmueble identificado con el folio'
+            inmuebles = 'Inmueble identificado con el folio de matrícula inmobiliaria'
 
         matriculas = [self.inmueble.matricula]
         for parqueadero in self.parqueaderos:
@@ -428,7 +571,12 @@ class DocumentoMinuta(Document):
             if self.depositos and deposito.matricula:
                 matriculas += [deposito.matricula]
         resultado = ''
-        resultado += f'<p>{t_inmuebles} de matrícula inmobiliaria No. <b><u>{", ".join(matriculas)}'
+        resultado += f'<p>{inmuebles} No. <b><u>{", ".join(matriculas)}'
+        for parqueadero in self.parqueaderos:
+            for deposito in self.depositos:
+                if parqueadero.matricula or deposito.matricula:
+                    resultado += '</u></b> respectivamente'
+
         resultado += '</u></b> de la Oficina de Registro de Instrumentos Públicos de '
         resultado += f'<b><u>{self.inmueble.municipio_de_registro_orip}</u></b> '
         return resultado
@@ -439,20 +587,43 @@ class DocumentoMinuta(Document):
             fichas = getattr(self.inmueble, 'numero_ficha_catastral', None)
             if isinstance(fichas, list) and all(isinstance(ficha, dict) for ficha in fichas):
                 resultado += 'y ficha catastral No. <b><u>'
-                resultado += ' y '.join([value for ficha in fichas for value in ficha.values()])
+                resultado += ' y '.join(
+                    [value for ficha in fichas for value in ficha.values()])
                 resultado += ' En Mayor Extensión.</u></b> '
         elif self.inmueble.tipo_ficha_catastral == "Individual":
-            resultado += 'y fichas catastrales individuales No. <b><u>'
-            fichas_catastrales = [self.inmueble.numero_ficha_catastral]
+            if self.parqueaderos or self.depositos:
+                if any(parqueadero.numero_ficha_catastral or deposito.numero_ficha_catastral for parqueadero in self.parqueaderos for deposito in self.depositos):
+                    resultado += 'y fichas catastrales individuales No. <b><u>'
+                else:
+                    resultado += 'y ficha catastral individual No. <b><u>'
+            else:
+                resultado += 'y ficha catastral individual No. <b><u>'
 
-            if self.parqueaderos:
-                fichas_catastrales += [
-                    parqueadero.numero_ficha_catastral for parqueadero in self.parqueaderos if parqueadero.numero_ficha_catastral]
-            if self.depositos:
-                fichas_catastrales += [
-                    deposito.numero_ficha_catastral for deposito in self.depositos if deposito.numero_ficha_catastral]
+            fichas_catastrales = self.inmueble.numero_ficha_catastral
+            resultado += ', '.join([', '.join(ficha.values())
+                                   for ficha in fichas_catastrales])
+            resultado += '</u></b>'
+            if self.parqueaderos or self.depositos:
+                resultado += ', '
 
-            resultado += f'{", ".join(fichas_catastrales)}</u></b> respectivamente.</p>'
+                if self.parqueaderos:
+                    resultado += '<b><u>'
+                    resultado += ', '.join([
+                        parqueadero.numero_ficha_catastral for parqueadero in self.parqueaderos if parqueadero.numero_ficha_catastral])
+                    resultado += '</u></b>'
+                if self.depositos:
+                    resultado += '<b><u>'
+                    resultado += ', '
+                    resultado += ', '.join([
+                        deposito.numero_ficha_catastral for deposito in self.depositos if deposito.numero_ficha_catastral])
+                    resultado += '</u></b>'
+            for parqueadero in self.parqueaderos:
+                for deposito in self.depositos:
+                    if parqueadero.matricula or deposito.matricula:
+                        resultado += ' respectivamente.</p>'
+                    else:
+                        resultado += '</p>'
+
         return resultado
 
     # TODO pendiente el tema de las escrituras, de momento se queda abierto linea 643
@@ -552,16 +723,16 @@ class DocumentoMinuta(Document):
 
     def generar_paragrafo_primero_aprobacion_de_credito(self):
         number_to_word_hipotecante = num2words(
-            self.banco.prestamo_banco_a_hipotecante_en_numero, lang='es')
-        number_format_hipotecante = f'{self.banco.prestamo_banco_a_hipotecante_en_numero:,}'
+            self.prestamo.cantidad_banco_a_hipotecante, lang='es')
+        number_format_hipotecante = f'{self.prestamo.cantidad_banco_a_hipotecante:,}'
 
         number_to_word_constructora = num2words(
-            self.banco.cantidad_dada_a_constructora_en_numero, lang='es')
-        number_format_constructora = f'{self.banco.cantidad_dada_a_constructora_en_numero:,}'
+            self.prestamo.cantidad_dada_a_constructora, lang='es')
+        number_format_constructora = f'{self.prestamo.cantidad_dada_a_constructora:,}'
 
         number_to_word_gastos = num2words(
-            self.banco.gastos_de_gestion_en_numero, lang='es')
-        number_format_gastos = f'{self.banco.gastos_de_gestion_en_numero:,}'
+            self.prestamo.gastos_de_gestion, lang='es')
+        number_format_gastos = f'{self.prestamo.gastos_de_gestion:,}'
 
         if self.multiples_inmuebles():
             t_inmuebles = 'de los bienes inmuebles'
@@ -843,37 +1014,58 @@ class DocumentoMinuta(Document):
     # TODO Agregar datos de escritura linea 1030
     def generar_datos_apoderado_banco(self):
         resultado = ''
-        resultado += f'Presente {self.apoderado_banco.doctor}, '
-        resultado += f'<b><u>{self.apoderado_banco.nombre.upper()}</u></b> '
-        resultado += f'{self.apoderado_banco.indole}, mayor de edad, '
-        resultado += f'{self.apoderado_banco.vecino} de '
-        resultado += f'<u>{self.apoderado_banco.ciudad_residencia}</u>, '
-        resultado += f'{self.apoderado_banco.identificado} con '
-        resultado += f'<u>{self.apoderado_banco.tipo_identificacion}</u> '
-        resultado += f'No. <b><u>{self.apoderado_banco.numero_identificacion}</u></b> quien '
-        resultado += 'comparece en este acto en su calidad de <b>'
-        resultado += f'{self.apoderado_banco.apoderado} {self.apoderado_banco.tipo_apoderado}</b> '
-        resultado += 'acorde con el Poder constituido por ______________________________ '
-        resultado += 'debidamente inscrito en la Cámara de Comercio de Cali '
-        resultado += 'según certificado de la Existencia y Representación legal que '
-        resultado += 'se protocoliza con este instrumento, conferido por '
+        nombre = self.apoderado_banco.nombre.upper()
+        ciudad_residencia = self.apoderado_banco.ciudad_residencia
+        tipo_identificacion = self.apoderado_banco.tipo_identificacion
+        numero_identificacion = self.apoderado_banco.numero_identificacion
+        ciudad_expedicion_identificacion = self.apoderado_banco.ciudad_expedicion_identificacion
+        tipo_apoderado = self.apoderado_banco.tipo_apoderado
+        tipo_poder = self.apoderado_banco.tipo_poder
+        naturaleza = self.apoderado_banco.naturaleza
+        vecino = self.apoderado_banco.vecino
+        identificado = self.apoderado_banco.identificado
+        doctor = self.apoderado_banco.doctor
+
+        resultado += f'Presente {doctor}, <u><b>{nombre}, '
+        resultado += f'</b></u>{naturaleza}, mayor de edad, {vecino} de <u><b>'
+        resultado += f'{ciudad_residencia}</b></u> {identificado} con '
+        resultado += f'<u><b>{tipo_identificacion}</b></u> No. '
+        resultado += f'<u><b>{numero_identificacion}</b></u> de '
+        resultado += f'<u><b>{ciudad_expedicion_identificacion}</b>'
+        resultado += '</u> quien comparece en este acto en su calidad de '
+        resultado += f'<u><b>{self.apoderado_banco.apoderado} {tipo_apoderado}</b>'
+        resultado += '</u> acorde con el Poder '
+        if self.apoderado_banco.tipo_poder == 'Autenticado':
+            resultado += 'a ella conferido por '
+        elif self.apoderado_banco.tipo_poder == 'Escriturado':
+            resultado += 'constituido por '
+            resultado += f'<u><b>{tipo_poder}</b></u> debidamente inscrito en '
+            resultado += 'la Cámara de Comercio de Cali según certificado de la Existencia '
+            resultado += 'Representación legal que se protocoliza con este instrumento, '
+            resultado += 'conferido por '
+
         return resultado
 
     def generar_datos_representante_banco(self):
         resultado = ''
-        resultado += f'{self.representante_banco.doctor} '
-        resultado += f'<b><u>{self.representante_banco.nombre.upper()}</u></b>, '
-        resultado += f'mayor de edad, {self.representante_banco.vecino} de '
-        resultado += f'<u>{self.representante_banco.ciudad_residencia}</u>, '
-        resultado += f'{self.representante_banco.identificado} con '
-        resultado += f'<u>{self.representante_banco.tipo_identificacion}</u> '
-        resultado += f'No. <b><u>{self.representante_banco.numero_identificacion}</u> '
-        resultado += f'de <u>{self.representante_banco.ciudad_expedicion_identificacion}</u></b>, '
+        nombre = self.representante_banco.nombre.upper()
+        ciudad_residencia = self.representante_banco.ciudad_residencia
+        tipo_identificacion = self.representante_banco.tipo_identificacion
+        numero_identificacion = self.representante_banco.numero_identificacion
+        ciudad_expedicion_identificacion = self.representante_banco.ciudad_expedicion_identificacion
+        tipo_representante = self.representante_banco.tipo_representante
+        doctor = self.representante_banco.doctor
+        vecino = self.representante_banco.vecino
+        identificado = self.representante_banco.identificado
+
+        resultado += f'{doctor} <u><b>{nombre},</b></u> mayor de edad, {vecino} de '
+        resultado += f'<u><b>{ciudad_residencia},</b></u> {identificado} con '
+        resultado += f'<u><b>{tipo_identificacion}</b></u> No. '
+        resultado += f'<u><b>{numero_identificacion}</b></u> de '
+        resultado += f'<u><b>{ciudad_expedicion_identificacion},</b></u> '
         resultado += 'quien comparece en este acto en calidad de '
-        if self.representante_banco.tipo_representante == 'Representante Legal':
-            resultado += 'Representante legal '
-        elif self.representante_banco.tipo_representante == 'Suplente suplente del presidente':
-            resultado += 'Suplente del presidente '
+        resultado += f'<u><b>{tipo_representante}</b></u> '
+
         return resultado
 
     def generar_constitucion_banco_union(self):
@@ -901,8 +1093,8 @@ class DocumentoMinuta(Document):
 
     def generar_aprobacion_credito_al_hipotecante(self):
         number_to_word_hipotecante = num2words(
-            self.banco.prestamo_banco_a_hipotecante_en_numero, lang='es')
-        number_format_hipotecante = f'{self.banco.prestamo_banco_a_hipotecante_en_numero:,}'
+            self.prestamo.cantidad_banco_a_hipotecante, lang='es')
+        number_format_hipotecante = f'{self.prestamo.cantidad_banco_a_hipotecante:,}'
         resultado = ''
         resultado += 'Para dar cumplimiento a lo ordenado en la Resolución No. 00536 del 22 de '
         resultado += 'Enero de 2021, aclarada por Resolución 0545 del 25 de Enero de 2021 '
@@ -986,13 +1178,13 @@ class DocumentoMinuta(Document):
         resultado = ''
         for index, poderdante in enumerate(self.poderdantes):
             resultado += f'<b>{poderdante.nombre.upper()}</b><br>'
-            if poderdante.tipo_identificacion == 'Cédula de ciudadanía':
-                resultado += '<b>C.C. '
-            elif poderdante.tipo_identificacion == 'Cédula de extranjería':
-                resultado += '<b>C.E '
+            if poderdante.tipo_identificacion == 'Cédula de Ciudadanía':
+                resultado += '<b>C.C.'
+            elif poderdante.tipo_identificacion == 'Cédula de Extranjería':
+                resultado += '<b>C.E.'
             elif poderdante.tipo_identificacion == 'Pasaporte':
-                resultado += '<b>Pasaporte '
-            resultado += f'{poderdante.numero_identificacion} de '
+                resultado += '<b>Pasaporte'
+            resultado += f' {poderdante.numero_identificacion} de '
             resultado += f'{poderdante.ciudad_expedicion_identificacion}</b><br><br>'
             if index < len(self.poderdantes) - 1:
                 resultado += 'y<br><br>'
@@ -1003,16 +1195,11 @@ class DocumentoMinuta(Document):
         resultado += 'EL ACREEDOR,<br><br><br><br>'
         resultado += '____________________________<br>'
         resultado += f'<b>{self.apoderado_banco.nombre.upper()}<br>'
-        if self.apoderado_banco.tipo_identificacion == 'Cédula de ciudadanía':
-            resultado += 'C.C. '
-        elif self.apoderado_banco.tipo_identificacion == 'Cédula de extranjería':
-            resultado += 'C.E '
-        elif self.apoderado_banco.tipo_identificacion == 'Pasaporte':
-            resultado += 'Pasaporte '
+        resultado += f'{self.apoderado_banco.abreviacion_identificacion} '
         resultado += f'{self.apoderado_banco.numero_identificacion} expedida en '
         resultado += f'{self.apoderado_banco.ciudad_expedicion_identificacion}</b><br>'
-        resultado += f'{self.apoderado_banco.apoderado} {self.apoderado_banco.tipo_apoderado} de'
-        resultado += f'<br><b>{self.banco.nombre.upper()}<br>'
+        resultado += f'{self.apoderado_banco.apoderado} {self.apoderado_banco.tipo_apoderado} '
+        resultado += f'de <br><b>{self.banco.nombre.upper()}<br>'
         resultado += f'NIT. {self.banco.nit}</b><br><br><br><br>'
         resultado += 'LA NOTARÍA.<br><br><br><br>____________________</div>'
         return resultado

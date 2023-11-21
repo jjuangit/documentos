@@ -8,6 +8,7 @@ dictionary_validator_apoderado_banco = {
     ],
     'tipo_identificacion': [
         Validator.validate_string,
+        Validator.validate_letters_with_spaces,
         Validator.validate_special_characters
     ],
     'numero_identificacion': [
@@ -27,5 +28,20 @@ dictionary_validator_apoderado_banco = {
         Validator.validate_string,
         Validator.validate_no_numbers,
         Validator.validate_special_characters
+    ],
+    'tipo_apoderado': [
+        Validator.validate_string,
+        Validator.validate_no_numbers,
+        Validator.validate_special_characters
+    ],
+    'tipo_poder': [
+        Validator.validate_string,
+        Validator.validate_no_numbers,
+        Validator.validate_special_characters
+    ]
+}
+
+dictionary_validator_escritura = {
+    'escritura': [  
     ]
 }

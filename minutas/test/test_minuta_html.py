@@ -3,17 +3,22 @@ from unittest import TestCase
 from models.minutas import DocumentoMinuta
 from models.apoderado import Apoderado
 from models.poderdantes import Poderdante
-from models.banco import Banco
 from models.inmueble import InmueblePrincipal
 from models.depositos import Deposito
 from models.parqueaderos import Parqueadero
 from models.apoderado_banco import ApoderadoBanco
 from models.representante_banco import RepresentanteBanco
+from models.banco import Banco
+from models.prestamo import Prestamo
 from catalogs.catalogos import tipos_identificacion_ciudadano
 from catalogs.catalogos import genero
 from catalogs.catalogos import estado_civil
 from catalogs.catalogos import tipo_apoderado_banco
 from catalogs.catalogos import tipo_representante_banco
+from catalogs.catalogos import ficha_catastral
+from catalogs.catalogos import apoderados_banco
+from catalogs.catalogos import representantes_banco
+from catalogs.catalogos import bancos
 from utils.strip_spaces import strip_dict_or_list
 
 
@@ -23,113 +28,126 @@ class TestMinuta(TestCase):
     def test_init_minuta_success(self):
         """Funcion para imprimir el html de la minuta"""
         diccionario_apoderado = {
-            'nombre': 'HENRY BARBOSA ORTIZ',
+            'nombre': 'LUZ MARIA DURAN RODRIGUEZ',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
-            'tipo_identificacion_abreviacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['abreviacion'],
-            'numero_identificacion': '79.708.406',
-            'ciudad_expedicion_identificacion': 'Bogotá D.C.',
-            'genero': genero['MASCULINO'],
+            'numero_identificacion': '63.283.505',
+            'ciudad_expedicion_identificacion': 'Bucaramanga',
+            'genero': genero['FEMENINO'],
         }
 
         diccionario_poderdantes = [{
-            'nombre': 'KATHERINN BARBOSA MARIN',
+            'nombre': 'RAFAEL AUGUSTO DURAN RODRIGUEZ',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
-            'tipo_identificacion_abreviacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['abreviacion'],
-            'numero_identificacion': '1.022.399.153',
-            'ciudad_expedicion_identificacion': 'Bogotá D.C.',
-            'domicilio': 'UNIT 2 15 GUESS AVE WOLLI CREEK - AUSTRALIA',
+            'numero_identificacion': '91.080.630',
+            'ciudad_expedicion_identificacion': 'San Gil',
+            'domicilio': '11 DARIEN RD CARMEL-NEW YORK',
             'estado_civil': estado_civil['SOLTERO_SIN_UNION_MARITAL_DE_HECHO'],
-            'genero': genero['FEMENINO'],
+            'genero': genero['MASCULINO'],
         }
         ]
-
-        diccionario_banco = {
-            'nombre': 'banco unión s.a',
-            'nit': '860.006.797-9',
-            'prestamo_banco_a_hipotecante_en_numero': 109844550,
-            'cantidad_dada_a_constructora_en_numero': 106130000,
-            'gastos_de_gestion_en_numero': 3714550
-        }
 
         diccionario_inmueble = {
             'nombre': 'APARTAMENTO',
-            'numero': '205',
-            'direccion': 'TORRE 7 ETAPA II, PRATTO PH. CARRERA 78 #11 C - 58,',
-            'ciudad_y_o_departamento': 'NUEVO TECHO BOGOTÁ D.C.',
-            'matricula': '50C-2180229',
-            'municipio_de_registro_orip': 'Bogotá Zona Centro',
-            'tipo_ficha_catastral': 'Individual',
-            'numero_ficha_catastral': '006507182000000000',
-            'linderos_especiales': 'TORRE 7 - APARTAMENTO 205: Tiene su acceso por la CARRERA 78 # 11 C - 58 de Bogotá D.C. de la actual nomenclatura urbana de Bogotá D.C. El Apartamento está ubicado en el Segundo Piso de la torre. Cuenta con un ÁREA CONSTRUIDA de treinta y siete punto cincuenta y siete metros cuadrados (37,57 M2); de los cuales, el ÁREA PRIVADA es de treinta y tres punto catorce metros cuadrados (33,14 M2) y cuenta con un Área Común de cuatro punto cuarenta y tres metros cuadrados (4,43 M2) que corresponden al área común de muros de fachada, muros divisorios, ductos, pantallas y muros estructurales los cuales aunque se encuentran en el interior de la unidad privada, no se pueden modificar ni demoler dado su carácter estructural. Son comunes los muros de fachada, muros divisorios, ductos, pantallas y muros estructurales de por medio: Partiendo del punto 1 al punto 2 en línea recta y en distancia de cinco punto veintitrés metros (5,23 mts) colinda parte con zona común de vacío interior, parte con el Apartamento 204 de ésta misma torre y parte con vacío sobre zona libre común. Del punto 2 al punto 3 en línea quebrada y en distancias sucesivas de tres punto quince metros (3,15 mts), dos punto cero ocho metros (2,08 mts), cero punto diez metros (0,10 mts), uno punto ochenta y siete metros (1,87 mts), dos punto ochenta y cinco metros (2,85 mts) colinda con vacío sobre zona libre común. Del punto 3 al punto 4 en línea quebrada y en distancias sucesivas de uno punto setenta y cinco metros (1,75 mts), dos punto cero cinco metros (2,05 mts), cero. punto doce metros (0,12 mts), tres punto veintidós metros (3, 22 mts), tres: punto. quince metros (3,15 mts) colinda parte con vacío sobre zona. libre común y circulación y parte con junta sísmica de dilatación contra la torre 6.  Del punto 4 al punto 1 y: cierra en línea: «quebrada y en distancias sucesivas de dos metros (2,00 mts), cero punto cincuenta y cuatro metros (0,54 mts), cero punto cincuenta -metros (0,50 mts), uno punto setenta y un metros (1,71 mts), cero punto quince metros (0,15 mts), dos punto veinticinco metros (2,25 mts), uno punto diecisiete metros (1,17 mts), dos punto veintitres metros (2,23 mts), uno punto cincuenta y cinco metros (1,55 mts), cero punto doce metros (0,12 mts), uno punto cuarenta metros (1,40 mts), uno punto cuarenta y nueve metros (1,49 mts), cero punto cuarenta y dos metros (0,42 mts), cero punto sesenta y dos metros (0,62 mts), dos punto ochenta y ocho metros (2,88 mts) colinda parte con vacío sobre zona libre común y parte con zonas comunes de ductos, escaleras, circulación y acceso al apartamento. LINDEROS VERTICALES APARTAMENTO: NADIR APARTAMENTO. Con placa común que lo separa del primer piso. CENIT APARTAMENTO. - Con placa común que lo separa del tercer piso. DEPENDENCIAS: Salón, Cocina, Ropas, Estudio, Una (1) Alcoba, Un (1) baño.'
+            'numero': '201 UNIDAD NÚMERO 13',
+            'direccion': 'EDIFICIO GALICIA CALLE 5 #5-20,',
+            'ciudad_y_o_departamento': 'EN PABLO VI SAN GIL SANTANDER',
+            'matricula': '319-87481',
+            'municipio_de_registro_orip': 'San Gil',
+            'tipo_ficha_catastral': ficha_catastral['MAYOR_EXTENSION'],
+            'numero_ficha_catastral': [
+                {'ficha': '686790100000000260005000000000'},
+            ],
+            'linderos_especiales': 'UNIDAD NÚMERO TRECE (Apartamento 201). Está ubicado en su totalidad en el segundo Piso de la edificación, su destino es residencial, se identifica en su puerta de entrada con el número CALLE 5 No 5-20, Apartamento 201, de la actual nomenclatura del MUNICIPIO DE SAN GIL; y consta de: tres (3) habitaciones, dos (2) baños, una (1) sala, un (1) comedor, una (1) cocina, un (1) cuarto ropas, 1 balcón, 1 estudio. Esta unidad dispone de un área privada de 83.65 M2 y un coeficiente de copropiedad de 7.37%. Sus linderos son: POR EL ORIENTE: punto 1 a punto 2 sentido norte sur en una extensión de 4.39 ml con calle 5, giro 90 grados, del punto 2 a punto 3 sentido oriente occidente en una extensión de 1.00 ml con calle 5, giro 90 grados, del punto 3 a punto 4 sentido norte sur en una extensión de 1.24 con calle 5, giro 90 grados, del punto 4 a punto 5 sentido occidente oriente en una extensión de 0.80 ml con calle 5, giro 90 grados, de punto 5 a punto 6 sentido norte sur en una extensión de 3.35 con calle 5; POR EL SUR: punto 6 a punto7 sentido oriente occidente en extensión de 5.55 ml con Samuel, giro 90 grados, de punto 7 a punto 8 sentido norte sur en una extensión de 0.07 ml con Samuel, giro 90 grados, de punto 8 a punto 9 sentido oriente occidente en una extensión de 3.53 ml con Samuel; POR EL OCCIDENTE: punto 9 a punto 10 sentido sur norte en extensión de 9.83 ml con zona común, POR EL NORTE: punto 10 a punto 11 sentido occidente oriente en extensión de 2.96 ml con sucesores Fulgencio Gelves, continua de punto 11 a punto 1 sentido occidente a oriente en extensión de 3.35 con sucesores Fulgencio Gelves, POR EL NADIR: con zona común parqueadero; POR EL CENIT: con la placa de entrepiso que lo separa del apartamento 301 de la misma Edificación.'
         }
 
         diccionario_parqueaderos = [{
-            'nombre': 'parqueadero de uso exclusivo',
-            'numero': '123',
-            'direccion': 'ETAPA II, PRATTO PH. CARRERA 78 #11 C - 58,',
-            'matricula': '50C-45755',
-            'tipo_ficha_catastral': 'Individual',
-            'numero_ficha_catastral': '0000001111111000000',
-            'linderos_especiales': 'PAQUEADERO DE USO EXCLUSIVO 123: tiene su acceso......'
+            'nombre': 'PARQUEADERO CARRO',
+            'numero': '10',
+            'direccion': 'EDIFICIO GALICIA CALLE 5 #5-20, EN PABLO VI SAN GIL SANTANDER',
+            'matricula': '319-87478',
+            'tipo_ficha_catastral': ficha_catastral['INDIVIDUAL'],
+            'numero_ficha_catastral': '',
+            'linderos_especiales': 'UNIDAD NÚMERO DIEZ (PARQUEADERO carro 10). Ubicada en el primer piso o nivel del edificio, con acceso directo a la CALLE 5 a través de una puerta de acceso, se identifica en su puerta de entrada con el número CALLE 5 No 5-18. Le corresponde un área privada de 15.32 metros cuadrados y un coeficiente de copropiedad del 1.35%. Esta unidad se destina para uso parqueadero. Consta de un (1) parqueadero carro. Sus linderos son: POR EL ORIENTE: punto 23 a punto 22 sentido norte sur en una extensión de 6.08 ml con parqueadero carro 9; POR EL SUR: punto 22 a punto 25 sentido oriente occidente en extensión de 2.50 ml con Samuel; POR EL OCCIDENTE: punto 25 a punto 24 sentido sur norte en extensión de 6.18 ml con parqueadero carro 11, POR EL NORTE: punto 24 a punto 23 sentido occidente oriente en extensión de 2.50 ml con zona común, POR EL NADIR: con el terreno donde se levanta la Edificación; POR EL CENIT: con la placa de entrepiso que lo separa del apartamento 203 de la misma Edificación.'
         }
         ]
 
-        diccionario_depositos = [{
-            'nombre': 'depósito',
-            'numero': '456',
-            'direccion': 'ETAPA II, PRATTO PH. CARRERA 78 #11 C - 58,',
-            'matricula': '50C-45999',
-            'tipo_ficha_catastral': 'Individual',
-            'numero_ficha_catastral': '0000003333333000000',
-            'linderos_especiales': 'DEPÓSITO 456: tiene su acceso......'
-        }
+        diccionario_depositos = [
         ]
 
         diccionario_apoderado_banco = {
-            'nombre': 'GERMÁN LEONARDO KALIL MÉNDEZ',
+            'nombre': 'Carlos Alberto Agudelo Zapata',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
-            'tipo_apoderado': tipo_apoderado_banco['ESPECIAL'],
-            'tipo_identificacion_abreviacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['abreviacion'],
-            'numero_identificacion': '79.489.351',
-            'ciudad_expedicion_identificacion': 'Bogotá',
-            'ciudad_residencia': 'Bogotá',
-            'genero': genero['MASCULINO'],
+            'numero_identificacion': '63.450.000',
+            'ciudad_expedicion_identificacion': 'Floridablanca',
+            'ciudad_residencia': 'Bucaramanga',
+            'genero': genero['FEMENINO'],
+            'tipo_apoderado': tipo_apoderado_banco['GENERAL'],
+            'tipo_poder': ''
         }
 
         diccionario_representante_banco = {
-            'nombre': 'JUAN PABLO CRUZ LÓPEZ',
+            'nombre': 'Héctor Fabio Rodríguez Prado',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
-            'numero_identificacion': '16.724.519',
-            'tipo_representante': tipo_representante_banco['LEGAL'],
-            'ciudad_expedicion_identificacion': 'Cali',
+            'numero_identificacion': '',
+            'ciudad_expedicion_identificacion': '',
             'ciudad_residencia': 'Cali',
             'genero': genero['MASCULINO'],
+            'tipo_representante': tipo_representante_banco['SUPLENTE'],
+        }
+
+        diccionario_banco = {
+            'nombre': 'banco unión s.a',
+            'nit': '',
+        }
+
+        diccionario_prestamo = {
+            'cantidad_banco_a_hipotecante': 150204375,
+            'cantidad_dada_a_constructora': 145125000,
+            'gastos_de_gestion': 5079375
         }
 
         diccionario_apoderado = strip_dict_or_list(diccionario_apoderado)
         diccionario_poderdantes = strip_dict_or_list(diccionario_poderdantes)
-        diccionario_banco = strip_dict_or_list(diccionario_banco)
         diccionario_inmueble = strip_dict_or_list(diccionario_inmueble)
         diccionario_parqueaderos = strip_dict_or_list(diccionario_parqueaderos)
         diccionario_depositos = strip_dict_or_list(diccionario_depositos)
         diccionario_apoderado_banco = strip_dict_or_list(diccionario_apoderado_banco)
         diccionario_representante_banco = strip_dict_or_list(diccionario_representante_banco)
+        diccionario_banco = strip_dict_or_list(diccionario_banco)
+        diccionario_prestamo = strip_dict_or_list(diccionario_prestamo)
 
         apoderado = Apoderado(**diccionario_apoderado)
         poderdantes = [Poderdante(**poderdante)
                        for poderdante in diccionario_poderdantes]
-        banco = Banco(**diccionario_banco)
         inmueble = InmueblePrincipal(**diccionario_inmueble)
         depositos = [Deposito(**deposito)
                      for deposito in diccionario_depositos]
         parqueaderos = [Parqueadero(**parqueadero)
                         for parqueadero in diccionario_parqueaderos]
-        apoderado_banco = ApoderadoBanco(
-            **diccionario_apoderado_banco)
-        representante_banco = RepresentanteBanco(
-            **diccionario_representante_banco)
-        minuta = DocumentoMinuta(apoderado, poderdantes, banco, inmueble, depositos,
-                                 parqueaderos, apoderado_banco, representante_banco)
+        for banck_apoderado in apoderados_banco:
+            if banck_apoderado['nombre'] == diccionario_apoderado_banco['nombre']:
+                apoderado_banco = ApoderadoBanco(**banck_apoderado)
+                break
+        else:
+            apoderado_banco = ApoderadoBanco(
+                **diccionario_apoderado_banco)
+        for representante in representantes_banco:
+            if representante['nombre'] == diccionario_representante_banco['nombre']:
+                representante_banco = RepresentanteBanco(**representante)
+                break
+        else:
+            representante_banco = RepresentanteBanco(
+                **diccionario_representante_banco)
+                    
+        for bank in bancos:
+            if bank['nombre'] == diccionario_banco['nombre']:
+                banco = Banco(**bank)
+                break
+        else:
+            banco = Banco(**diccionario_banco)
+        prestamo = Prestamo(**diccionario_prestamo)
+        minuta = DocumentoMinuta(apoderado, poderdantes, inmueble, depositos,
+                                 parqueaderos, apoderado_banco, representante_banco, banco, prestamo)
         minuta.generate_html()
         print(minuta.html)
 
