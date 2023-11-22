@@ -28,70 +28,72 @@ class TestMinuta(TestCase):
     def test_init_minuta_success(self):
         """Funcion para imprimir el html de la minuta"""
         diccionario_apoderado = {
-            'nombre': 'LUZ MARIA DURAN RODRIGUEZ',
+            'nombre': 'HELMUTH GEOFRE RAMOS CALONGE',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
-            'numero_identificacion': '63.283.505',
-            'ciudad_expedicion_identificacion': 'Bucaramanga',
+            'numero_identificacion': '93.391.258',
+            'ciudad_expedicion_identificacion': 'Ibague',
             'genero': genero['FEMENINO'],
         }
 
         diccionario_poderdantes = [{
-            'nombre': 'RAFAEL AUGUSTO DURAN RODRIGUEZ',
+            'nombre': 'OSCAR GARCES HURTADO',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
-            'numero_identificacion': '91.080.630',
-            'ciudad_expedicion_identificacion': 'San Gil',
-            'domicilio': '11 DARIEN RD CARMEL-NEW YORK',
-            'estado_civil': estado_civil['SOLTERO_SIN_UNION_MARITAL_DE_HECHO'],
+            'numero_identificacion': '80.062.545',
+            'ciudad_expedicion_identificacion': 'Bogotá D.C.',
+            'domicilio': 'CENTEREACH - NEW YORK',
+            'estado_civil': estado_civil['CASADO_CON_SOCIEDAD_CONYUGAL_VIGENTE'],
             'genero': genero['MASCULINO'],
         }
         ]
 
         diccionario_inmueble = {
             'nombre': 'APARTAMENTO',
-            'numero': '201 UNIDAD NÚMERO 13',
-            'direccion': 'EDIFICIO GALICIA CALLE 5 #5-20,',
-            'ciudad_y_o_departamento': 'EN PABLO VI SAN GIL SANTANDER',
-            'matricula': '319-87481',
-            'municipio_de_registro_orip': 'San Gil',
-            'tipo_ficha_catastral': ficha_catastral['MAYOR_EXTENSION'],
+            'numero': '704 TORRE 12,',
+            'direccion': 'AGRUPACION RESIDENCIAL AQUALINA ORANGE, TRANSVERSAL 26 # 5A-02(LOTE UTIL 5),',
+            'ciudad_y_o_departamento': 'EN AQUALINA GIRARDOT CUNDINAMARCA.',
+            'matricula': '307-105408',
+            'municipio_de_registro_orip': 'GIRARDOT',
+            'tipo_ficha_catastral': ficha_catastral['INDIVIDUAL'],
             'numero_ficha_catastral': [
-                {'ficha': '686790100000000260005000000000'},
+                {'ficha': '010200062508904'},
             ],
-            'linderos_especiales': 'UNIDAD NÚMERO TRECE (Apartamento 201). Está ubicado en su totalidad en el segundo Piso de la edificación, su destino es residencial, se identifica en su puerta de entrada con el número CALLE 5 No 5-20, Apartamento 201, de la actual nomenclatura del MUNICIPIO DE SAN GIL; y consta de: tres (3) habitaciones, dos (2) baños, una (1) sala, un (1) comedor, una (1) cocina, un (1) cuarto ropas, 1 balcón, 1 estudio. Esta unidad dispone de un área privada de 83.65 M2 y un coeficiente de copropiedad de 7.37%. Sus linderos son: POR EL ORIENTE: punto 1 a punto 2 sentido norte sur en una extensión de 4.39 ml con calle 5, giro 90 grados, del punto 2 a punto 3 sentido oriente occidente en una extensión de 1.00 ml con calle 5, giro 90 grados, del punto 3 a punto 4 sentido norte sur en una extensión de 1.24 con calle 5, giro 90 grados, del punto 4 a punto 5 sentido occidente oriente en una extensión de 0.80 ml con calle 5, giro 90 grados, de punto 5 a punto 6 sentido norte sur en una extensión de 3.35 con calle 5; POR EL SUR: punto 6 a punto7 sentido oriente occidente en extensión de 5.55 ml con Samuel, giro 90 grados, de punto 7 a punto 8 sentido norte sur en una extensión de 0.07 ml con Samuel, giro 90 grados, de punto 8 a punto 9 sentido oriente occidente en una extensión de 3.53 ml con Samuel; POR EL OCCIDENTE: punto 9 a punto 10 sentido sur norte en extensión de 9.83 ml con zona común, POR EL NORTE: punto 10 a punto 11 sentido occidente oriente en extensión de 2.96 ml con sucesores Fulgencio Gelves, continua de punto 11 a punto 1 sentido occidente a oriente en extensión de 3.35 con sucesores Fulgencio Gelves, POR EL NADIR: con zona común parqueadero; POR EL CENIT: con la placa de entrepiso que lo separa del apartamento 301 de la misma Edificación.'
+            'linderos_especiales': '"APARTAMENTO NÚMERO 704 (TORRE 12) GENERALIDADES: Se localiza en el SÉPTIMO PISO de la respectiva Torre del Proyecto “AGRUPACIÓN RESIDENCIAL AQUALINA ORANGE”, predio ubicado en la Transversal 26 No. 5A-02 (Lote Útil 5) URBANIZACIÓN AQUALINA (Antes URBANIZACIÓN AQUALINA LOTE 5) de la ciudad de Girardot. Su Coeficiente de Propiedad Horizontal y su altura libre es de dos punto cincuenta metros (2.50m) aproximadamente, con las siguientes áreas de construcción. ÁREAS TOTALES: AREA CONSTRUIDA: SETENTA Y SEIS PUNTO OCHENTA Y CUATRO METROS CUADRADOS (76.84 M2). AREA PRIVADA: SESENTA Y NUEVE PUNTO VEINTITRÉS METROS CUADRADOS (69.23 M2). PÁRRAFO: Dentro del área construida están incluidos MUROS, DUCTOS Y ELEMENTOS ESTRUCTURALES COMUNALES con un área de: SIETE PUNTO CINCUENTA Y UN METROS CUADRADOS (7.51 M2). SESENTA Y UNO METROS CUADRADOS (76.1 M2). ÁREA COMÚN DE USO EXCLUSIVO: Se le asigna un balcón común de uso exclusivo con un área total de siete punto sesenta y dos metros cuadrados (7.62m2). DEPENDENCIAS PRIVADAS. Sala – comedor, dos (2) alcobas (cada una de ellas con espacio disponible para futuro baño), un (1) disponible, un (1) baño, cocina y zona de ropas. LINDEROS: Los linderos con muros de fachada, medianeros, interiores, elementos estructurales, ductos, placas de piso y entrepiso, cubiertas y las demás zonas comunes de uso exclusivo y zonas comunales al medio, son los consignados en los planos de Propiedad Horizontal debidamente sellados y aprobados. Dichos elementos y muros forman parte de la estructura de la edificación, tienen la calidad de bienes comunes esenciales y no pueden ser modificados ni ser demolidos parcial o totalmente pues se pone en peligro la solidez y estabilidad de la construcción. LINDEROS HORIZONTALES Y VERTICALES: Partiendo del punto Número uno (1), localizado a la derecha del acceso, hasta el punto Número dos (2) en línea quebrada y distancias sucesivas de dos punto sesenta y tres metros (2.63m), dos punto ochenta metros (2.80m), cero punto doce metros (0.12m), uno punto cincuenta metros (1.50m), cero punto cero dos metros (0.02m), cero punto noventa y uno metros (0.91m), uno punto trece metros (1.13m), cero punto noventa y uno metros (0.91m), cero punto veintidós metros (0.22m), uno punto treinta y ocho metros (1.38m), cero punto sesenta y tres metros (0.63m), cero punto doce metros (0.12m), cero punto sesenta y tres metros (0.63m), cero punto diez metros (0.10m), cero punto doce metros (0.12m), dos punto cincuenta y uno metros (2.51m), uno punto treinta y siete metros (1.37m), cero punto cincuenta y uno metros (0.51m), cero punto treinta y seis metros (0.36m), dos punto sesenta y dos metros (2.62m) y tres punto treinta y seis metros (3.36m) respectivamente, con condensadores de aire acondicionado y con vacío sobre zona común, Del punto Número dos (2) al Punto Número tres (3) en línea quebrada y distancias sucesivas de dos punto setenta y tres metros (2.73m), cinco punto treinta y ocho metros (5.38m), cero punto quince metros (0.15m), uno punto ochenta y siete metros (1.87m) y tres punto veintinueve metros (3.21m) respectivamente, con vacío sobre zona verde común y área de circulación peatonal. Del punto Número tres (3) al punto Número cuatro (4) en línea quebrada y distancias sucesivas de dos punto setenta y uno metros (2.71m), tres punto treinta y seis metros (3.36m), cero punto ochenta y cinco metros (0.85m), cero punto veinte y cinco metros (0.25m), cero punto noventa y nueve metros (0.99m), cero punto veinte y cinco metros (0.25m), cero punto dieciséis metros (0.16m), cero punto doce metros (0.12m), tres punto cincuenta y nueve metros (3.59m), cero punto doce metros (0.12m), cero punto catorce metros (0.14m), dos punto ochenta y siete metros (2.87m), cero punto doce metros (0.12m), tres punto ochenta y seis metros (3.86m) y dos punto setenta y cuatro metros (2.74m) respectivamente, con balcón común de uso exclusivo del apartamento que se alindera y con vacío sobre zona verde común, área de circulación peatonal y zona verde recreativa. Del punto Número cuatro (4) al punto Número cinco (5) en línea recta y distancia de seis punto treinta y ocho metros (6.38m) con el Apartamento Número 703 de esta misma Torre. Del punto Número cinco (5) al punto Número uno (1) de partida cerrando el polígono, en línea quebrada y distancias sucesivas de uno punto treinta y nueve metros (1.39m), uno punto sesenta y ocho metros (1.68m), uno punto cuarenta y siete metros (1.47m), cero punto veinticuatro metros (0.24m), uno punto treinta y cinco metros (1.35m), cero punto ochenta y siete metros (0.87m), cero punto catorce metros (0.14m), cero punto cincuenta y siete metros (0.57m), cero punto sesenta y dos metros (0.62m), cero punto cero seis metros (0.06m), un metro sesenta y uno metros (1.61m), cero punto cero seis metros (0.06m), un metro sesenta y tres metros (1.63m), cero punto veinticuatro metros (0.24m) y uno punto treinta metros (1.30m) respectivamente, con ducto de ventilación y con vestíbulo de circulación comunal. Cenit: Placa de entrepiso comunal al medio con el OCTAVO PISO de la Torre. Nadir: Placa de entrepiso comunal al medio con el SEXTO PISO del Conjunto. PÁRRAFO: No obstante la mención de las áreas de este apartamento y de la longitud de sus linderos, éstas son aproximadas y se determinan como cuerpos ciertos. En tal calidad se hará su transferencia de dominio a los futuros adquirientes; por lo tanto cualquier eventual diferencia que pueda resultar entre las cabidas de linderos reales y las aquí declaradas, no dará lugar a reclamo por ninguna de las partes."'
         }
 
-        diccionario_parqueaderos = [{
-            'nombre': 'PARQUEADERO CARRO',
-            'numero': '10',
-            'direccion': 'EDIFICIO GALICIA CALLE 5 #5-20, EN PABLO VI SAN GIL SANTANDER',
-            'matricula': '319-87478',
-            'tipo_ficha_catastral': ficha_catastral['INDIVIDUAL'],
-            'numero_ficha_catastral': '',
-            'linderos_especiales': 'UNIDAD NÚMERO DIEZ (PARQUEADERO carro 10). Ubicada en el primer piso o nivel del edificio, con acceso directo a la CALLE 5 a través de una puerta de acceso, se identifica en su puerta de entrada con el número CALLE 5 No 5-18. Le corresponde un área privada de 15.32 metros cuadrados y un coeficiente de copropiedad del 1.35%. Esta unidad se destina para uso parqueadero. Consta de un (1) parqueadero carro. Sus linderos son: POR EL ORIENTE: punto 23 a punto 22 sentido norte sur en una extensión de 6.08 ml con parqueadero carro 9; POR EL SUR: punto 22 a punto 25 sentido oriente occidente en extensión de 2.50 ml con Samuel; POR EL OCCIDENTE: punto 25 a punto 24 sentido sur norte en extensión de 6.18 ml con parqueadero carro 11, POR EL NORTE: punto 24 a punto 23 sentido occidente oriente en extensión de 2.50 ml con zona común, POR EL NADIR: con el terreno donde se levanta la Edificación; POR EL CENIT: con la placa de entrepiso que lo separa del apartamento 203 de la misma Edificación.'
-        }
+        diccionario_parqueaderos = [
+            {
+                'nombre': 'PARQUEADERO',
+                'numero': '665',
+                'direccion': 'AGRUPACION RESIDENCIAL AQUALINA ORANGE, TRANSVERSAL 26 # 5A-02(LOTE UTIL 5), EN AQUALINA GIRARDOT CUNDINAMARCA.',
+                'linderos_especiales': '"PARQUEADERO NÚMERO 665 GENERALIDADES: Se localiza en la Planta CUBIERTA del EDIFICIO PARQUEADEROS del Proyecto “AGRUPACIÓN RESIDENCIAL AQUALINA ORANGE”, predio ubicado en la Transversal 26 No. 5A-02 (Lote Útil 5) URBANIZACIÓN AQUALINA (Antes URBANIZACIÓN AQUALINA LOTE 5) de la ciudad de Girardot. Su Coeficiente de Copropiedad sobre los bienes comunes es el que se consigna en el Reglamento de Propiedad Horizontal y su altura libre (utilizable) es de dos punto veinte metros (2.20m) aproximadamente. ÁREA PRIVADA: DOCE PUNTO CUARENTA Y OCHO METROS CUADRADOS (12.48 M2). DEPENDENCIAS: Consta de un espacio cubierto (cubierta con teja en acero galvanizado, pre-pintada de espesor 0.36mm) para un (1) estacionamiento vehicular. LINDEROS: Los linderos con elementos estructurales, muros comunales, placas de piso, placas de entrepiso, líneas de demarcación y zonas comunales al medio son los consignados en los planos de Propiedad Horizontal debidamente sellados y aprobados. Dichos elementos y muros estructurales no podrán ser modificados en razón al carácter estructural que prestan. LINDEROS HORIZONTALES Y VERTICALES: Partiendo del punto Número uno (1), localizado a la izquierda del acceso, hasta el punto Número dos (2) en línea recta y distancia de cinco metros (5.00m) con el Parqueadero Número 664. Del punto Número dos (2) al Punto Número tres (3) en línea recta y distancia de dos punto cincuenta metros (2.50m) con vacío sobre zona de cesión. Del punto Número tres (3) al punto Número cuatro (4) en línea quebrada y distancias sucesivas de tres punto setenta y ocho metros (3.78m), cero punto cero cinco metros (0.05m), cero punto quince metros (0.15m), cero punto cero cinco metros (0.05m) y uno punto cero siete metros (1.07m) respectivamente, con el Parqueadero Número 666. Del punto Número cuatro (4) al punto Número uno (1) o punto de partida cerrando el polígono, en línea recta y distancia de dos punto cincuenta metros (2.50m) con acceso y con zona de circulación vehicular comunal. Cenit: Cubierta con teja en acero galvanizado al medio con el vacío o aire común. Nadir: Placa de entrepiso comunal al medio con el PRIMER PISO del Edificio Parqueaderos."',
+                'matricula': '307-105760',
+                'tipo_ficha_catastral': ficha_catastral['INDIVIDUAL'],
+                'numero_ficha_catastral': '10200062863904'
+            }
         ]
 
         diccionario_depositos = [
         ]
 
         diccionario_apoderado_banco = {
-            'nombre': 'Carlos Alberto Agudelo Zapata',
+            'nombre': 'Jaime Andres Rodriguez Moreno',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
-            'numero_identificacion': '63.450.000',
-            'ciudad_expedicion_identificacion': 'Floridablanca',
-            'ciudad_residencia': 'Bucaramanga',
+            'numero_identificacion': '',
+            'ciudad_expedicion_identificacion': '',
+            'ciudad_residencia': '',
             'genero': genero['FEMENINO'],
             'tipo_apoderado': tipo_apoderado_banco['GENERAL'],
-            'tipo_poder': ''
+            'tipo_poder': '',
+            'escritura': ''
         }
 
         diccionario_representante_banco = {
-            'nombre': 'Héctor Fabio Rodríguez Prado',
+            'nombre': 'Juan Pablo Cruz López',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
             'numero_identificacion': '',
             'ciudad_expedicion_identificacion': '',
             'ciudad_residencia': 'Cali',
-            'genero': genero['MASCULINO'],
+            'genero': genero['FEMENINO'],
             'tipo_representante': tipo_representante_banco['SUPLENTE'],
         }
 
@@ -101,9 +103,9 @@ class TestMinuta(TestCase):
         }
 
         diccionario_prestamo = {
-            'cantidad_banco_a_hipotecante': 150204375,
-            'cantidad_dada_a_constructora': 145125000,
-            'gastos_de_gestion': 5079375
+            'cantidad_banco_a_hipotecante': 180000000,
+            'cantidad_dada_a_constructora': 173913043,
+            'gastos_de_gestion': 6086957
         }
 
         diccionario_apoderado = strip_dict_or_list(diccionario_apoderado)
@@ -124,9 +126,9 @@ class TestMinuta(TestCase):
                      for deposito in diccionario_depositos]
         parqueaderos = [Parqueadero(**parqueadero)
                         for parqueadero in diccionario_parqueaderos]
-        for banck_apoderado in apoderados_banco:
-            if banck_apoderado['nombre'] == diccionario_apoderado_banco['nombre']:
-                apoderado_banco = ApoderadoBanco(**banck_apoderado)
+        for bank_apoderado in apoderados_banco:
+            if bank_apoderado['nombre'] == diccionario_apoderado_banco['nombre']:
+                apoderado_banco = ApoderadoBanco(**bank_apoderado)
                 break
         else:
             apoderado_banco = ApoderadoBanco(

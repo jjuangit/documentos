@@ -1,10 +1,10 @@
 tipos_identificacion_ciudadano = {
     "CEDULA_CIUDADANIA": {
-        "nombre": "Cédula de ciudadanía",
+        "nombre": "Cédula de Ciudadanía",
         "abreviacion": "C.C.",
     },
     "CEDULA_EXTRANJERIA": {
-        "nombre": "Cédula de extranjería",
+        "nombre": "Cédula de Extranjería",
         "abreviacion": "C.E.",
     },
     "PASAPORTE": {
@@ -202,5 +202,14 @@ bancos = [
     {
         'nombre': 'banco unión s.a',
         'nit': '860.006.797-9'
+    }
+]
+
+constructoras = [
+    {
+        'nombre': 'Constructora Bolivar Cali S.A.',
+        'nit': '860037900-4',
+        'ciudad_ubicacion': 'Cali'
+
     }
 ]

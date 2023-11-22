@@ -27,8 +27,8 @@
         "municipio_de_registro_orip": "Pereira",
         "tipo_ficha_catastral": "Mayor Extensión",
         "numero_ficha_catastral": [
-            {"ficha": "00-03-00-00- 0001-259-5-00-00-0000-0"},
-            {"ficha": "00-03-00-00- 0001-259-6-00-00-0000-0"}
+            {"ficha": "00-03-00-00-0001-259-5-00-00-0000-0"},
+            {"ficha": "00-03-00-00-0001-259-6-00-00-0000-0"}
         ],
         "linderos_especiales": ""
     },
