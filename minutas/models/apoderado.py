@@ -37,3 +37,12 @@ class Apoderado:
             return 'identificado'
         elif self.genero == 'Femenino':
             return 'identificada'
+
+    @property
+    def abreviacion_identificacion(self):
+        if self.tipo_identificacion == 'Cédula de Ciudadanía':
+            return 'C.C.'
+        elif self.tipo_identificacion == 'Cédula de Extranjería':
+            return 'C.E'
+        elif self.tipo_identificacion == 'Pasaporte':
+            return 'Pasaporte'

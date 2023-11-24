@@ -79,3 +79,12 @@ class Poderdante:
             elif self.genero == "Femenino":
                 return "Soltera con unión marital de hecho sin sociedad patrimonial vigente"
         raise ValorNoEncontrado(f"El valor <{self.estado_civil}> no se encuentra en el catálogo de estado_civil")
+
+    @property
+    def abreviacion_identificacion(self):
+        if self.tipo_identificacion == 'Cédula de Ciudadanía':
+            return 'C.C.'
+        elif self.tipo_identificacion == 'Cédula de Extranjería':
+            return 'C.E'
+        elif self.tipo_identificacion == 'Pasaporte':
+            return 'Pasaporte'

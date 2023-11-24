@@ -17,6 +17,7 @@ class Validator:
 
     @staticmethod
     def validate_string(value, key=None):
+        '''Validar que sea tipo de dato string'''
         if value:
             if not isinstance(value, str):
                 raise ValidationError(
@@ -56,6 +57,17 @@ class Validator:
             return True
         else:
             return True
+        
+    @staticmethod
+    def validate_letters_numbers(value, key=None):
+        '''Valida si la cadena contiene solo letras y números'''
+        if value:
+            pattern = r'^[a-zA-Z0-9]+$'
+            if not re.match(pattern, value):
+                raise ValueError(f'"{key}" contiene caracteres no permitidos.')
+            return True
+        else:
+            return True
 
     @staticmethod
     def validate_letters_with_spaces(value, key=None):
@@ -72,7 +84,7 @@ class Validator:
     @staticmethod
     def validate_letters_with_accents_dots_and_spaces(value, key=None):
         '''Solo se permiten letras incluyendo tildes y puntos(.)'''
-        pattern = r'^[a-zA-ZáéíóúüÁÉÍÓÚÜ.,\s]+$'
+        pattern = r'^[a-zA-ZáéíóúüÁÉÍÓÚÜñÑ.,\s]+$'
         if not re.match(pattern, value):
             raise ValidationError(
                 f'"{key}" contiene carácteres no permitidos.')
@@ -81,7 +93,7 @@ class Validator:
     @staticmethod
     def validate_alphanumeric_with_spaces_and_hyphen(value, key=None):
         '''Solo se permiten letras,espacios intermedios y guión(-)'''
-        pattern = r'^[a-zA-Z0-9\s-]+$'
+        pattern = r'^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜö\s-]+$'
         if not re.match(pattern, value):
             raise ValidationError(
                 f'"{key}" contiene carácteres no permitidos.')
@@ -112,7 +124,7 @@ class Validator:
     def validate_letters_numbers_comma_dot_hash_dash(value, key=None):
         '''Solo se permiten letras, números, almohadilla(#) y guion(-)'''
         if value:
-            pattern = r'^[a-zA-Z0-9,.\#\-\s\'"áéíóúÁÉÍÓÚüÜ()]+$'
+            pattern = r'^[a-zA-Z0-9,.\#\-\s\'"áéíóúÁÉÍÓÚüÜñÑ()]+$'
             if not re.match(pattern, value):
                 raise ValidationError(
                     f'"{key}" contiene carácteres no permitidos.')
@@ -124,7 +136,7 @@ class Validator:
     def validate_letters_numbers_dash(value, key=None):
         '''Solo se permiten letras, números y guion(-)'''
         if value:
-            pattern = r'^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜ\s-]+$'
+            pattern = r'^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜ\s,-]+$'
             if not re.match(pattern, value):
                 raise ValidationError(
                     f'"{key}" contiene carácteres no permitidos.')

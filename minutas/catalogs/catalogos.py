@@ -45,28 +45,6 @@ ficha_catastral = {
 
 apoderados_banco = [
     {
-        'nombre': 'Germán Leonardo Kalil Méndez',
-        'tipo_identificacion': 'Cédula de Ciudadanía',
-        'numero_identificacion': '79489351',
-        'ciudad_expedicion_identificacion': 'Bogotá',
-        'ciudad_residencia': 'Bogotá',
-        'genero': 'Masculino',
-        'tipo_apoderado': 'Especial',
-        'tipo_poder': 'Escriturado',
-        'escritura': 'Escritura Pública Número 2075 de diciembre 17 de 2015 de la Notaría Catorce de Cali'
-    },
-    {
-        'nombre': 'Carlos Alberto Agudelo Zapata',
-        'tipo_identificacion': 'Cédula de Ciudadanía',
-        'numero_identificacion': '10089944',
-        'ciudad_expedicion_identificacion': 'Pereira',
-        'ciudad_residencia': 'Pereira',
-        'genero': 'Masculino',
-        'tipo_apoderado': 'General',
-        'tipo_poder': 'Escriturado',
-        'escritura': 'Escritura Pública Número 0020 de enero 7 de 2020 de la Notaría Catorce de Cali'
-    },
-    {
         'nombre': 'Jaime Andres Rodriguez Moreno',
         'tipo_identificacion': 'Cédula de Ciudadanía',
         'numero_identificacion': '79871505',
@@ -76,6 +54,17 @@ apoderados_banco = [
         'tipo_apoderado': 'Especial',
         'tipo_poder': 'Escriturado',
         'escritura': 'Escritura Pública No. 2075 del 17 de septiembre de 2015 Notaría Catorce de Cali',
+    },
+    {
+        'nombre': 'Germán Leonardo Kalil Méndez',
+        'tipo_identificacion': 'Cédula de Ciudadanía',
+        'numero_identificacion': '79489351',
+        'ciudad_expedicion_identificacion': 'Bogotá',
+        'ciudad_residencia': 'Bogotá',
+        'genero': 'Masculino',
+        'tipo_apoderado': 'Especial',
+        'tipo_poder': 'Escriturado',
+        'escritura': 'Escritura Pública Número 2075 de diciembre 17 de 2015 de la Notaría Catorce de Cali'
     },
     {
         'nombre': 'Jineth Vanessa Lamilla Arguello',
@@ -120,6 +109,17 @@ apoderados_banco = [
         'tipo_apoderado': 'General',
         'tipo_poder': 'Escriturado',
         'escritura': 'Escritura Pública No. 0020 del 7 de enero de 2022 Notaría Catorce de Cali',
+    },
+            {
+        'nombre': 'Carlos Alberto Agudelo Zapata',
+        'tipo_identificacion': 'Cédula de Ciudadanía',
+        'numero_identificacion': '10089944',
+        'ciudad_expedicion_identificacion': 'Pereira',
+        'ciudad_residencia': 'Pereira',
+        'genero': 'Masculino',
+        'tipo_apoderado': 'General',
+        'tipo_poder': 'Escriturado',
+        'escritura': 'Escritura Pública Número 0020 de enero 7 de 2020 de la Notaría Catorce de Cali'
     },
     {
         'nombre': 'Angy Viviana Gallego',
@@ -182,7 +182,7 @@ representantes_banco = [
     {
         'nombre': 'Héctor Fabio Rodríguez Prado',
         'tipo_identificacion': 'Cédula de Ciudadanía',
-        'numero_identificacion': '14.650.246',
+        'numero_identificacion': '14650246',
         'ciudad_expedicion_identificacion': 'Ginebra',
         'ciudad_residencia': 'Cali',
         'genero': 'Masculino',
@@ -190,7 +190,7 @@ representantes_banco = [
     }, {
         'nombre': 'Juan Pablo Cruz López',
         'tipo_identificacion': 'Cédula de Ciudadanía',
-        'numero_identificacion': '16.724.519',
+        'numero_identificacion': '16724519',
         'ciudad_expedicion_identificacion': 'Cali',
         'ciudad_residencia': 'Cali',
         'genero': 'Masculino',
@@ -201,7 +201,7 @@ representantes_banco = [
 bancos = [
     {
         'nombre': 'banco unión s.a',
-        'nit': '860.006.797-9'
+        'nit': '860006797-9'
     }
 ]
 

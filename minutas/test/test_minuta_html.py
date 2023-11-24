@@ -27,56 +27,45 @@ class TestMinuta(TestCase):
 
     def test_init_minuta_success(self):
         """Funcion para imprimir el html de la minuta"""
-        diccionario_apoderado = {
-            'nombre': 'HELMUTH GEOFRE RAMOS CALONGE',
-            'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
-            'numero_identificacion': '93.391.258',
-            'ciudad_expedicion_identificacion': 'Ibague',
-            'genero': genero['FEMENINO'],
-        }
+        diccionario_apoderado = None
 
         diccionario_poderdantes = [{
-            'nombre': 'OSCAR GARCES HURTADO',
+            'nombre': 'SANDRA ISABEL HERRERA NIETO',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
-            'numero_identificacion': '80.062.545',
-            'ciudad_expedicion_identificacion': 'Bogotá D.C.',
-            'domicilio': 'CENTEREACH - NEW YORK',
-            'estado_civil': estado_civil['CASADO_CON_SOCIEDAD_CONYUGAL_VIGENTE'],
-            'genero': genero['MASCULINO'],
+            'numero_identificacion': '1.126.398.298',
+            'ciudad_expedicion_identificacion': 'Con Lisboa Por',
+            'domicilio': 'Nyköping - Suecia',
+            'estado_civil': estado_civil['SOLTERO_SIN_UNION_MARITAL_DE_HECHO'],
+            'genero': genero['FEMENINO'],
         }
         ]
 
         diccionario_inmueble = {
             'nombre': 'APARTAMENTO',
-            'numero': '704 TORRE 12,',
-            'direccion': 'AGRUPACION RESIDENCIAL AQUALINA ORANGE, TRANSVERSAL 26 # 5A-02(LOTE UTIL 5),',
-            'ciudad_y_o_departamento': 'EN AQUALINA GIRARDOT CUNDINAMARCA.',
-            'matricula': '307-105408',
-            'municipio_de_registro_orip': 'GIRARDOT',
-            'tipo_ficha_catastral': ficha_catastral['INDIVIDUAL'],
+            'numero': '706 TORRE 4 PISO 7,',
+            'detalle': 'CONJUNTO RESIDENCIAL FLORA PH',
+            'direccion': 'CARRERA 30 - 50-09',
+            'ciudad_y_o_departamento': 'EN SANTA CRUZ DE CURINCA, SANTA MARTA MAGDALENA',
+            'matricula': '3080-161856',
+            'municipio_de_registro_orip': 'Santa Marta',
+            'tipo_ficha_catastral': ficha_catastral['MAYOR_EXTENSION'],
             'numero_ficha_catastral': [
-                {'ficha': '010200062508904'},
+                {'ficha': '0002000000076974000000000'},
+                {'ficha': '0002000000076979000000000'},
+                {'ficha': '0002000000076978000000000'},
             ],
-            'linderos_especiales': '"APARTAMENTO NÚMERO 704 (TORRE 12) GENERALIDADES: Se localiza en el SÉPTIMO PISO de la respectiva Torre del Proyecto “AGRUPACIÓN RESIDENCIAL AQUALINA ORANGE”, predio ubicado en la Transversal 26 No. 5A-02 (Lote Útil 5) URBANIZACIÓN AQUALINA (Antes URBANIZACIÓN AQUALINA LOTE 5) de la ciudad de Girardot. Su Coeficiente de Propiedad Horizontal y su altura libre es de dos punto cincuenta metros (2.50m) aproximadamente, con las siguientes áreas de construcción. ÁREAS TOTALES: AREA CONSTRUIDA: SETENTA Y SEIS PUNTO OCHENTA Y CUATRO METROS CUADRADOS (76.84 M2). AREA PRIVADA: SESENTA Y NUEVE PUNTO VEINTITRÉS METROS CUADRADOS (69.23 M2). PÁRRAFO: Dentro del área construida están incluidos MUROS, DUCTOS Y ELEMENTOS ESTRUCTURALES COMUNALES con un área de: SIETE PUNTO CINCUENTA Y UN METROS CUADRADOS (7.51 M2). SESENTA Y UNO METROS CUADRADOS (76.1 M2). ÁREA COMÚN DE USO EXCLUSIVO: Se le asigna un balcón común de uso exclusivo con un área total de siete punto sesenta y dos metros cuadrados (7.62m2). DEPENDENCIAS PRIVADAS. Sala – comedor, dos (2) alcobas (cada una de ellas con espacio disponible para futuro baño), un (1) disponible, un (1) baño, cocina y zona de ropas. LINDEROS: Los linderos con muros de fachada, medianeros, interiores, elementos estructurales, ductos, placas de piso y entrepiso, cubiertas y las demás zonas comunes de uso exclusivo y zonas comunales al medio, son los consignados en los planos de Propiedad Horizontal debidamente sellados y aprobados. Dichos elementos y muros forman parte de la estructura de la edificación, tienen la calidad de bienes comunes esenciales y no pueden ser modificados ni ser demolidos parcial o totalmente pues se pone en peligro la solidez y estabilidad de la construcción. LINDEROS HORIZONTALES Y VERTICALES: Partiendo del punto Número uno (1), localizado a la derecha del acceso, hasta el punto Número dos (2) en línea quebrada y distancias sucesivas de dos punto sesenta y tres metros (2.63m), dos punto ochenta metros (2.80m), cero punto doce metros (0.12m), uno punto cincuenta metros (1.50m), cero punto cero dos metros (0.02m), cero punto noventa y uno metros (0.91m), uno punto trece metros (1.13m), cero punto noventa y uno metros (0.91m), cero punto veintidós metros (0.22m), uno punto treinta y ocho metros (1.38m), cero punto sesenta y tres metros (0.63m), cero punto doce metros (0.12m), cero punto sesenta y tres metros (0.63m), cero punto diez metros (0.10m), cero punto doce metros (0.12m), dos punto cincuenta y uno metros (2.51m), uno punto treinta y siete metros (1.37m), cero punto cincuenta y uno metros (0.51m), cero punto treinta y seis metros (0.36m), dos punto sesenta y dos metros (2.62m) y tres punto treinta y seis metros (3.36m) respectivamente, con condensadores de aire acondicionado y con vacío sobre zona común, Del punto Número dos (2) al Punto Número tres (3) en línea quebrada y distancias sucesivas de dos punto setenta y tres metros (2.73m), cinco punto treinta y ocho metros (5.38m), cero punto quince metros (0.15m), uno punto ochenta y siete metros (1.87m) y tres punto veintinueve metros (3.21m) respectivamente, con vacío sobre zona verde común y área de circulación peatonal. Del punto Número tres (3) al punto Número cuatro (4) en línea quebrada y distancias sucesivas de dos punto setenta y uno metros (2.71m), tres punto treinta y seis metros (3.36m), cero punto ochenta y cinco metros (0.85m), cero punto veinte y cinco metros (0.25m), cero punto noventa y nueve metros (0.99m), cero punto veinte y cinco metros (0.25m), cero punto dieciséis metros (0.16m), cero punto doce metros (0.12m), tres punto cincuenta y nueve metros (3.59m), cero punto doce metros (0.12m), cero punto catorce metros (0.14m), dos punto ochenta y siete metros (2.87m), cero punto doce metros (0.12m), tres punto ochenta y seis metros (3.86m) y dos punto setenta y cuatro metros (2.74m) respectivamente, con balcón común de uso exclusivo del apartamento que se alindera y con vacío sobre zona verde común, área de circulación peatonal y zona verde recreativa. Del punto Número cuatro (4) al punto Número cinco (5) en línea recta y distancia de seis punto treinta y ocho metros (6.38m) con el Apartamento Número 703 de esta misma Torre. Del punto Número cinco (5) al punto Número uno (1) de partida cerrando el polígono, en línea quebrada y distancias sucesivas de uno punto treinta y nueve metros (1.39m), uno punto sesenta y ocho metros (1.68m), uno punto cuarenta y siete metros (1.47m), cero punto veinticuatro metros (0.24m), uno punto treinta y cinco metros (1.35m), cero punto ochenta y siete metros (0.87m), cero punto catorce metros (0.14m), cero punto cincuenta y siete metros (0.57m), cero punto sesenta y dos metros (0.62m), cero punto cero seis metros (0.06m), un metro sesenta y uno metros (1.61m), cero punto cero seis metros (0.06m), un metro sesenta y tres metros (1.63m), cero punto veinticuatro metros (0.24m) y uno punto treinta metros (1.30m) respectivamente, con ducto de ventilación y con vestíbulo de circulación comunal. Cenit: Placa de entrepiso comunal al medio con el OCTAVO PISO de la Torre. Nadir: Placa de entrepiso comunal al medio con el SEXTO PISO del Conjunto. PÁRRAFO: No obstante la mención de las áreas de este apartamento y de la longitud de sus linderos, éstas son aproximadas y se determinan como cuerpos ciertos. En tal calidad se hará su transferencia de dominio a los futuros adquirientes; por lo tanto cualquier eventual diferencia que pueda resultar entre las cabidas de linderos reales y las aquí declaradas, no dará lugar a reclamo por ninguna de las partes."'
+            'linderos_especiales': '"TORRE 4 APARTAMENTO 706. LOCALIZACIÓN: Localizado en el Piso 7 de la TORRE 4 del Proyecto Flora, ubicado en Santa Marta. Las Áreas Generales se clasifican como: ÁREA CONSTRUIDA de cincuenta y ocho punto ochenta y cuatro metros cuadrados (58.84 m2). ÁREA PRIVADA CONSTRUIDA de cuarenta y nueve punto cuarenta y siete metros cuadrados (49.47 m2). Cuenta con una ÁREA PRIVADA CONSTRUIDA de BALCÓN y BALCÓN TÉCNICO de tres punto sesenta y tres metros cuadrados (3.63 m2). La diferencia entre el área construida y el área privada es de cinco punto sesenta y cuatro metros cuadrados (5.74 m2). DEPENDENCIAS: Sala-Comedor, cocina, ropas, disponible, dos (2) alcobas, un (1) baño y espacio para futuro baño. LINDEROS HORIZONTALES: Entre los puntos 1 y 2: Línea recta, en dimensión de cinco punto veinticuatro metros (5.24 m); con área privada construida. Entre los puntos 2 y 3: Línea quebrada, en dimensiones de dos punto ochenta y cinco metros (2.85 m); cero punto veintitrés metros (0.23 m), cero punto treinta y seis metros (0.36 m), cero punto sesenta y seis metros (0.66 m), cero punto diez metros (0.10 m), uno punto cincuenta metros (1.05 m), uno punto ochenta metros (1.80 m), tres punto diez metros (3.10 m), cero punto diez metros (0.10 m), tres punto diez metros (3.10 m), y dos punto cincuenta y cuatro metros (2.54 m); parte con área común libre, y parte con área privada construida de la misma unidad. Entre los puntos 3 y 4: Línea quebrada, en dimensiones de dos punto cuarenta y cinco metros (2.45 m), cero punto dieciocho metros (0.18 m), cero punto cincuenta y cinco metros (0.55 m), uno punto cincuenta y seis metros (1.56 m), cero punto diez metros (0.10 m), tres punto quince metros (3.15 m), y tres punto cincuenta y tres metros (3.53 m); parte con área común libre, y parte con área privada construida de la misma unidad. Entre los puntos 4 y 1: Línea quebrada, en dimensiones de dos punto setenta metros (2.70 m), cero punto cincuenta y uno metros (0.51 m), cero punto diez metros (0.10 m), cero punto cincuenta y uno metros (0.51 m), uno punto treinta y cinco metros (1.35 m), cero punto doce metros (0.12 m), cero punto ochenta metros (0.80 m), uno punto cero nueve metros (1.09 m), dos punto veinticinco metros (2.25 m), uno punto cincuenta y dos metros (1.52 m), cero punto diez metros (0.10 m), uno punto cuarenta y dos metros (1.42 m), uno punto treinta y cinco metros (1.35 m), cero punto veintiséis metros (0.26 m), cero punto ochenta metros (0.80 m), uno punto cero seis metros (1.06 m), uno punto veinte metros (1.20 m), cero punto diez metros (0.10 m), uno punto cero ocho metros (1.08 m), uno punto cero ocho metros (1.08 m), cero punto dieciocho metros (0.18 m), cero punto cincuenta metros (0.50 m), cero punto noventa y dos metros (0.92 m), cero punto dieciocho metros (0.18 m), cero punto noventa metros (0.90 m), uno punto diecisiete metros (1.17 m), cero punto cero ocho metros (0.08 m), cero punto setenta y dos metros (0.72 m), y dos metros (2.00 m); parte con área común construida, y parte con área privada construida. CONTORNOS INTERNOS: COLUMNA O MURO INTERIOR: Entre los puntos 5 y 6: Línea quebrada, en dimensiones de uno punto diez metros (1.10 m), y cero punto diez metros (0.10 m). Entre los puntos 6 y 5: Línea quebrada, en dimensiones de uno punto diez metros (1.10 m), y cero punto diez metros (0.10 m). BALCÓN. Las Áreas Generales se clasifican como: ÁREA PRIVADA CONSTRUIDA de dos punto cuarenta y tres metros cuadrados (2.43 m2). DEPENDENCIAS: Un (1) balcón. LINDEROS HORIZONTALES: Entre los puntos 7 y 8: Línea quebrada, en dimensiones de cero punto setenta y seis metros (0.76 m), y tres punto veinte metros (3.20 m); parte con área común libre, y parte con área privada construida. Entre los puntos 8 y 7: Línea quebrada, en dimensiones de cero punto setenta y seis metros (0.76 m), y tres punto veinte metros (3.20 m); parte con área común libre, y parte con dependencias de la misma unidad. BALCÓN TÉCNICO. Las Áreas Generales se clasifican como: ÁREA PRIVADA CONSTRUIDA de uno punto veinte metros cuadrados (1.20 m2). DEPENDENCIAS: Un (1) balcón técnico. LINDEROS HORIZONTALES: Entre los puntos 9 y 10: Línea quebrada, en dimensiones de cero punto ochenta y siete metros (0.87 m), y uno punto treinta y nueve metros (1.39 m); parte con área común libre, y parte con dependencias de la misma unidad. Entre los puntos 10 y 9: Línea quebrada, en dimensiones de cero punto ochenta y siete metros (0.87 m), y uno punto treinta y nueve metros (1.39 m); parte con área común libre, y parte con dependencias de la misma unidad. LINDEROS VERTICALES: La altura libre aproximada es de dos punto cuarenta metros (2.40 m). NADIR: Placa de entrepiso al medio, colindante con Piso 6. CENIT: Placa de entrepiso al medio, colindante con Piso 8."'
         }
-
         diccionario_parqueaderos = [
-            {
-                'nombre': 'PARQUEADERO',
-                'numero': '665',
-                'direccion': 'AGRUPACION RESIDENCIAL AQUALINA ORANGE, TRANSVERSAL 26 # 5A-02(LOTE UTIL 5), EN AQUALINA GIRARDOT CUNDINAMARCA.',
-                'linderos_especiales': '"PARQUEADERO NÚMERO 665 GENERALIDADES: Se localiza en la Planta CUBIERTA del EDIFICIO PARQUEADEROS del Proyecto “AGRUPACIÓN RESIDENCIAL AQUALINA ORANGE”, predio ubicado en la Transversal 26 No. 5A-02 (Lote Útil 5) URBANIZACIÓN AQUALINA (Antes URBANIZACIÓN AQUALINA LOTE 5) de la ciudad de Girardot. Su Coeficiente de Copropiedad sobre los bienes comunes es el que se consigna en el Reglamento de Propiedad Horizontal y su altura libre (utilizable) es de dos punto veinte metros (2.20m) aproximadamente. ÁREA PRIVADA: DOCE PUNTO CUARENTA Y OCHO METROS CUADRADOS (12.48 M2). DEPENDENCIAS: Consta de un espacio cubierto (cubierta con teja en acero galvanizado, pre-pintada de espesor 0.36mm) para un (1) estacionamiento vehicular. LINDEROS: Los linderos con elementos estructurales, muros comunales, placas de piso, placas de entrepiso, líneas de demarcación y zonas comunales al medio son los consignados en los planos de Propiedad Horizontal debidamente sellados y aprobados. Dichos elementos y muros estructurales no podrán ser modificados en razón al carácter estructural que prestan. LINDEROS HORIZONTALES Y VERTICALES: Partiendo del punto Número uno (1), localizado a la izquierda del acceso, hasta el punto Número dos (2) en línea recta y distancia de cinco metros (5.00m) con el Parqueadero Número 664. Del punto Número dos (2) al Punto Número tres (3) en línea recta y distancia de dos punto cincuenta metros (2.50m) con vacío sobre zona de cesión. Del punto Número tres (3) al punto Número cuatro (4) en línea quebrada y distancias sucesivas de tres punto setenta y ocho metros (3.78m), cero punto cero cinco metros (0.05m), cero punto quince metros (0.15m), cero punto cero cinco metros (0.05m) y uno punto cero siete metros (1.07m) respectivamente, con el Parqueadero Número 666. Del punto Número cuatro (4) al punto Número uno (1) o punto de partida cerrando el polígono, en línea recta y distancia de dos punto cincuenta metros (2.50m) con acceso y con zona de circulación vehicular comunal. Cenit: Cubierta con teja en acero galvanizado al medio con el vacío o aire común. Nadir: Placa de entrepiso comunal al medio con el PRIMER PISO del Edificio Parqueaderos."',
-                'matricula': '307-105760',
-                'tipo_ficha_catastral': ficha_catastral['INDIVIDUAL'],
-                'numero_ficha_catastral': '10200062863904'
-            }
+
         ]
 
         diccionario_depositos = [
+
         ]
 
         diccionario_apoderado_banco = {
-            'nombre': 'Jaime Andres Rodriguez Moreno',
+            'nombre': 'Gloria Esperanza Garcia Troncoso',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
             'numero_identificacion': '',
             'ciudad_expedicion_identificacion': '',
@@ -88,7 +77,7 @@ class TestMinuta(TestCase):
         }
 
         diccionario_representante_banco = {
-            'nombre': 'Juan Pablo Cruz López',
+            'nombre': 'Héctor Fabio Rodríguez Prado',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
             'numero_identificacion': '',
             'ciudad_expedicion_identificacion': '',
@@ -103,9 +92,9 @@ class TestMinuta(TestCase):
         }
 
         diccionario_prestamo = {
-            'cantidad_banco_a_hipotecante': 180000000,
-            'cantidad_dada_a_constructora': 173913043,
-            'gastos_de_gestion': 6086957
+            'cantidad_banco_a_hipotecante': 86422500,
+            'cantidad_dada_a_constructora': 83500000,
+            'gastos_de_gestion': 2922500
         }
 
         diccionario_apoderado = strip_dict_or_list(diccionario_apoderado)
@@ -118,7 +107,10 @@ class TestMinuta(TestCase):
         diccionario_banco = strip_dict_or_list(diccionario_banco)
         diccionario_prestamo = strip_dict_or_list(diccionario_prestamo)
 
-        apoderado = Apoderado(**diccionario_apoderado)
+        if diccionario_apoderado is None:
+            apoderado = None
+        else:
+            apoderado = Apoderado(**diccionario_apoderado)
         poderdantes = [Poderdante(**poderdante)
                        for poderdante in diccionario_poderdantes]
         inmueble = InmueblePrincipal(**diccionario_inmueble)

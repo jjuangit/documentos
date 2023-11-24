@@ -51,6 +51,7 @@ class TestCesionContrato(TestCase):
         diccionario_inmueble = {
             'nombre': 'APARTAMENTO',
             'numero': '107 TORRE A',
+            'detalle': 'CONJUNTO RESIDENCIAL ALTEA PH.',
             'direccion': 'CARRERA 24 5-269',
             'ciudad_y_o_departamento': 'EN PARQUE NATURA JAMUNDÍ VALLE DEL CAUCA',
             'matricula': '370-1097610',
@@ -109,8 +110,8 @@ class TestCesionContrato(TestCase):
         }
 
         diccionario_compraventa = {
-            'cantidad_compraventa': '',
-            'cantidad_restante': '',
+            'cantidad_compraventa': 190236667,
+            'cantidad_restante': 131444452,
             'cuota_inicial': 58792215,
             'fecha_compraventa': '05/06/2023'
         }

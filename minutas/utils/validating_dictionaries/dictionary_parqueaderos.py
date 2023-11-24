@@ -9,7 +9,7 @@ dictionary_validator_parqueaderos = {
     ],
     'numero': [
         Validator.required,
-        Validator.validate_only_numbers
+        Validator.validate_letters_numbers
     ],
     'direccion': [
         Validator.validate_letters_numbers_comma_dot_hash_dash

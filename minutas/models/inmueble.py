@@ -1,23 +1,23 @@
-from typing import Optional, Text
+from typing import Optional, Type, Text
 
 
 class InmueblePrincipal:
-    nombre: Optional[Text]
-    numero: Optional[Text]
-    direccion: Optional[Text]
-    ciudad_y_o_departamento: Optional[Text]
-    matricula: Optional[Text]
-    municipio_de_registro_orip: Optional[Text]
-    tipo_ficha_catastral: Optional[Text]
-    numero_ficha_catastral: Optional[Text]
-    construccion: Optional[Text]
-    linderos: Optional[Text]
-    dependencias: Optional[Text]
+    nombre: Type[Text]
+    numero: Type[Text]
+    detalle: Optional[Text]
+    direccion: Type[Text]
+    ciudad_y_o_departamento: Type[Text]
+    matricula: Type[Text]
+    municipio_de_registro_orip: Type[Text]
+    tipo_ficha_catastral: Type[Text]
+    numero_ficha_catastral: Type[Text]
+    linderos_especiales: Optional[Text]
 
     def __init__(
         self,
         nombre: str,
         numero: str,
+        detalle: str,
         direccion: str,
         ciudad_y_o_departamento: str,
         matricula: str,
@@ -28,6 +28,7 @@ class InmueblePrincipal:
     ):
         self.nombre = nombre
         self.numero = numero
+        self.detalle = detalle
         self.direccion = direccion
         self.ciudad_y_o_departamento = ciudad_y_o_departamento
         self.matricula = matricula

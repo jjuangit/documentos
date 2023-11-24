@@ -10,6 +10,7 @@ from models.inmueble import InmueblePrincipal
 from models.parqueaderos import Parqueadero
 from models.depositos import Deposito
 from models.banco import Banco
+from models.prestamo import Prestamo
 from models.minutas import DocumentoMinuta
 from utils.strip_spaces import strip_dict_or_list
 from utils.exceptions import GeneracionDeMinutaError
@@ -35,17 +36,17 @@ def create_minuta_html():
         request_data = strip_dict_or_list(request_data)
         json_apoderado = request_data['apoderado']
         json_poderdantes = request_data['poderdantes']
-        json_banco = request_data['banco']
         json_inmueble = request_data['inmueble']
         json_parqueaderos = request_data['parqueaderos']
         json_depositos = request_data['depositos']
         json_apoderado_banco = request_data['apoderado_banco']
         json_representante_banco = request_data['representante_banco']
+        json_banco = request_data['banco']
+        json_prestamo = request_data['prestamo']
 
         apoderado = Apoderado(**json_apoderado)
         poderdantes = [Poderdante(**poderdante)
                        for poderdante in json_poderdantes]
-        banco = Banco(**json_banco)
         inmueble = InmueblePrincipal(**json_inmueble)
         depositos = [Deposito(**deposito)
                      for deposito in json_depositos]
@@ -55,8 +56,11 @@ def create_minuta_html():
             **json_apoderado_banco)
         representante_banco = RepresentanteBanco(
             **json_representante_banco)
-        minuta = DocumentoMinuta(apoderado, poderdantes, banco, inmueble, depositos,
-                                 parqueaderos, apoderado_banco, representante_banco)
+        banco = Banco(**json_banco)
+        prestamo = Prestamo(**json_prestamo)
+        minuta = DocumentoMinuta(apoderado, poderdantes, inmueble, depositos,
+                                 parqueaderos, apoderado_banco, representante_banco, 
+                                 banco, prestamo)
         minuta.generate_html()
         print(minuta.html)
         return minuta.html

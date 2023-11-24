@@ -5,9 +5,24 @@ from num2words import num2words
 from utils.document import Document
 from utils.exceptions import ValidationError
 from utils.validators import Validator
+
+from utils.validating_dictionaries.dictionary_poderdantes import dictionary_validator_poderdantes
+from utils.validating_dictionaries.dictionary_apoderado import dictionary_validator_apoderado
+from utils.validating_dictionaries.dictionary_representante_banco import dictionary_validator_representante_banco
+from utils.validating_dictionaries.dictionary_inmueble import dictionary_validator_inmueble
+from utils.validating_dictionaries.dictionary_parqueaderos import dictionary_validator_parqueaderos
+from utils.validating_dictionaries.dictionary_depositos import dictionary_validator_depositos
+from utils.validating_dictionaries.dictionary_apoderado_banco import dictionary_validator_apoderado_banco
+from utils.validating_dictionaries.dictionary_banco import dictionary_validator_banco
+from utils.validating_dictionaries.dictionary_constructora import dictionary_validator_constructora
+from utils.validating_dictionaries.dictionary_compraventa import dictionary_validator_compraventa
+
+from catalogs.catalogos import apoderados_banco
+from catalogs.catalogos import representantes_banco
+from catalogs.catalogos import bancos
+from catalogs.catalogos import constructoras
 from catalogs.fechas import MESES_INGLES_ESPANOL
 
-from models.minutas import DocumentoMinuta
 from .apoderado import Apoderado
 from .apoderado_banco import ApoderadoBanco
 from .depositos import Deposito
@@ -20,7 +35,7 @@ from .constructora import Constructora
 from .compraventa import Compraventa
 
 
-class DocumentoCesionContrato(DocumentoMinuta):
+class DocumentoCesionContrato(Document):
     apoderado: Apoderado
     poderdantes: List[Poderdante]
     inmueble: InmueblePrincipal
@@ -42,8 +57,21 @@ class DocumentoCesionContrato(DocumentoMinuta):
         'generar_clausula_antecedentes',
         'generar_parrafo_datos_constructora',
         'generar_parrafo_datos_inmuebles',
+        'generar_matriculas_inmobiliarias',
+        'generar_fichas_catastrales',
+        'generar_solicitud_credito_a_banco',
+        'generar_clausula_objeto',
+        'generar_clausula_cesion_instrumentada',
+        'generar_clausula_aceptacion',
+        'generar_datos_constructora',
+        'generar_firma_apoderado',
+        'generar_firma_poderdantes',
+        'generar_firma_apoderado_banco',
+        'generar_firma_representante_constructora',
+        'generar_estilos'
+
     ]
-    
+
     def __init__(
         self,
         apoderado: Apoderado,
@@ -67,6 +95,117 @@ class DocumentoCesionContrato(DocumentoMinuta):
         self.banco = banco
         self.constructora = constructora
         self.compraventa = compraventa
+        self.validate_data_cesion_contrato()
+
+    def validate_data_cesion_contrato(self):
+        self.validar_apoderado()
+        self.validar_poderdantes()
+        self.validar_inmueble()
+        self.validar_parqueaderos()
+        self.validar_depositos()
+        self.validar_apoderado_banco()
+        self.validar_representante_banco()
+        self.validar_banco()
+        self.validar_constructora()
+        self.validar_compraventa()
+
+    def validar_poderdantes(self):
+        if self.cantidad_poderdantes == 0 and self.cantidad_poderdantes > 2:
+            raise ValidationError(
+                'Debe haber al menos un poderdante y no más de dos poderdantes.')
+
+        for poderdante in self.poderdantes:
+            atributos_poderdante = poderdante.__dict__
+            Validator.validate_dict(
+                atributos_poderdante, dictionary_validator_poderdantes, 'Poderdantes')
+
+    def validar_apoderado(self):
+        if self.apoderado is None:
+            raise ValidationError(
+                'No hay datos de apoderado. Favor de agregar datos')
+
+        atributos_apoderado = self.apoderado.__dict__
+        Validator.validate_dict(
+            atributos_apoderado, dictionary_validator_apoderado, 'Apoderado')
+
+    def validar_apoderado_banco(self):
+        if self.apoderado_banco is None:
+            raise ValidationError(
+                'No hay datos de apoderado especial. Favor de agregar datos')
+
+        if self.apoderado_banco.nombre not in [apoderado['nombre'] for apoderado in apoderados_banco]:
+            atributos_apoderado_banco = self.apoderado_banco.__dict__
+            Validator.validate_dict(
+                atributos_apoderado_banco, dictionary_validator_apoderado_banco, 'Apoderado del banco')
+
+    def validar_representante_banco(self):
+        if self.representante_banco is None:
+            raise ValidationError(
+                'No hay datos de representante legal. Favor de agregar datos')
+
+        if self.representante_banco.nombre not in [representante['nombre'] for representante in representantes_banco]:
+            atributos_representante_banco = self.representante_banco.__dict__
+            Validator.validate_dict(
+                atributos_representante_banco, dictionary_validator_representante_banco, 'Representante del banco')
+
+    def validar_inmueble(self):
+        if self.inmueble is None:
+            raise ValidationError(
+                'No hay datos de inmueble. Favor de agregar datos')
+
+        atributos_inmueble = self.inmueble.__dict__
+        Validator.validate_dict(
+            atributos_inmueble, dictionary_validator_inmueble, 'Inmueble')
+
+    def validar_parqueaderos(self):
+        if len(self.parqueaderos) > 2:
+            raise ValidationError('No puede haber más de dos "parqueaderos".')
+
+        if self.parqueaderos:
+            for parqueadero in self.parqueaderos:
+                atributos_parqueaderos = parqueadero.__dict__
+
+            Validator.validate_dict(
+                atributos_parqueaderos, dictionary_validator_parqueaderos, 'Parqueaderos')
+
+    def validar_depositos(self):
+        if len(self.depositos) > 2:
+            raise ValidationError('No puede haber más de dos "depósitos".')
+
+        if self.depositos:
+            for deposito in self.depositos:
+                atributos_depositos = deposito.__dict__
+
+            Validator.validate_dict(
+                atributos_depositos, dictionary_validator_depositos, 'Depósitos')
+
+    def validar_banco(self):
+        if self.banco is None:
+            raise ValidationError(
+                'No hay datos de banco. Favor de agregar datos')
+
+        if self.banco.nombre not in [banco['nombre'] for banco in bancos]:
+            atributos_banco = self.banco.__dict__
+            Validator.validate_dict(
+                atributos_banco, dictionary_validator_banco, 'Banco')
+
+    def validar_constructora(self):
+        if self.constructora is None:
+            raise ValidationError(
+                'No hay datos de la constructora. Favor de agregar datos')
+
+        if self.constructora.nombre not in [constructora['nombre'] for constructora in constructoras]:
+            atributos_constructora = self.constructora.__dict__
+            Validator.validate_dict(
+                atributos_constructora, dictionary_validator_constructora, 'Constructora')
+
+    def validar_compraventa(self):
+        if self.compraventa is None:
+            raise ValidationError(
+                'No hay datos de la compraventa. Favor de agregar datos')
+        atributos_compraventa = self.compraventa.__dict__
+        Validator.validate_dict(
+            atributos_compraventa, dictionary_validator_compraventa, 'Compraventa')
 
     def estado_civil_es_union(self, estado_civil):
         estados_civiles_union = [
@@ -76,6 +215,10 @@ class DocumentoCesionContrato(DocumentoMinuta):
             'Soltero con unión marital de hecho sin sociedad patrimonial vigente'
         ]
         return estado_civil in estados_civiles_union
+
+    @property
+    def cantidad_poderdantes(self):
+        return len(self.poderdantes)
 
     def multiples_inmuebles(self):
         inmuebles = 0
@@ -96,9 +239,9 @@ class DocumentoCesionContrato(DocumentoMinuta):
 
     def generar_parrafo_datos_apoderado(self):
         resultado = ''
-        resultado += '<p>Entre los suscritos a saber: de una parte, '
+        resultado += '<div class="parrafos"><p>Entre los suscritos a saber: de una parte, '
         resultado += f'<b>{self.apoderado.nombre.upper()},</b> mayor de edad, '
-        resultado += f'{self.apoderado.identificado} con <b> {self.apoderado.tipo_identificacion} '
+        resultado += f'{self.apoderado.identificado} con <b>{self.apoderado.tipo_identificacion} '
         resultado += f'No. {self.apoderado.numero_identificacion} de '
         resultado += f'{self.apoderado.ciudad_expedicion_identificacion},</b> hábil para '
         resultado += 'contratar y obligarse, quien actúa en nombre y representación de '
@@ -106,6 +249,12 @@ class DocumentoCesionContrato(DocumentoMinuta):
 
     # TODO Pendiente agregar texto final
     def generar_parrafo_datos_poderdantes(self):
+        if len(self.poderdantes) > 1:
+            cedentes = 'denominarán <b>LOS CEDENTES</b>'
+            quienes = 'quienes'
+        elif len(self.poderdantes) == 1:
+            quienes = 'quien'
+            cedentes = 'denominará <b>El CEDENTE</b>'
         resultado = ''
         for index, poderdante in enumerate(self.poderdantes):
 
@@ -116,14 +265,16 @@ class DocumentoCesionContrato(DocumentoMinuta):
             resultado += f'{poderdante.identificado} con {poderdante.tipo_identificacion} <b>No. '
             resultado += f'{poderdante.numero_identificacion} de '
             resultado += f'{poderdante.ciudad_expedicion_identificacion},</b> '
-            resultado += f'{poderdante.domiciliado} {poderdante.residenciado} en '
+            resultado += f'{poderdante.domiciliado} y {poderdante.residenciado} en '
             resultado += f'<b>{poderdante.domicilio},</b> de estado civil '
             resultado += f'<b>{poderdante.estado_civil_genero};</b> en su calidad de '
+            resultado += 'Apoderado Especial, según acredita con el ________________'
+            resultado += f'{quienes} para todos los efectos se {cedentes}, '
         return resultado
 
     def generar_parrafo_datos_apoderado_banco(self):
         resultado = ''
-        resultado += f'y de otra parte, {self.apoderado_banco.doctor}, <b>'
+        resultado += f'y de otra parte {self.apoderado_banco.doctor}, <b>'
         resultado += f'{self.apoderado_banco.nombre.upper()},</b> mayor de edad, '
         resultado += f'{self.apoderado_banco.vecino} de {self.apoderado_banco.ciudad_residencia}, '
         resultado += f'{self.apoderado_banco.identificado} con <b> '
@@ -133,16 +284,33 @@ class DocumentoCesionContrato(DocumentoMinuta):
         resultado += 'quien comparece en este acto en su calidad de '
         resultado += f'{self.apoderado_banco.apoderado} {self.apoderado_banco.tipo_apoderado} de '
         resultado += f'<b>{self.banco.nombre.upper()},</b> acorde con el Poder '
+        resultado += f'{self.apoderado_banco.tipo_poder} constituido por '
         return resultado
 
     def generar_parrafo_datos_representante_banco(self):
+        nombre = self.representante_banco.nombre.upper()
+        ciudad_residencia = self.representante_banco.ciudad_residencia
+        tipo_identificacion = self.representante_banco.tipo_identificacion
+        numero_identificacion = self.representante_banco.numero_identificacion
+        ciudad_expedicion_identificacion = self.representante_banco.ciudad_expedicion_identificacion
+        tipo_representante = self.representante_banco.tipo_representante
+        doctor = self.representante_banco.doctor
+        vecino = self.representante_banco.vecino
+        identificado = self.representante_banco.identificado
+
         resultado = ''
-        resultado += ''
+        resultado += f'{doctor} <u><b>{nombre},</b></u> mayor de edad, {vecino} de '
+        resultado += f'<u><b>{ciudad_residencia},</b></u> {identificado} con '
+        resultado += f'<u><b>{tipo_identificacion}</b></u> No. '
+        resultado += f'<u><b>{numero_identificacion}</b></u> de '
+        resultado += f'<u><b>{ciudad_expedicion_identificacion},</b></u> '
+        resultado += 'quien compareció en ese acto en nombre y por cuenta en su calidad  '
+        resultado += f'de {tipo_representante} de '
         return resultado
 
     def generar_constitucion_banco_union(self):
         resultado = ''
-        resultado += f'de <b>{self.banco.nombre.upper()}</b> antes <b>GIROS & FINANZAS COMPAÑÍA DE '
+        resultado += f'<b>{self.banco.nombre.upper()}</b>antes <b>GIROS & FINANZAS COMPAÑÍA DE '
         resultado += 'FINANCIAMIENTO S.A.</b>, sociedad con domicilio principal en Cali, '
         resultado += 'identificada Tributariamente con NIT número 860.006.797-9, sociedad '
         resultado += 'constituida legalmente mediante Escritura Pública No. 5938 del 05 de '
@@ -157,12 +325,13 @@ class DocumentoCesionContrato(DocumentoMinuta):
         resultado += 'Superintendencia Finaciera, quien para los efectos del presente contraro se '
         resultado += 'denominará la <b>CESIONARIA,</b> por medio del presente documento convenimos '
         resultado += 'celebrar cesión de contrato de promesa de compraventa que se regirá por las '
-        resultado += 'siguientes cláusulas:----------------------------------------------------</p>'
+        resultado += 'siguientes cláusulas:----------------------------------------------------'
+        resultado += '</p></div>'
         return resultado
 
     def generar_clausula_antecedentes(self):
         resultado = ''
-        resultado += '<b>PRIMERA ANTECEDENTES:</b><br><br>'
+        resultado += '<div class="center"><b>PRIMERA ANTECEDENTES:</b></div><br>'
         return resultado
 
     def generar_parrafo_datos_constructora(self):
@@ -175,8 +344,9 @@ class DocumentoCesionContrato(DocumentoMinuta):
         if len(self.poderdantes) > 1:
             cedentes = '<b>LOS CEDENTES</b> suscribieron'
         elif len(self.poderdantes) == 1:
-            cedentes = '<b>EL CEDENTE</b> souscribió'
+            cedentes = '<b>EL CEDENTE</b> suscribió'
         resultado = ''
+        resultado += '<div class="parrafos">'
         resultado += f'<ol><li>{cedentes} con la sociedad <b>{self.constructora.nombre.upper()}'
         resultado += f'</b>, identificada tributariamente con NIT <b>{self.constructora.nit},</b> '
         resultado += f'contrato de promesa de compraventa suscrita <b>el {dia} de {mes} de '
@@ -186,14 +356,8 @@ class DocumentoCesionContrato(DocumentoMinuta):
     def generar_parrafo_datos_inmuebles(self):
         if self.multiples_inmuebles():
             inmuebles = 'los inmuebles'
-            inmuebles_identifcados = 'inmuebles identificados las matrículas inmobiliarias '
-            fichas = 'fichas catastrales'
-            individuales = 'Individuales respectivamente'
         else:
             inmuebles = 'el inmueble'
-            inmuebles_identifcados = 'inmueble identificado la matrícula inmobiliaria '
-            fichas = 'ficha catastral'
-            individuales = 'Individual'
         resultado = ''
         resultado += f'contrato que versa sobre {inmuebles}: <b>{self.inmueble.nombre} '
         resultado += f'{self.inmueble.numero}, '
@@ -203,24 +367,102 @@ class DocumentoCesionContrato(DocumentoMinuta):
         if self.depositos:
             for deposito in self.depositos:
                 resultado += f'{deposito.nombre} {deposito.numero}, '
+        if self.inmueble.detalle:
+            resultado += f'{self.inmueble.detalle} '
         resultado += f'{self.inmueble.direccion}, {self.inmueble.ciudad_y_o_departamento},</b> '
-        resultado += f'{inmuebles_identifcados}: <b>{self.inmueble.matricula} '
-        if self.parqueaderos:
-            resultado += f'{parqueadero.matricula},</b> '
-        if self.depositos:
-            resultado += f'{deposito.matricula},</b> '
-        resultado += 'de la Oficina de Registro de Instrumentos Públicos de '
-        resultado += f'{self.inmueble.municipio_de_registro_orip} y '
-        if self.inmueble.tipo_ficha_catastral == 'Mayor Extensión':
-            resultado += f'{fichas} <b>No. {self.inmueble.numero_ficha_catastral} Folio de '
-            resultado += 'Mayor Extensión.</b>'
-        elif self.inmueble.tipo_ficha_catastral == 'Individual':
-            resultado += f'{fichas} <b>No. {self.inmueble.numero_ficha_catastral}</b> '
+        return resultado
+
+    def generar_matriculas_inmobiliarias(self):
+        matriculas_presentes = False
+
+        for parqueadero in self.parqueaderos:
+            if parqueadero.matricula:
+                matriculas_presentes = True
+                break
+
+        if not matriculas_presentes:
+            for deposito in self.depositos:
+                if deposito.matricula:
+                    matriculas_presentes = True
+                    break
+
+        if matriculas_presentes:
+            inmuebles = 'inmuebles identificados con los folios de matrículas inmobiliarias'
+        else:
+            inmuebles = 'inmueble identificado con el folio de matrícula inmobiliaria'
+
+        matriculas = [self.inmueble.matricula]
+        for parqueadero in self.parqueaderos:
+            if self.parqueaderos and parqueadero.matricula:
+                matriculas += [parqueadero.matricula]
+        for deposito in self.depositos:
+            if self.depositos and deposito.matricula:
+                matriculas += [deposito.matricula]
+        resultado = ''
+        resultado += f'{inmuebles} No. <b><u>{", ".join(matriculas)}'
+        if matriculas_presentes:
+            resultado += '</u></b> respectivamente '
+
+        resultado += '</u></b> de la Oficina de Registro de Instrumentos Públicos de '
+        resultado += f'<b><u>{self.inmueble.municipio_de_registro_orip}</u></b>'
+        return resultado    
+
+    def generar_fichas_catastrales(self):
+        resultado = ''
+        if self.inmueble.tipo_ficha_catastral == "Mayor Extensión":
+            fichas = getattr(self.inmueble, 'numero_ficha_catastral')
+            if isinstance(fichas, list) and all(isinstance(ficha, dict) for ficha in fichas):
+                resultado += ' y ficha catastral No. <b><u>'
+                resultado += ', '.join([', '.join(ficha_values.values()) for ficha_values in fichas[:-1]])
+                if len(fichas) > 1:
+                    resultado += ' y ' + ', '.join(fichas[-1].values())
+                elif len(fichas) == 1:
+                    resultado += ', '.join(fichas[-1].values())
+                resultado += ' En Mayor Extensión.</u></b> '
+        elif self.inmueble.tipo_ficha_catastral == "Individual":
+            fichas_presentes = False
+            for parqueadero in self.parqueaderos:
+                if parqueadero.numero_ficha_catastral:
+                    fichas_presentes = True
+                    break
+
+            if not fichas_presentes:
+                for deposito in self.depositos:
+                    if deposito.numero_ficha_catastral:
+                        fichas_presentes = True
+                        break
+
+            if fichas_presentes:
+                resultado += ' y fichas catastrales individuales No. <b><u>'
+            else:
+                resultado += 'y ficha catastral individual No. <b><u>'
+
+            fichas_catastrales = self.inmueble.numero_ficha_catastral
+            resultado += ', '.join([', '.join(ficha.values())
+                                   for ficha in fichas_catastrales])
+            resultado += '</u></b>'
+
+            if any(parqueadero.numero_ficha_catastral for parqueadero in self.parqueaderos if parqueadero.numero_ficha_catastral) or any(deposito.numero_ficha_catastral for deposito in self.depositos if deposito.numero_ficha_catastral):
+                resultado += ', '
+
             if self.parqueaderos:
-                resultado += f'<b>{parqueadero.numero_ficha_catastral}</b>'
+                resultado += '<b><u>'
+                resultado += ', '.join([
+                    parqueadero.numero_ficha_catastral for parqueadero in self.parqueaderos if parqueadero.numero_ficha_catastral])
+                resultado += '</u></b>'
             if self.depositos:
-                resultado += f'<b>{deposito.numero_ficha_catastral}</b>'
-            resultado += f'{individuales}'
+                resultado += '<b><u>'
+                resultado += ', '
+                resultado += ', '.join([
+                    deposito.numero_ficha_catastral for deposito in self.depositos if deposito.numero_ficha_catastral])
+                resultado += '</u></b>'
+            for parqueadero in self.parqueaderos:
+                for deposito in self.depositos:
+                    if parqueadero.matricula or deposito.matricula:
+                        resultado += ' respectivamente.</p>'
+                    else:
+                        resultado += '</p>'
+
         return resultado
 
     def generar_solicitud_credito_a_banco(self):
@@ -229,12 +471,17 @@ class DocumentoCesionContrato(DocumentoMinuta):
         elif len(self.poderdantes) == 1:
             cedentes = '<b>EL CEDENTE</b> solicitó'
         resultado = ''
-        resultado += f'<li>{cedentes} a {self.banco.nombre} crédito de vivienda, '
+        resultado += f'<li>{cedentes} a <b>{self.banco.nombre.upper()}</b> crédito de vivienda, '
         resultado += 'para cubrir el pago del precio de la promesa de compraventa '
         resultado += 'descrita en el numeral anterior, el cual le fue aprobado en la '
         resultado += 'modalidad de Leasing Habitacional.</li></ol>'
+        return resultado
 
     def generar_clausula_objeto(self):
+        number_to_word_cuota_inicial = num2words(
+            self.compraventa.cuota_inicial, lang='es')
+        number_format_cuota_inicial = f'{self.compraventa.cuota_inicial:,}'
+
         fecha = datetime.strptime(
             self.compraventa.fecha_compraventa, "%d/%m/%Y").date()
         dia = fecha.day
@@ -242,10 +489,14 @@ class DocumentoCesionContrato(DocumentoMinuta):
         anio = fecha.year
 
         if len(self.poderdantes) > 1:
-            cedentes = 'LOS CEDENTES'
+            cedentes = '<b>CEDENTES</b>'
+            los = f'los {cedentes}'
+            de = f'de los {cedentes}'
             realizan = 'realizan'
         elif len(self.poderdantes) == 1:
-            cedentes = 'EL CEDENTE'
+            cedentes = '<b>CEDENTE</b>'
+            los = f'el {cedentes}'
+            de = f'del {cedentes}'
             realizan = 'realiza'
 
         if self.multiples_inmuebles():
@@ -254,16 +505,18 @@ class DocumentoCesionContrato(DocumentoMinuta):
             inmuebles = 'el inmueble'
         resultado = ''
         resultado += '<p><b>SEGUNDO OBJETO:</b> El objeto del presente contrato es la '
-        resultado += f'cesión que <b>{cedentes}</b> {realizan} a favor de la <b>'
+        resultado += f'cesión que {los} {realizan} a favor de la <b>'
         resultado += 'CESIONARIA,</b> de su posición contractual en la promesa de '
-        resultado += f'compraventa suscrita con la sociedad <b> {self.constructora.nombre} '
-        resultado += f', identificada tributariamente con NIT {self.constructora.nit},</b> '
-        resultado += 'cesión que recae también sobre los recursos entregados por parte del '
+        resultado += f'compraventa suscrita con la sociedad <b>{self.constructora.nombre}, '
+        resultado += f'identificada tributariamente con NIT {self.constructora.nit},</b> '
+        resultado += f'cesión que recae también sobre los recursos entregados por parte {de} '
+        resultado += 'a la sociedad vendedora como cuota inicial, dineros pagados en '
         resultado += 'cumplimiento de la promesa de compraventa objeto de la presente '
-        resultado += f'cesión, los cuales ascienden a la suma de {self.compraventa.cuota_inicial} '
-        resultado += f'contrato de promesa de compraventa suscrito el <b>{dia} de {mes} de '
-        resultado += f'{anio},</b> contratos que versan sobre {inmuebles}: '
-        resultado += f'<b>{self.inmueble.nombre} {self.inmueble.numero} '
+        resultado += 'cesión, los cuales ascienden a la suma de <b>'
+        resultado += f'{number_to_word_cuota_inicial.upper()} PESOS MCTE ($'
+        resultado += f'{number_format_cuota_inicial}),</b> contrato de promesa de compraventa '
+        resultado += f'suscrito el <b>{dia} de {mes} de {anio},</b> contratos que versan '
+        resultado += f'sobre {inmuebles}: <b>{self.inmueble.nombre} {self.inmueble.numero} '
         if self.parqueaderos:
             for parqueadero in self.parqueaderos:
                 resultado += f', {parqueadero.nombre} {parqueadero.numero}, '
@@ -272,36 +525,103 @@ class DocumentoCesionContrato(DocumentoMinuta):
                 resultado += f', {deposito.nombre} {deposito.numero}, '
 
         resultado += f'{self.inmueble.direccion} {self.inmueble.ciudad_y_o_departamento},</b> '
+        resultado += f'{self.generar_parrafo_datos_inmuebles()}</p>'
         return resultado
 
-    def generar_matriculas(self):
+    def generar_clausula_cesion_instrumentada(self):
         resultado = ''
-        if self.multiples_inmuebles():
-            inmuebles_identificados = 'inmuebles identificados con las matrículas inmobiliarias'
-        else:
-            inmuebles_identificados = 'inmueble identificado con la matrícula inmobiliaria'
-        resultado += f'{inmuebles_identificados}: {self.inmueble.matricula}'
-        if self.parqueaderos:
-            for parqueadero in self.parqueaderos:
-                resultado += f', {parqueadero.matricula}'
-        if self.depositos:
-            for deposito in self.depositos:
-                resultado += f', {deposito.matricula} '
-
-        resultado += 'de la Oficina de Registro de Instrumentos Públicos de Cali, y '
+        resultado += '<p><b>TERCERO:</b> Que la cesión instrumentada en el presente documento '
+        resultado += 'la hace el cedente de su libre y espontánea voluntad y para el '
+        resultado += 'cumplimiento de los requisitos exigidos por <b>'
+        resultado += f'{self.banco.nombre.upper()},</b> para el desembolso del crédito de '
+        resultado += 'vivienda en la modalidad de Leasing Habitacional.</p>'
         return resultado
 
-    def generar_fichas_catastrales(self):
-        if self.multiples_inmuebles():
-            fichas = 'fichas catastrales'
-        else:
-            fichas = '=ficha catastral'
+    # TODO terminar funcón, validar datos con Angie
+    def generar_clausula_aceptacion(self):
         resultado = ''
-        if self.inmueble.tipo_ficha_catastral == 'Mayor Extensión':
-            resultado += f'{fichas} <b>No. {self.inmueble.numero_ficha_catastral} '
-            resultado += 'Folio de Mayor Extensión</b>'
-        elif self.inmueble.tipo_ficha_catastral == 'Individual':
-            resultado += f'{fichas} No. {self.inmueble.numero_ficha_catastral} '
-            if self.parqueaderos:
-                for parqueadero in self.parqueaderos:
-                    resultado += f'{parqueadero.numero_ficha_catastral}, '
+        resultado += '<b>CUARTO: ACEPTACIÓN</b> Presente _____________________, mayor de edad '
+        resultado += ', vecino(a) de ____________, identificado(a) con Cédula de Ciudadanía No. '
+        resultado += '______________, actuando en este acto en nombre y representación legal en '
+        resultado += 'su calidad de (GERENTE, REPRESENTANTE LEGAL, ETC) de la sociedad '
+        return resultado
+
+    def generar_datos_constructora(self):
+        if len(self.poderdantes) > 1:
+            cedentes = 'LOS CEDENTES'
+        elif len(self.poderdantes) == 1:
+            cedentes = 'EL CEDENTE'
+        resultado = ''
+        resultado += f'<b>{self.constructora.nombre.upper()}, identificada tributariamente con '
+        resultado += f'NIT {self.constructora.nit},</b> sociedad con domicilio en la ciudad de '
+        resultado += f'<b>{self.constructora.ciudad_ubicacion}</b> constituida por medio de '
+        resultado += '______________________ de fecha _____________________, otorgada en _____, '
+        resultado += 'debidamente inscrita en __________________, '
+        resultado += 'cuya existencia, vigencia y representación legal acreditada con el '
+        resultado += 'certificado que para los efectos le ha expedido la ______________, '
+        resultado += 'debidamente autorizada por _______________________, '
+        resultado += 'hábil para contratar y obligarse, manifestó que acepta la cesión que por '
+        resultado += f'este instrumento hace <b>{cedentes}</b> a la <b>CESIONARIA.</b><br></div>'
+        return resultado
+
+    def generar_firma_apoderado(self):
+        if len(self.poderdantes) > 1:
+            cedentes = 'LOS CEDENTES'
+        elif len(self.poderdantes) == 1:
+            cedentes = 'EL CEDENTE'
+        resultado = ''
+        resultado += f'<b>{cedentes}</b><br>'
+        resultado += '_________________________________<br>'
+        resultado += '_________________________________<br>'
+        resultado += '_________________________________<br>'
+        resultado += f'<b>{self.apoderado.nombre.upper()},<br>'
+        resultado += f'{self.apoderado.abreviacion_identificacion} '
+        resultado += f'{self.apoderado.numero_identificacion} de '
+        resultado += f'{self.apoderado.ciudad_expedicion_identificacion}</b><br>'
+        resultado += 'En nombre y representación de<br><br>'
+        return resultado
+    
+    def generar_firma_poderdantes(self):
+        resultado = ''
+        for index, poderdante in enumerate(self.poderdantes):
+            resultado += f'<b>{poderdante.nombre.upper()}</b><br>'
+            resultado += f'<b>{poderdante.abreviacion_identificacion} '
+            resultado += f' {poderdante.numero_identificacion} de '
+            resultado += f'{poderdante.ciudad_expedicion_identificacion}</b><br><br>'
+            if index < len(self.poderdantes) - 1:
+                resultado += 'y<br><br>'
+        return resultado
+
+    def generar_firma_apoderado_banco(self):
+        resultado = ''
+        resultado += '<b>EL CESIONARIO</b><br><br><br>'
+        resultado += '_______________________________________<br>'
+        resultado += f'<b>{self.apoderado_banco.nombre.upper()}<br>'
+        resultado += f'{self.apoderado_banco.abreviacion_identificacion} '
+        resultado += f'{self.apoderado_banco.numero_identificacion} expedida en'
+        resultado += f'{self.apoderado_banco.ciudad_expedicion_identificacion}<br> '
+        resultado += f'{self.apoderado_banco.apoderado} {self.apoderado_banco.tipo_apoderado} de'
+        resultado += f'<br> {self.banco.nombre.upper()}<br>'
+        resultado += f'NIT {self.banco.nit}</b>'
+        return resultado
+
+    def generar_firma_representante_constructora(self):
+        resultado = ''
+        resultado += '<br><br><br><b>EL ACEPTANTE</b><br><br><br>'
+        resultado += '____________________________________<br>'
+        resultado += 'C.C. No._______________ de<br>'
+        resultado += 'Representante legal de<br>'
+        resultado += f'<b>{self.constructora.nombre.upper()}<br>'
+        resultado += f'NIT. {self.constructora.nit}</b>'
+        return resultado
+
+    def generar_estilos(self):
+        resultado = ''
+        resultado += '<style>div.titulo {text-align: center; font-weight: '
+        resultado += 'bold; font-size: 17px; font-family: Arial, Helvetica, '
+        resultado += 'sans-serif;} div.parrafos {text-align: justify; font-size: '
+        resultado += '16px; list-style: lower-alpha; font-family: '
+        resultado += 'Arial, Helvetica, sans-serif;} div.center {text-align: center; '
+        resultado += 'font-size: 16px; font-family: Arial, Helvetica, sans-serif;}'
+        resultado += '</style>'
+        return resultado

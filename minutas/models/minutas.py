@@ -75,7 +75,6 @@ class DocumentoMinuta(Document):
         'generar_afectacion_vivienda_familiar',
         'generar_lectura_escritura_por_otorgantes',
         'generar_paz_y_salvo',
-        'generar_firma_comprador',
         'generar_firma_hipotecante',
         'generar_firma_apoderado_banco',
         'generar_estilos'
@@ -126,18 +125,15 @@ class DocumentoMinuta(Document):
                 atributos_poderdante, dictionary_validator_poderdantes, 'Poderdantes')
 
     def validar_apoderado(self):
-        if self.apoderado is None:
-            raise ValidationError(
-                'No hay datos de apoderado. Favor de agregar datos')
-
-        atributos_apoderado = self.apoderado.__dict__
-        Validator.validate_dict(
-            atributos_apoderado, dictionary_validator_apoderado, 'Apoderado')
+        if self.apoderado:
+            atributos_apoderado = self.apoderado.__dict__
+            Validator.validate_dict(
+                atributos_apoderado, dictionary_validator_apoderado, 'Apoderado')
 
     def validar_apoderado_banco(self):
         if self.apoderado_banco is None:
             raise ValidationError(
-                'No hay datos de apoderado especial. Favor de agregar datos')
+                'No hay datos del banco. Favor de agregar datos')
 
         if self.apoderado_banco.nombre not in [apoderado['nombre'] for apoderado in apoderados_banco]:
             atributos_apoderado_banco = self.apoderado_banco.__dict__
@@ -237,15 +233,16 @@ class DocumentoMinuta(Document):
     # TODO Pendiente en relación a la escritura, de momento se queda abierto linea 523
     def generar_parrafo_apoderado(self):
         resultado = ''
-        resultado += '<div class="parrafos"><p>'
-        resultado += f'Presente nuevamente <b><u>{self.apoderado.nombre}</u>,</b> mayor de edad, '
-        resultado += f'{self.apoderado.identificado} con <b><u>{self.apoderado.tipo_identificacion}'
-        resultado += f'</u></b> No. <b><u>{self.apoderado.numero_identificacion}</u></b> de '
-        resultado += f'<b><u>{self.apoderado.ciudad_expedicion_identificacion}</u></b>, quien '
-        resultado += 'conforme al Poder General a él otorgado por medio de la __________________ '
-        resultado += 'el cual se protocoliza con la presente escritura para los fines legales, '
-        resultado += 'cuya vigencia, autenticidad y alcance se hace responsable; actúa en nombre y '
-        resultado += 'representación de '
+        resultado += '<div class="parrafos"><p>Presente nuevamente '
+        if self.apoderado:
+            resultado += f'<b><u>{self.apoderado.nombre}</u>,</b> mayor de edad, '
+            resultado += f'{self.apoderado.identificado} con <b><u>{self.apoderado.tipo_identificacion}'
+            resultado += f'</u></b> No. <b><u>{self.apoderado.numero_identificacion}</u></b> de '
+            resultado += f'<b><u>{self.apoderado.ciudad_expedicion_identificacion}</u></b>, quien '
+            resultado += 'conforme al Poder General a él otorgado por medio de la __________________ '
+            resultado += 'el cual se protocoliza con la presente escritura para los fines legales, '
+            resultado += 'cuya vigencia, autenticidad y alcance se hace responsable; actúa en nombre y '
+            resultado += 'representación de '
         return resultado
 
     def generar_parrafo_poderdantes(self):
@@ -288,6 +285,8 @@ class DocumentoMinuta(Document):
     def generar_direccion_inmueble(self):
         resultado = ''
         resultado += f'<p><b><u>{self.inmueble.nombre.upper()} {self.inmueble.numero.upper()} '
+        if self.inmueble.detalle:
+            resultado += f'{self.inmueble.detalle} '
         resultado += f'{self.inmueble.direccion.upper()} '
         resultado += f'{self.inmueble.ciudad_y_o_departamento.upper()}</u></b></p>'
         if self.inmueble.linderos_especiales:
@@ -343,22 +342,25 @@ class DocumentoMinuta(Document):
             if self.depositos and deposito.matricula:
                 matriculas += [deposito.matricula]
         resultado = ''
-        resultado += f'<p>{inmuebles} No. <b><u>{", ".join(matriculas)}'
+        resultado += f'{inmuebles} No. <b><u>{", ".join(matriculas)}'
         if matriculas_presentes:
             resultado += '</u></b> respectivamente '
 
         resultado += '</u></b> de la Oficina de Registro de Instrumentos Públicos de '
-        resultado += f'<b><u>{self.inmueble.municipio_de_registro_orip}</u></b> '
+        resultado += f'<b><u>{self.inmueble.municipio_de_registro_orip}</u></b>'
         return resultado
 
     def generar_fichas_catastrales(self):
         resultado = ''
         if self.inmueble.tipo_ficha_catastral == "Mayor Extensión":
-            fichas = getattr(self.inmueble, 'numero_ficha_catastral', None)
+            fichas = getattr(self.inmueble, 'numero_ficha_catastral')
             if isinstance(fichas, list) and all(isinstance(ficha, dict) for ficha in fichas):
-                resultado += 'y ficha catastral No. <b><u>'
-                resultado += ' y '.join(
-                    [value for ficha in fichas for value in ficha.values()])
+                resultado += ' y ficha catastral No. <b><u>'
+                resultado += ', '.join([', '.join(ficha_values.values()) for ficha_values in fichas[:-1]])
+                if len(fichas) > 1:
+                    resultado += ' y ' + ', '.join(fichas[-1].values())
+                elif len(fichas) == 1:
+                    resultado += ', '.join(fichas[-1].values())
                 resultado += ' En Mayor Extensión.</u></b> '
         elif self.inmueble.tipo_ficha_catastral == "Individual":
             fichas_presentes = False
@@ -374,7 +376,7 @@ class DocumentoMinuta(Document):
                         break
 
             if fichas_presentes:
-                resultado += 'y fichas catastrales individuales No. <b><u>'
+                resultado += ' y fichas catastrales individuales No. <b><u>'
             else:
                 resultado += 'y ficha catastral individual No. <b><u>'
 
@@ -806,7 +808,7 @@ class DocumentoMinuta(Document):
         identificado = self.apoderado_banco.identificado
         doctor = self.apoderado_banco.doctor
 
-        resultado += f'Presente {doctor}, <u><b>{nombre},</b></u>'
+        resultado += f'Presente {doctor}, <u><b>{nombre},</b></u> '
         resultado += f'{naturaleza}, mayor de edad, {vecino} de <u><b>'
         resultado += f'{ciudad_residencia}</b></u> {identificado} con '
         resultado += f'<u><b>{tipo_identificacion}</b></u> No. '
@@ -895,7 +897,9 @@ class DocumentoMinuta(Document):
         resultado = ''
         resultado += '<b>APLICACIÓN A LA LEY 0258 de 1996: AFECTACIÓN A VIVIENDA FAMILIAR:</b> '
         resultado += 'A continuación, el(la) notario(a) interroga bajo juramento a '
-        resultado += f'{self.apoderado.apoderado} de <b>LA PARTE HIPOTECANTE</b>, si '
+        if self.apoderado:
+            resultado += f'{self.apoderado.apoderado} de '
+        resultado += '<b>LA PARTE HIPOTECANTE</b>, si '
         resultado += f'{inmuebles} por el presente Instrumento se encuentra Afectado al '
         resultado += 'Régimen de Vivienda Familiar, a lo que responde: <b>NO.</b> '
         resultado += f'El Notario deja constancia que {inmuebles} <b>NO</b> se afecta a vivienda '
@@ -936,19 +940,16 @@ class DocumentoMinuta(Document):
         resultado += '<div class="seccion_firmas">'
         resultado += 'LOS VENDEDORES,<br><br><br> _____________________<br>_________<br>'
         resultado += 'NIT: _____________<br><br><br>'
+        resultado += 'EL COMPRADOR E HIPOTECANTE<br><br><br><br>'
+        resultado += '_______________________________<br>'
+        if self.apoderado:
+            resultado += self.generar_firma_comprador()
         return resultado
 
     def generar_firma_comprador(self):
         resultado = ''
-        resultado += 'EL COMPRADOR E HIPOTECANTE<br><br><br><br>'
-        resultado += '_______________________________<br>'
         resultado += f'<b>{self.apoderado.nombre.upper()}<br>'
-        if self.apoderado.tipo_identificacion == 'Cédula de ciudadanía':
-            resultado += 'C.C. '
-        elif self.apoderado.tipo_identificacion == 'Cédula de extranjería':
-            resultado += 'C.E '
-        elif self.apoderado.tipo_identificacion == 'Pasaporte':
-            resultado += 'Pasaporte '
+        resultado += f'{self.apoderado.abreviacion_identificacion} '
         resultado += f'{self.apoderado.numero_identificacion} de '
         resultado += f'{self.apoderado.ciudad_expedicion_identificacion}</b><br>'
         resultado += 'En representación de<br>'
@@ -958,13 +959,8 @@ class DocumentoMinuta(Document):
         resultado = ''
         for index, poderdante in enumerate(self.poderdantes):
             resultado += f'<b>{poderdante.nombre.upper()}</b><br>'
-            if poderdante.tipo_identificacion == 'Cédula de Ciudadanía':
-                resultado += '<b>C.C.'
-            elif poderdante.tipo_identificacion == 'Cédula de Extranjería':
-                resultado += '<b>C.E.'
-            elif poderdante.tipo_identificacion == 'Pasaporte':
-                resultado += '<b>Pasaporte'
-            resultado += f' {poderdante.numero_identificacion} de '
+            resultado += f'<b>{poderdante.abreviacion_identificacion} '
+            resultado += f'{poderdante.numero_identificacion} de '
             resultado += f'{poderdante.ciudad_expedicion_identificacion}</b><br><br>'
             if index < len(self.poderdantes) - 1:
                 resultado += 'y<br><br>'

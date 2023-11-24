@@ -38,7 +38,10 @@ class TestMinuta(TestCase):
             json_prestamo = cases['prestamo']
 
             try:
-                apoderado = Apoderado(**json_apoderado)
+                if json_apoderado is None:
+                    apoderado = None
+                else:
+                    apoderado = Apoderado(**json_apoderado)
                 poderdantes = [Poderdante(**poderdante)
                                for poderdante in json_poderdantes]
                 inmueble = InmueblePrincipal(**json_inmueble)

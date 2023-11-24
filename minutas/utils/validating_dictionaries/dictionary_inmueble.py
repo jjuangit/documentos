@@ -11,6 +11,9 @@ dictionary_validator_inmueble = {
         Validator.required,
         Validator.validate_letters_numbers_dash
     ],
+    'detalle': [
+        Validator.validate_letters_numbers_comma_dot_hash_dash
+    ],
     'direccion': [
         Validator.required,
         Validator.validate_letters_numbers_comma_dot_hash_dash
