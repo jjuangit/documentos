@@ -12,5 +12,9 @@ dictionary_validator_compraventa = {
     'cuota_inicial': [
         Validator.required,
         Validator.validate_number,
+    ],
+    'fecha_compraventa': [
+        Validator.validate_string,
+        Validator.validate_date_format
     ]
 }

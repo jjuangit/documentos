@@ -17,6 +17,7 @@ from utils.validating_dictionaries.dictionary_banco import dictionary_validator_
 from utils.validating_dictionaries.dictionary_aceptante import dictionary_validator_aceptante
 from utils.validating_dictionaries.dictionary_compraventa import dictionary_validator_compraventa
 from utils.validating_dictionaries.dictionary_representante_aceptante import dictionary_validator_representante_aceptante
+from utils.validating_dictionaries.dictionary_organo_autorizador import dictionary_validator_organo_autorizador
 
 from catalogs.catalogos import apoderados_banco
 from catalogs.catalogos import representantes_banco
@@ -119,6 +120,7 @@ class DocumentoCesionContrato(Document):
         self.validar_banco()
         self.validar_aceptante()
         self.validar_compraventa()
+        self.validar_organo_autorizador()
 
     def validar_poderdantes(self):
         if self.cantidad_poderdantes == 0 and self.cantidad_poderdantes > 2:
@@ -222,6 +224,14 @@ class DocumentoCesionContrato(Document):
         atributos_compraventa = self.compraventa.__dict__
         Validator.validate_dict(
             atributos_compraventa, dictionary_validator_compraventa, 'Compraventa')
+        
+    def validar_organo_autorizador(self):
+        if self.organo_autorizador is None:
+            raise ValidationError(
+                'No hay datos del Organo autorizador. Favor de agregar datos')
+        atributos_organo_autorizador = self.organo_autorizador.__dict__
+        Validator.validate_dict(
+            atributos_organo_autorizador, dictionary_validator_organo_autorizador, 'Organo Autorizador')
 
     def estado_civil_es_union(self, estado_civil):
         estados_civiles_union = [
@@ -256,10 +266,10 @@ class DocumentoCesionContrato(Document):
     def generar_parrafo_datos_apoderado(self):
         resultado = ''
         resultado += '<div class="parrafos"><p>Entre los suscritos a saber: de una parte, '
-        resultado += f'<b>{self.apoderado.nombre.upper()},</b> mayor de edad, '
+        resultado += f'<b><u>{self.apoderado.nombre.upper()},</u></b> mayor de edad, '
         resultado += f'{self.apoderado.identificado} con <b>{self.apoderado.tipo_identificacion} '
-        resultado += f'No. {self.apoderado.numero_identificacion} de '
-        resultado += f'{self.apoderado.ciudad_expedicion_identificacion},</b> hábil para '
+        resultado += f'No. <u>{self.apoderado.numero_identificacion}</u> de '
+        resultado += f'<u>{self.apoderado.ciudad_expedicion_identificacion},</u></b> hábil para '
         resultado += 'contratar y obligarse, quien actúa en nombre y representación de '
         return resultado
 
@@ -282,37 +292,37 @@ class DocumentoCesionContrato(Document):
             if index == len(self.poderdantes) - \
                     1 and len(self.poderdantes) > 1:
                 resultado += ' y '
-            resultado += f'<b>{poderdante.nombre.upper()},</b> mayor de edad, '
-            resultado += f'{poderdante.identificado} con <b>{poderdante.tipo_identificacion} No. '
-            resultado += f'{poderdante.numero_identificacion} de '
-            resultado += f'{poderdante.ciudad_expedicion_identificacion},</b> '
+            resultado += f'<b><u>{poderdante.nombre.upper()},</u></b> mayor de edad, '
+            resultado += f'{poderdante.identificado} con <b><u>{poderdante.tipo_identificacion} '
+            resultado += f'No. {poderdante.numero_identificacion}</u> de '
+            resultado += f'<u>{poderdante.ciudad_expedicion_identificacion},</u></b> '
             resultado += f'{poderdante.domiciliado} y {poderdante.residenciado} en '
-            resultado += f'<b>{poderdante.domicilio.upper()},</b> de estado civil '
-            resultado += f'<b>{poderdante.estado_civil_genero.upper()};</b> en su calidad de '
-            resultado += f'{self.apoderado.apoderado} {self.apoderado.tipo_apoderado}, '
+            resultado += f'<b><u>{poderdante.domicilio.upper()},</u></b> de estado civil '
+            resultado += f'<b><u>{poderdante.estado_civil_genero.upper()};</u></b> en su calidad '
+            resultado += f'de {self.apoderado.apoderado} {self.apoderado.tipo_apoderado}, '
             resultado += f'según acredita con el Poder {self.apoderado.tipo_apoderado} a '
             resultado += f'{self.apoderado.el} otorgado '
             if self.apoderado.tipo_apoderado == 'Especial':
-                resultado += f'y debidamente autenticado el día <b>{dia} de {mes} de {anio} </b>'
-                resultado += f'ante {self.apoderado.dependencia} <b>'
-                resultado += f'{self.apoderado.tipo_dependencia_autenticacion} '
-                resultado += f'{self.apoderado.nombre_dependencia} de '
-                resultado += f'{self.apoderado.ciudad_dependencia},</b> '
+                resultado += f'y debidamente autenticado el día <b><u>{dia} de {mes} del {anio} '
+                resultado += f'</u></b>ante {self.apoderado.dependencia} '
+                resultado += f'<b><u>{self.apoderado.nombre_dependencia.upper()} de '
+                resultado += f'{self.apoderado.ciudad_dependencia.upper()},</u></b> '
             elif self.apoderado.tipo_apoderado == 'General':
-                resultado += 'mediante la <b>Escritura Pública No.</b>'
+                resultado += 'mediante la <b><u>Escritura Pública No.'
+                resultado += f'{self.apoderado.escritura}</u></b>'
 
             resultado += f'{quienes} para todos los efectos se {cedentes}, '
         return resultado
 
     def generar_parrafo_datos_apoderado_banco(self):
         resultado = ''
-        resultado += f'y de otra parte {self.apoderado_banco.doctor}, <b>'
-        resultado += f'{self.apoderado_banco.nombre.upper()},</b> mayor de edad, '
-        resultado += f'{self.apoderado_banco.vecino} de {self.apoderado_banco.ciudad_residencia}, '
-        resultado += f'{self.apoderado_banco.identificado} con <b>'
+        resultado += f'y de otra parte {self.apoderado_banco.doctor}, <b><u>'
+        resultado += f'{self.apoderado_banco.nombre.upper()},</u></b> mayor de edad, '
+        resultado += f'{self.apoderado_banco.vecino} de <b><u>{self.apoderado_banco.ciudad_residencia},'
+        resultado += f'</b></u> {self.apoderado_banco.identificado} con <b>'
         resultado += f'{self.apoderado_banco.tipo_identificacion} No. '
-        resultado += f'{self.apoderado_banco.numero_identificacion} de '
-        resultado += f'{self.apoderado_banco.ciudad_expedicion_identificacion},</b> '
+        resultado += f'<u>{self.apoderado_banco.numero_identificacion}</u> de '
+        resultado += f'<u>{self.apoderado_banco.ciudad_expedicion_identificacion},</u></b> '
         resultado += 'quien comparece en este acto en su calidad de '
         resultado += f'{self.apoderado_banco.apoderado} {self.apoderado_banco.tipo_apoderado} de '
         resultado += f'<b>{self.banco.nombre.upper()},</b> acorde con el Poder '
@@ -320,7 +330,7 @@ class DocumentoCesionContrato(Document):
         if self.apoderado_banco.tipo_poder == 'Autenticado':
             resultado += f'a {self.apoderado_banco.el} conferido por '
         elif self.apoderado_banco.tipo_poder == 'Escriturado':
-            resultado += f' constituido por <b>{self.apoderado_banco.escritura},</b> '
+            resultado += f' constituido por <b><u>{self.apoderado_banco.escritura},</u></b> '
             resultado += f'a {self.apoderado_banco.el} conferido por '
         return resultado
 
@@ -351,7 +361,7 @@ class DocumentoCesionContrato(Document):
         resultado += 'FINANCIAMIENTO S.A.</b>, sociedad con domicilio principal en Cali, '
         resultado += 'identificada Tributariamente con NIT número 860.006.797-9, sociedad '
         resultado += 'constituida legalmente mediante Escritura Pública No. 5938 del 05 de '
-        resultado += 'diciembre de 1963, otorgada en la Notaria Cuarta (04) del Círculo de Bogotá '
+        resultado += 'diciembre de 1963, otorgada en la Notaría Cuarta (04) del Círculo de Bogotá '
         resultado += ', inscrita en la Cámara de Comercio de Cali, el 7 de noviembre de 2000, bajo '
         resultado += 'el número 7516 del Libro IX, sociedad convertida a establecimiento Bancario '
         resultado += 'y modificada su razón social mediante Escritura Pública No. 3140 del 16 de '
@@ -359,7 +369,7 @@ class DocumentoCesionContrato(Document):
         resultado += 'en la Cámara de Comercio de Cali el 28 de Junio de 2022, bajo el No. 12001 '
         resultado += 'del Libro todo lo cual se acredita con el Certificado de Existencia y '
         resultado += 'Representación Legal expedido por la Cámara de Comercio de Cali y por la '
-        resultado += 'Superintendencia Finaciera, quien para los efectos del presente contrato se '
+        resultado += 'Superintendencia Financiera, quien para los efectos del presente contrato se '
         resultado += 'denominará la <b>CESIONARIA,</b> por medio del presente documento convenimos '
         resultado += 'celebrar cesión de contrato de promesa de compraventa que se regirá por las '
         resultado += 'siguientes cláusulas:----------------------------------------------------'
@@ -383,11 +393,11 @@ class DocumentoCesionContrato(Document):
         elif len(self.poderdantes) == 1:
             cedentes = '<b>EL CEDENTE</b> suscribió'
         resultado = ''
-        resultado += '<div class="parrafos">'
-        resultado += f'<ol><li>{cedentes} con la sociedad <b>{self.aceptante.nombre.upper()}'
-        resultado += f'</b>, identificada tributariamente con NIT <b>{self.aceptante.nit},</b> '
-        resultado += f'contrato de promesa de compraventa suscrita <b>el {dia} de {mes} de '
-        resultado += f'{anio},</b> '
+        resultado += f'<div class="parrafos"><ol><li>{cedentes} '
+        resultado += f'con la sociedad <b><u>{self.aceptante.nombre.upper()},</u></b>'
+        resultado += f' identificada tributariamente con NIT <b><u>{self.aceptante.nit},'
+        resultado += '</b></u> contrato de promesa de compraventa '
+        resultado += f'suscrita el <b><u>{dia} de {mes} de {anio},</u></b> '
         return resultado
 
     def generar_parrafo_datos_inmuebles(self):
@@ -396,7 +406,7 @@ class DocumentoCesionContrato(Document):
         else:
             inmuebles = 'el inmueble'
         resultado = ''
-        resultado += f'contrato que versa sobre {inmuebles}: <b>{self.inmueble.nombre} '
+        resultado += f'contrato que versa sobre {inmuebles}: <b><u>{self.inmueble.nombre} '
         resultado += f'{self.inmueble.numero}, '
         if self.parqueaderos:
             for parqueadero in self.parqueaderos:
@@ -404,7 +414,7 @@ class DocumentoCesionContrato(Document):
         if self.depositos:
             for deposito in self.depositos:
                 resultado += f'{deposito.nombre} {deposito.numero}, '
-        resultado += f'{self.inmueble.direccion}, {self.inmueble.ciudad_y_o_departamento},</b> '
+        resultado += f'{self.inmueble.direccion}, {self.inmueble.ciudad_y_o_departamento},</u></b> '
         return resultado
 
     def generar_matriculas_inmobiliarias(self):
@@ -535,23 +545,19 @@ class DocumentoCesionContrato(Document):
             de = f'del <b>{cedentes}</b>'
             realizan = 'realiza'
 
-        if self.multiples_inmuebles():
-            inmuebles = 'los inmuebles'
-        else:
-            inmuebles = 'el inmueble'
         resultado = ''
         resultado += '<p><b>SEGUNDO OBJETO:</b> El objeto del presente contrato es la '
         resultado += f'cesión que {los} {realizan} a favor de la <b>'
-        resultado += 'CESIONARIA,</b> de su posición contractual en la promesa de '
-        resultado += f'compraventa suscrita con la sociedad <b>{self.aceptante.nombre.upper()}, '
-        resultado += f'identificada tributariamente con NIT {self.aceptante.nit},</b> '
+        resultado += 'CESIONARIA,</b> de su posición contractual en la promesa de compraventa '
+        resultado += f'suscrita con la sociedad <b><u>{self.aceptante.nombre.upper()},</u> '
+        resultado += f'identificada tributariamente con NIT <u>{self.aceptante.nit},</u></b> '
         resultado += f'cesión que recae también sobre los recursos entregados por parte {de} '
         resultado += 'a la sociedad vendedora como cuota inicial, dineros pagados en '
         resultado += 'cumplimiento de la promesa de compraventa objeto de la presente '
-        resultado += 'cesión, los cuales ascienden a la suma de <b>'
+        resultado += 'cesión, los cuales ascienden a la suma de <b><u>'
         resultado += f'{number_to_word_cuota_inicial.upper()} PESOS MCTE ($'
-        resultado += f'{number_format_cuota_inicial}),</b> contrato de promesa de compraventa '
-        resultado += f'suscrito el <b>{dia} de {mes} de {anio},</b> '
+        resultado += f'{number_format_cuota_inicial}),</u></b> contrato de promesa de '
+        resultado += f'compraventa suscrito el <b><u>{dia} de {mes} de {anio},</u></b> '
         resultado += f'{self.generar_parrafo_datos_inmuebles()}'
         resultado += f'{self.generar_matriculas_inmobiliarias()} '
         resultado += f'{self.generar_fichas_catastrales()}</p>'
@@ -568,35 +574,32 @@ class DocumentoCesionContrato(Document):
 
     # TODO terminar funcón, validar datos con Angie
     def generar_clausula_aceptacion(self):
-        if self.representante_aceptante.nombre:
-            doctor = self.representante_aceptante.doctor
-            nombre = self.representante_aceptante.nombre
-            vecino = self.representante_aceptante.vecino
-            ciudad = self.representante_aceptante.ciudad_residencia
-            identificado = self.representante_aceptante.identificado
-            numero_identificacion = self.representante_aceptante.numero_identificacion
-            tipo_representante = self.representante_aceptante.tipo_representante
-        else:
-            doctor = 'el Dr(a)'
-            nombre = '_________________'
-            vecino = 'vecino(a)'
-            ciudad = '_________________'
-            identificado = 'identificado(a)'
-            numero_identificacion = '_____________'
-            tipo_representante = '______________'
-
+        if not self.representante_aceptante:
+            self.representante_aceptante = RepresentanteAceptante(
+                nombre='_________________',
+                tipo_identificacion='_______________',
+                numero_identificacion='_____________',
+                ciudad_expedicion_identificacion='________',
+                ciudad_residencia='__________',
+                genero='________',
+                tipo_representante='_________',
+            )
         resultado = ''
-        resultado += f'<b>CUARTO: ACEPTACIÓN</b> Presente {doctor}. {nombre}, mayor de edad, '
-        resultado += f'{vecino} de {ciudad}, {identificado} con Cédula de Ciudadanía No. '
-        resultado += f'{numero_identificacion}, actuando en este acto en nombre y '
-        resultado += f'representación legal en su calidad de ({tipo_representante}) '
-        resultado += 'de la sociedad '
+        resultado += f'<b>CUARTO: ACEPTACIÓN</b> Presente {self.representante_aceptante.doctor}. '
+        resultado += f'<b><u>{self.representante_aceptante.nombre},</b></u> mayor de edad, '
+        resultado += f'{self.representante_aceptante.vecino} de <b><u>'
+        resultado += f'{self.representante_aceptante.ciudad_residencia},</b></u> '
+        resultado += f'{self.representante_aceptante.identificado} con '
+        resultado += f'{self.representante_aceptante.tipo_identificacion} No. '
+        resultado += f'<b><u>{self.representante_aceptante.numero_identificacion},</u></b> '
+        resultado += 'actuando en este acto en nombre y representación legal en su calidad de '
+        resultado += f'({self.representante_aceptante.tipo_representante}) de la sociedad '
         return resultado
 
     def generar_datos_aceptante(self):
-        if self.organo_autorizador.fecha:
+        if self.organo_autorizador.fecha_acta:
             fecha = datetime.strptime(
-                self.organo_autorizador.fecha, "%d/%m/%Y").date()
+                self.organo_autorizador.fecha_acta, "%d/%m/%Y").date()
             dia = fecha.day
             mes = MESES_INGLES_ESPANOL[fecha.strftime('%B')]
             anio = fecha.year
@@ -615,26 +618,28 @@ class DocumentoCesionContrato(Document):
         elif len(self.poderdantes) == 1:
             cedentes = 'EL CEDENTE'
         resultado = ''
-        resultado += f'<b>{self.aceptante.nombre.upper()}, identificada tributariamente con '
-        resultado += f'NIT {self.aceptante.nit},</b> sociedad con domicilio en la ciudad de '
-        resultado += f'<b>{self.aceptante.ciudad_ubicacion}</b> constituida por medio de la '
-        resultado += f'<b>{self.aceptante.escritura},</b> otorgada en la '
-        resultado += f'<b>{self.aceptante.nombre_notaria} de '
-        resultado += f'{self.aceptante.ciudad_ubicacion_notaria}</b> debidamente inscrita en la '
-        resultado += f'<b>Cámara de Comercio de {self.aceptante.ciudad_ubicacion_camara_comercio},'
-        resultado += '</b> cuya existencia, vigencia y representación legal acreditada con el '
-        resultado += 'certificado que para los efectos le ha expedido la <b>Camara de Comercio de '
-        resultado += f'{self.organo_autorizador.ciudad_ubicacion_camara_comercio}</b> '
-        resultado += 'debidamente autorizada por la Junta Directiva según consta en el acta No. '
-        resultado += f'{numero_acta} de fecha {mes} de {anio} hábil para contratar y obligarse, '
-        resultado += 'manifestó que acepta la cesión que por este instrumento hace '
-        resultado += f'<b>{cedentes}</b> a la <b>CESIONARIA. -----------------</b><br><br><br>'
+        resultado += f'<b><u>{self.aceptante.nombre.upper()},</u></b> identificada tributariamente '
+        resultado += f'con NIT <b><u>{self.aceptante.nit},</u></b> sociedad con domicilio en la '
+        resultado += f'ciudad de <b>{self.aceptante.ciudad_ubicacion.upper()}</b> constituida '
+        resultado += f'por medio de la <b><u>{self.aceptante.escritura},</u></b> otorgada en la '
+        resultado += f'<b><u>{self.aceptante.nombre_notaria} de '
+        resultado += f'{self.aceptante.ciudad_ubicacion_notaria}</u></b> debidamente inscrita en '
+        resultado += 'la <b><u>Cámara de Comercio de '
+        resultado += f'{self.aceptante.ciudad_ubicacion_camara_comercio},</b></u> cuya existencia, '
+        resultado += 'vigencia y representación legal acreditada con el certificado que para los '
+        resultado += 'efectos le ha expedido la <b><u>Camara de Comercio de '
+        resultado += f'{self.organo_autorizador.ciudad_ubicacion_camara_comercio}</b></u> debidamente '
+        resultado += 'autorizada por la Junta Directiva según consta en el acta No. <b><u>'
+        resultado += f'{numero_acta}</b></u> de fecha <b><u>{dia} {mes} de {anio}</u></b> hábil '
+        resultado += 'para contratar y obligarse, manifestó que acepta la cesión que por este '
+        resultado += f'instrumento hace <b>{cedentes}</b> a la <b>CESIONARIA. -----------------'
+        resultado += '</b><br><br><br>'
         return resultado
     
     def generar_fecha_firma(self):
         resultado = ''
-        resultado += 'Para constancia se firma en la ciudad de ________ el  día ________ (_____) de '
-        resultado += '________ del año dos mil veintitres (2023).<br><br></div>'
+        resultado += 'Para constancia se firma en la ciudad de ________ el  día ________ (_____) '
+        resultado += 'de ________ del año dos mil veintitres (2023).<br><br></div>'
         return resultado
 
     def generar_firma_apoderado(self):
@@ -679,21 +684,24 @@ class DocumentoCesionContrato(Document):
         return resultado
 
     def generar_firma_representante_aceptante(self):
-        if self.representante_aceptante.nombre:
-            nombre = self.representante_aceptante.nombre
-            numero_cedula = self.representante_aceptante.numero_identificacion
-            ciudad_expedicion_identificacion = self.representante_aceptante.ciudad_expedicion_identificacion
-
-        else:
-            nombre = '_______________'
-            numero_cedula = '____________'
-            ciudad_expedicion_identificacion = '________'
+        if not self.representante_aceptante:
+            self.representante_aceptante = RepresentanteAceptante(
+                nombre='_________________',
+                tipo_identificacion='_______________',
+                numero_identificacion='_____________',
+                ciudad_expedicion_identificacion='________',
+                ciudad_residencia='__________',
+                genero='________',
+                tipo_representante='_________',
+            )
         resultado = ''
         resultado += '<br><br><br><b>EL ACEPTANTE</b><br><br><br>'
         resultado += '____________________________________<br>'
-        resultado += f'<b>{nombre}</b><br>'
-        resultado += f'C.C. No. {numero_cedula} de {ciudad_expedicion_identificacion}<br>'
-        resultado += 'Representante legal de<br>'
+        resultado += f'<b>{self.representante_aceptante.nombre}</b><br>'
+        resultado += f'<b>{self.representante_aceptante.abreviacion_identificacion} No. '
+        resultado += f'{self.representante_aceptante.numero_identificacion} de '
+        resultado += self.representante_aceptante.ciudad_expedicion_identificacion
+        resultado += '</b><br>Representante legal de<br>'
         resultado += f'<b>{self.aceptante.nombre.upper()}<br>'
         resultado += f'NIT. {self.aceptante.nit}</b>'
         return resultado

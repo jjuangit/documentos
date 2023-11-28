@@ -62,6 +62,7 @@ class Apoderado:
 
 class ApoderadoCesionContrato(Apoderado):
     tipo_apoderado: Optional[Text]
+    escritura: Optional[Text]
     fecha_autenticacion_poder: Optional[Text]
     tipo_dependencia_autenticacion: Optional[Text]
     nombre_dependencia: Optional[Text]
@@ -75,6 +76,7 @@ class ApoderadoCesionContrato(Apoderado):
         ciudad_expedicion_identificacion: str,
         genero: str,
         tipo_apoderado: str,
+        escritura: str,
         fecha_autenticacion_poder: str,
         tipo_dependencia_autenticacion: str,
         nombre_dependencia: str,
@@ -87,6 +89,7 @@ class ApoderadoCesionContrato(Apoderado):
             ciudad_expedicion_identificacion,
             genero)
         self.tipo_apoderado = tipo_apoderado
+        self.escritura = escritura
         self.fecha_autenticacion_poder = fecha_autenticacion_poder
         self.tipo_dependencia_autenticacion = tipo_dependencia_autenticacion
         self.nombre_dependencia = nombre_dependencia

@@ -32,59 +32,52 @@ class TestCesionContrato(TestCase):
     def test_init_cesion_contrato_success(self):
         """Funcion para imprimir el html de la cesión de contrato"""
         diccionario_apoderado = {
-            'nombre': 'ESPERANZA BOTERO IDÁRRAGA',
+            'nombre': 'DAIRY PAOLA MEJIA PASTRANA',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
-            'numero_identificacion': '31.951.464',
-            'ciudad_expedicion_identificacion': 'Cali',
+            'numero_identificacion': '1.083.040.935',
+            'ciudad_expedicion_identificacion': 'Santa Marta',
             'genero': genero['FEMENINO'],
             'tipo_apoderado': 'Especial',
-            'fecha_autenticacion_poder': '28/08/2023',
-            'tipo_dependencia_autenticacion': 'Notaría',
-            'nombre_dependencia': 'Novena del Circulo',
-            'ciudad_dependencia': 'Cali'
+            'escritura': '',
+            'fecha_autenticacion_poder': '01/11/2023',
+            'tipo_dependencia_autenticacion': 'Consulado',
+            'nombre_dependencia': 'Consulado General Central de Colombia',
+            'ciudad_dependencia': 'New York - Estados Unidos',
         }
 
         diccionario_poderdantes = [{
-            'nombre': 'MARIA ESPERANZA BETANCOURT',
+            'nombre': 'JORGE ALBEIRO CÁCERES MUNIVE',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
-            'numero_identificacion': '31.868.984',
-            'ciudad_expedicion_identificacion': 'Cali',
-            'domicilio': 'FLAT 5 262A OLD KENT ROAD SE1 5UB LONDRES',
-            'estado_civil': estado_civil['CASADO_CON_SOCIEDAD_CONYUGAL_VIGENTE'],
-            'genero': genero['FEMENINO'],
+            'numero_identificacion': '79.409.698',
+            'ciudad_expedicion_identificacion': 'Bogotá',
+            'domicilio': 'NEW ROCHELLE- NEW YORK',
+            'estado_civil': estado_civil['SOLTERO_SIN_UNION_MARITAL_DE_HECHO'],
+            'genero': genero['MASCULINO'],
         }
         ]
 
         diccionario_inmueble = {
             'nombre': 'APARTAMENTO',
-            'numero': '107 TORRE A',
-            'direccion': 'CONJUNTO RESIDENCIAL ALTEA PH., CARRERA 24 5-269',
-            'ciudad_y_o_departamento': 'EN PARQUE NATURA JAMUNDÍ VALLE DEL CAUCA',
-            'matricula': '370-1097610',
-            'municipio_de_registro_orip': 'Cali',
+            'numero': '207 PISO-2 TORRE-4',
+            'direccion': 'CONJUNTO RESIDENCIAL VENECIA INN CARRERA 34 # 43 - 15',
+            'ciudad_y_o_departamento': 'EN SANTA MARTA MAGDALENA',
+            'matricula': '080-163243',
+            'municipio_de_registro_orip': 'Santa Marta',
             'tipo_ficha_catastral': ficha_catastral['MAYOR_EXTENSION'],
             'numero_ficha_catastral': [
-                {'ficha': '763640100000007701796000000000'},
+                {'ficha': '0002000000070001000000000'},
             ],
             'linderos_especiales': ''
         }
 
-        diccionario_parqueaderos = [{
-            'nombre': 'GARAJE',
-            'numero': '71',
-            'direccion': '',
-            'matricula': '370-1098010',
-            'tipo_ficha_catastral': ficha_catastral['INDIVIDUAL'],
-            'numero_ficha_catastral': '',
-            'linderos_especiales': ''
-        }
+        diccionario_parqueaderos = [
         ]
 
         diccionario_depositos = [
         ]
 
         diccionario_apoderado_banco = {
-            'nombre': 'Lina Marcela Palau Zea',
+            'nombre': 'Gloria Esperanza Garcia Troncoso',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
             'numero_identificacion': '',
             'ciudad_expedicion_identificacion': '',
@@ -105,13 +98,13 @@ class TestCesionContrato(TestCase):
         }
 
         diccionario_representante_aceptante = {
-            'nombre': '',
-            'tipo_identificacion': '',
-            'numero_identificacion': '',
-            'ciudad_expedicion_identificacion': '',
-            'ciudad_residencia': '',
-            'genero': '',
-            'tipo_representante': ''
+            'nombre': 'MILANI ESTHER ESCORCIA SANTIAGO',
+            'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
+            'numero_identificacion': '32.706.233',
+            'ciudad_expedicion_identificacion': 'Barranquilla',
+            'ciudad_residencia': 'Barranquilla',
+            'genero': genero['FEMENINO'],
+            'tipo_representante': 'Representante Legal'
         }
         diccionario_banco = {
             'nombre': 'banco unión s.a',
@@ -119,13 +112,13 @@ class TestCesionContrato(TestCase):
         }
 
         diccionario_aceptante = {
-            'nombre': 'Constructora Bolivar Cali S.A.',
-            'nit': '',
-            'ciudad_ubicacion': '',
-            'escritura': 'Escritura Pública Numero 3747 de fecha 31 de agosto de 1973',
-            'nombre_notaria': 'Notaria Catorce de Santa Fe',
-            'ciudad_ubicacion_notaria': 'Bogotá',
-            'ciudad_ubicacion_camara_comercio': 'Cali'
+            'nombre': 'CONSTRUCTORA JIMENEZ S.A',
+            'nit': '891.702.877-8',
+            'ciudad_ubicacion': 'Santa Marta',
+            'escritura': 'Escritura Pública Numero 300 de fecha 25 de febrero de 1986',
+            'nombre_notaria': 'Notaria Primera',
+            'ciudad_ubicacion_notaria': 'Santa Marta',
+            'ciudad_ubicacion_camara_comercio': 'Santa Marta'
 
         }
 
@@ -137,9 +130,9 @@ class TestCesionContrato(TestCase):
         }
 
         diccionario_organo_autorizador = {
-            'ciudad_ubicacion_camara_comercio': 'Cali',
-            'numero_acta': '',
-            'fecha': ''
+            'ciudad_ubicacion_camara_comercio': 'Santa Marta',
+            'numero_acta': '00002365 del Libro IX',
+            'fecha_acta': '16/06/2006'
         }
 
         diccionario_apoderado = strip_dict_or_list(diccionario_apoderado)

@@ -130,7 +130,7 @@ class Validator:
     def validate_letters_numbers_comma_dot_hash_dash(value, key=None):
         '''Solo se permiten letras, números, almohadilla(#) y guion(-)'''
         if value:
-            pattern = r'^[a-zA-Z0-9,.\#\-\s\'"áéíóúÁÉÍÓÚüÜñÑ()]+$'
+            pattern = r'^[a-zA-Z0-9,.\#\-\s\'"áéíóúÁÉÍÓÚüÜñÑ()/]+$'
             if not re.match(pattern, value):
                 raise ValidationError(
                     f'"{key}" contiene carácteres no permitidos.')
@@ -187,6 +187,19 @@ class Validator:
             if not re.match(pattern, value):
                 raise ValidationError(
                     f"{key} contiene caracteres no permitidos.")
+            return True
+        else:
+            return True
+    
+    @staticmethod
+    def validate_date_format(value, key=None):
+        '''Solo se permite fecha con el siguiente formato (dd/mm/yyyy)'''
+        if value:
+            pattern = r'^\d{2}/\d{2}/\d{4}$'
+
+            if not re.match(pattern, value):
+                raise ValueError(f'Error: La fecha "{key}" no tiene el formato correcto (dd/mm/yyyy).')
+
             return True
         else:
             return True

@@ -28,55 +28,38 @@ class TestMinuta(TestCase):
     def test_init_minuta_success(self):
         """Funcion para imprimir el html de la minuta"""
         diccionario_apoderado = {
-            'nombre': 'FRANCISCO BUSTAMANTE POSADA',
+            'nombre': 'JOSÉ FERNANDO SALAS CALA',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
-            'numero_identificacion': '7.436.307',
-            'ciudad_expedicion_identificacion': 'BARRANQUILLA',
+            'numero_identificacion': '91.219.662',
+            'ciudad_expedicion_identificacion': 'Bucaramanga',
             'genero': genero['MASCULINO'],
         }
 
         diccionario_poderdantes = [{
-            'nombre': 'LUISA AMELIA HERNANDEZ POSADA',
+            'nombre': 'YHISELL FERNANDA MORA SALAS',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
-            'numero_identificacion': '55.220.020',
-            'ciudad_expedicion_identificacion': 'BARRANQUILLA',
-            'domicilio': 'HOFFMAN ESTATES - ILLINOIS',
-            'estado_civil': estado_civil['CASADO_CON_SOCIEDAD_CONYUGAL_VIGENTE'],
+            'numero_identificacion': '1.232.892.499',
+            'ciudad_expedicion_identificacion': 'Bucaramanga',
+            'domicilio': 'Dacula Georgia',
+            'estado_civil': estado_civil['SOLTERO_SIN_UNION_MARITAL_DE_HECHO'],
             'genero': genero['FEMENINO'],
-        },{
-            'nombre': 'WOJCIECH JAROSLAW URBAN',
-            'tipo_identificacion': tipos_identificacion_ciudadano['PASAPORTE']['nombre'],
-            'numero_identificacion': '520255366',
-            'ciudad_expedicion_identificacion': 'ESTADOS UNIDOS DE AMERICA',
-            'domicilio': 'HOFFMAN ESTATES - ILLINOIS',
-            'estado_civil': estado_civil['CASADO_CON_SOCIEDAD_CONYUGAL_VIGENTE'],
-            'genero': genero['MASCULINO'],
         }
         ]
 
         diccionario_inmueble = {
             'nombre': 'APARTAMENTO',
-            'numero': '714 PISO 7 TORRE 2 ETAPA 1',
-            'direccion': 'CONJUNTO RESIDENCIAL RIVER PALMS CALLE 100 # 64 84',
-            'ciudad_y_o_departamento': 'EN RIO ALTO BARRANQUILLA ATLANTICO',
-            'matricula': '040-649403',
-            'municipio_de_registro_orip': 'Barranquilla',
+            'numero': '411 de la Torre 5, piso 4',
+            'direccion': 'CONJUNTO RESIDENCIAL NUEVA FORESTA ETAPA V, CARRERA 15 No. 92-164, B/ EL ANGELINO, BUCARAMANGA -SANTANDER',
+            'ciudad_y_o_departamento': 'EN SANTA CRUZ DE CURINCA, SANTA MARTA MAGDALENA',
+            'matricula': '300-466617',
+            'municipio_de_registro_orip': 'BUCARAMANGA',
             'tipo_ficha_catastral': ficha_catastral['MAYOR_EXTENSION'],
             'numero_ficha_catastral': [
-                {'ficha': '01-03-00-00-0716-0226-0-00-00-0000'}
+                {'ficha': '68001010404130005000'}
             ],
-            'linderos_especiales': 'TORRE 2 APARTAMENTO N° 714 ubicado en el piso 7 de la Torre número 2 de la etapa 1 del CONJUNTO RESIDENCIAL RIVER PALMS P.H., situada en la ciudad de Barranquilla, en la Calle 100 No. 64 -84 de la nomenclatura urbana, destinado a vivienda, con un área construida total aproximada de 69.05 metros cuadrados, un área privada construida aproximada de 64.61 metros cuadrados, y una altura libre aproximada entre 2.40 - 2.50 metros lineales. Su área y linderos están determinados por el perímetro marcado con los puntos del 133 al 150 y 133 punto de partida, del plano No. PH 9/12 que se protocoliza con el presente reglamento de Propiedad Horizontal; linda por el CENIT, o parte de encima, con losa de concreto que lo separa del piso 8, y por el NADIR, o parte de abajo, con losa de concreto que lo separa del piso 6.'
+            'linderos_especiales': 'APARTAMENTO 411 Torre 5 PISO 4 del conjunto residencial Nueva Foresta etapa V, ubicado en la Carrera 15 No. 92-164 del barrio El Angelino, del Municipio de Bucaramanga, Santander, el cual contiene: sala, comedor, balcón, cocina, ropas, baño 1, baño 2, habitación principal, habitación 2, espacio disponible. El inmueble posee un área total de cincuenta y tres metros cuadrados (53 mts2) de los cuales cuarenta y cinco metros con dieciséis centímetros cuadrados (45,16 mts2) son de área privada construida, seis metros con cuarenta centímetros cuadrados (6,40 mts2) son de área común y un metro con cuarenta y cuatro centímetros (1,44 mts2) son de área común de uso exclusivo. El inmueble está determinado por los siguientes linderos: por el NORTE: Del punto 1 con Foresta - coordenada este= 1105196,35 y coordenada norte= 1275891,06, al punto 2 con coordenada este= 1105188,93 y coordenada norte= 1275888,07 en línea quebrada de 10,75 mts con zona común de la torre; por el SUR: Del punto 3 con coordenada este= 1105191,35 y coordenada norte= 1275882,36, al punto 4 con coordenada este= 1105198,72 y coordenada norte= 1275885,50 en línea quebrada de 13,00 mtl con zona común del conjunto; ORIENTE: Del punto 1 con coordenada este= 1105196,35 y coordenada norte= 1275891,06, al punto 4 con coordenada este= 1105198,72 y coordenada norte= 1275885,50 en línea quebrada de 15,75 mtl con apto 409; por el OCCIDENTE: Del punto 2 con coordenada este= 1105188,93 y coordenada norte= 1275888,07, al punto 3 con coordenada este= 1105191,35 y coordenada norte= 1275882,36 en línea quebrada de 15,60 mtl con apto 413; por el NADIR: con el apto 311; por el CENIT: Con apartamento 511.'
         }
         diccionario_parqueaderos = [
-            {
-                "nombre": "GARAJE CON CUARTO UTIL No.",
-                "numero": "714 PISO 7 TORRE 2 ETAPA 1",
-                "direccion": "CONJUNTO RESIDENCIAL RIVER PALMS CALLE 100 # 64 84, EN RIO ALTO BARRANQUILLA ATLANTICO",
-                "matricula": "040-649440",
-                "tipo_ficha_catastral": "",
-                "numero_ficha_catastral": "",
-                "linderos_especiales": "TORRE 2 PARQUEADERO CON CUARTO ÚTIL N° 81, Ubicado en el SOTANO 1 de la torre 2 de la etapa 1 en el CONJUNTO RESIDENCIAL RIVER PALMS P.H., situado en la ciudad de Barranquilla, en la Calle 100 No. 64 - 84 de la nomenclatura urbana, destinado a estacionamiento de un (1) vehículo y a depósito de objetos, con un área privada construida aproximada de 15.2 metros cuadrados y una altura mínima aproximada de 2.5 metros lineales. Su área y linderos están determinados por el perímetro marcado con los puntos 63 al 69 y 63, punto de partida, del plano No. PH 1/12 que se protocoliza con el presente reglamento de Propiedad Horizontal; linda por el CENIT, o parte de encima, con losa de concreto que lo separa del Primer Piso, y por el NADIR, o parte de abajo, con losa de concreto que lo separa del sótano 2."
-            }
         ]
 
         diccionario_depositos = [
@@ -84,23 +67,23 @@ class TestMinuta(TestCase):
         ]
 
         diccionario_apoderado_banco = {
-            'nombre': 'Viviana del Pilar Olaciregui Escalante',
+            'nombre': 'ROSANA GUEVARA PLATA',
+            'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
+            'numero_identificacion': '37.746.531',
+            'ciudad_expedicion_identificacion': 'Bucaramanga',
+            'ciudad_residencia': 'Bucaramanga',
+            'genero': genero['FEMENINO'],
+            'tipo_apoderado': tipo_apoderado_banco['GENERAL'],
+            'tipo_poder': 'General',
+            'escritura': 'Escritura Pública Número 0020 de enero 7 de 2020 de la Notaría Catorce de Cali'
+        }
+
+        diccionario_representante_banco = {
+            'nombre': 'Héctor Fabio Rodríguez Prado',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
             'numero_identificacion': '',
             'ciudad_expedicion_identificacion': '',
             'ciudad_residencia': '',
-            'genero': genero['FEMENINO'],
-            'tipo_apoderado': tipo_apoderado_banco['GENERAL'],
-            'tipo_poder': '',
-            'escritura': ''
-        }
-
-        diccionario_representante_banco = {
-            'nombre': 'Juan Pablo Cruz López',
-            'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
-            'numero_identificacion': '',
-            'ciudad_expedicion_identificacion': '',
-            'ciudad_residencia': 'Cali',
             'genero': genero['FEMENINO'],
             'tipo_representante': tipo_representante_banco['SUPLENTE'],
         }
@@ -111,9 +94,9 @@ class TestMinuta(TestCase):
         }
 
         diccionario_prestamo = {
-            'cantidad_banco_a_hipotecante': 276370742,
-            'cantidad_dada_a_aceptante': 267024871,
-            'gastos_de_gestion': 9345871
+            'cantidad_banco_a_hipotecante': 102879000,
+            'cantidad_dada_a_aceptante': 99400000,
+            'gastos_de_gestion': 3479000
         }
 
         diccionario_apoderado = strip_dict_or_list(diccionario_apoderado)
