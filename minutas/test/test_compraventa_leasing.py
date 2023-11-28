@@ -3,7 +3,7 @@ from unittest import TestCase
 from models.compraventa_leasing import DocumentoCompraventaLeasing
 from models.apoderado import Apoderado
 from models.poderdantes import Poderdante
-from models.inmueble import InmueblePrincipal
+from models.inmueble import Inmueble
 from models.depositos import Deposito
 from models.parqueaderos import Parqueadero
 from models.apoderado_banco import ApoderadoBanco
@@ -123,7 +123,7 @@ class TestCompraventaLeasing(TestCase):
             apoderado = Apoderado(**diccionario_apoderado)
         poderdantes = [Poderdante(**poderdante)
                        for poderdante in diccionario_poderdantes]
-        inmueble = InmueblePrincipal(**diccionario_inmueble)
+        inmueble = Inmueble(**diccionario_inmueble)
         depositos = [Deposito(**deposito)
                      for deposito in diccionario_depositos]
         parqueaderos = [Parqueadero(**parqueadero)

@@ -26,7 +26,7 @@ from catalogs.fechas import MESES_INGLES_ESPANOL
 from .apoderado import Apoderado
 from .apoderado_banco import ApoderadoBanco
 from .depositos import Deposito
-from .inmueble import InmueblePrincipal
+from .inmueble import Inmueble
 from .parqueaderos import Parqueadero
 from .poderdantes import Poderdante
 from .representante_banco import RepresentanteBanco
@@ -38,7 +38,7 @@ from .compraventa import Compraventa
 class DocumentoCompraventaLeasing(Document):
     apoderado: Apoderado
     poderdantes: List[Poderdante]
-    inmueble: InmueblePrincipal
+    inmueble: Inmueble
     depositos: List[Deposito]
     parqueaderos: List[Parqueadero]
     apoderado_banco: ApoderadoBanco
@@ -59,7 +59,7 @@ class DocumentoCompraventaLeasing(Document):
         self,
         apoderado: Apoderado,
         poderdantes: List[Poderdante],
-        inmueble: InmueblePrincipal,
+        inmueble: Inmueble,
         parqueaderos: List[Parqueadero],
         depositos: List[Deposito],
         apoderado_banco: ApoderadoBanco,

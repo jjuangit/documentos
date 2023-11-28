@@ -6,7 +6,7 @@ from models.apoderado import Apoderado
 from models.apoderado_banco import ApoderadoBanco
 from models.poderdantes import Poderdante
 from models.representante_banco import RepresentanteBanco
-from models.inmueble import InmueblePrincipal
+from models.inmueble import Inmueble
 from models.parqueaderos import Parqueadero
 from models.depositos import Deposito
 from models.banco import Banco
@@ -47,7 +47,7 @@ def create_minuta_html():
         apoderado = Apoderado(**json_apoderado)
         poderdantes = [Poderdante(**poderdante)
                        for poderdante in json_poderdantes]
-        inmueble = InmueblePrincipal(**json_inmueble)
+        inmueble = Inmueble(**json_inmueble)
         depositos = [Deposito(**deposito)
                      for deposito in json_depositos]
         parqueaderos = [Parqueadero(**parqueadero)

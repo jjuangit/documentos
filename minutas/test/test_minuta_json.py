@@ -5,7 +5,7 @@ from unittest import TestCase
 from models.minuta import DocumentoMinuta
 from models.apoderado import Apoderado
 from models.poderdantes import Poderdante
-from models.inmueble import InmueblePrincipal
+from models.inmueble import Inmueble
 from models.depositos import Deposito
 from models.parqueaderos import Parqueadero
 from models.apoderado_banco import ApoderadoBanco
@@ -44,7 +44,7 @@ class TestMinuta(TestCase):
                     apoderado = Apoderado(**json_apoderado)
                 poderdantes = [Poderdante(**poderdante)
                                for poderdante in json_poderdantes]
-                inmueble = InmueblePrincipal(**json_inmueble)
+                inmueble = Inmueble(**json_inmueble)
                 depositos = [Deposito(**deposito)
                              for deposito in json_depositos]
                 parqueaderos = [Parqueadero(**parqueadero)

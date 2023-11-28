@@ -27,9 +27,9 @@ from catalogs.fechas import MESES_INGLES_ESPANOL
 
 from .apoderado import ApoderadoCesionContrato
 from .apoderado_banco import ApoderadoBanco
-from .depositos import Deposito
-from .inmueble import InmueblePrincipal
-from .parqueaderos import Parqueadero
+from .depositos import DepositoPromesaCompraventa
+from .inmueble import InmueblePromesaCompraventa
+from .parqueaderos import ParqueaderoPromesaCompraventa
 from .poderdantes import Poderdante
 from .representante_banco import RepresentanteBanco
 from .banco import Banco
@@ -42,9 +42,9 @@ from .organo_autorizador import OrganoAutorizador
 class DocumentoCesionContrato(Document):
     apoderado: ApoderadoCesionContrato
     poderdantes: List[Poderdante]
-    inmueble: InmueblePrincipal
-    depositos: List[Deposito]
-    parqueaderos: List[Parqueadero]
+    inmueble: InmueblePromesaCompraventa
+    depositos: List[DepositoPromesaCompraventa]
+    parqueaderos: List[ParqueaderoPromesaCompraventa]
     apoderado_banco: ApoderadoBanco
     representante_banco: RepresentanteBanco
     representante_aceptante: RepresentanteAceptante
@@ -83,9 +83,9 @@ class DocumentoCesionContrato(Document):
         self,
         apoderado: ApoderadoCesionContrato,
         poderdantes: List[Poderdante],
-        inmueble: InmueblePrincipal,
-        parqueaderos: List[Parqueadero],
-        depositos: List[Deposito],
+        inmueble: InmueblePromesaCompraventa,
+        parqueaderos: List[ParqueaderoPromesaCompraventa],
+        depositos: List[DepositoPromesaCompraventa],
         apoderado_banco: ApoderadoBanco,
         representante_banco: RepresentanteBanco,
         representante_aceptante: RepresentanteAceptante,

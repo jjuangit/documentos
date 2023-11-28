@@ -21,7 +21,7 @@ from catalogs.catalogos import bancos
 from .apoderado import Apoderado
 from .apoderado_banco import ApoderadoBanco
 from .depositos import Deposito
-from .inmueble import InmueblePrincipal
+from .inmueble import Inmueble
 from .parqueaderos import Parqueadero
 from .poderdantes import Poderdante
 from .representante_banco import RepresentanteBanco
@@ -32,7 +32,7 @@ from .prestamo import Prestamo
 class DocumentoMinuta(Document):
     apoderado: Apoderado
     poderdantes: List[Poderdante]
-    inmueble: InmueblePrincipal
+    inmueble: Inmueble
     depositos: List[Deposito]
     parqueaderos: List[Parqueadero]
     apoderado_banco: ApoderadoBanco
@@ -84,7 +84,7 @@ class DocumentoMinuta(Document):
         self,
         apoderado: Apoderado,
         poderdantes: List[Poderdante],
-        inmueble: InmueblePrincipal,
+        inmueble: Inmueble,
         depositos: List[Deposito],
         parqueaderos: List[Parqueadero],
         apoderado_banco: ApoderadoBanco,

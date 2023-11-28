@@ -3,9 +3,9 @@ from unittest import TestCase
 from models.cesion_contrato import DocumentoCesionContrato
 from models.apoderado import ApoderadoCesionContrato
 from models.poderdantes import Poderdante
-from models.inmueble import InmueblePrincipal
-from models.depositos import Deposito
-from models.parqueaderos import Parqueadero
+from models.inmueble import InmueblePromesaCompraventa
+from models.depositos import DepositoPromesaCompraventa
+from models.parqueaderos import ParqueaderoPromesaCompraventa
 from models.apoderado_banco import ApoderadoBanco
 from models.representante_banco import RepresentanteBanco
 from models.representante_aceptante import RepresentanteAceptante
@@ -66,8 +66,7 @@ class TestCesionContrato(TestCase):
             'tipo_ficha_catastral': ficha_catastral['MAYOR_EXTENSION'],
             'numero_ficha_catastral': [
                 {'ficha': '0002000000070001000000000'},
-            ],
-            'linderos_especiales': ''
+            ]
         }
 
         diccionario_parqueaderos = [
@@ -149,10 +148,10 @@ class TestCesionContrato(TestCase):
         apoderado = ApoderadoCesionContrato(**diccionario_apoderado)
         poderdantes = [Poderdante(**poderdante)
                        for poderdante in diccionario_poderdantes]
-        inmueble = InmueblePrincipal(**diccionario_inmueble)
-        depositos = [Deposito(**deposito)
+        inmueble = InmueblePromesaCompraventa(**diccionario_inmueble)
+        depositos = [DepositoPromesaCompraventa(**deposito)
                      for deposito in diccionario_depositos]
-        parqueaderos = [Parqueadero(**parqueadero)
+        parqueaderos = [ParqueaderoPromesaCompraventa(**parqueadero)
                         for parqueadero in diccionario_parqueaderos]
         for banck_apoderado in apoderados_banco:
             if banck_apoderado['nombre'] == diccionario_apoderado_banco['nombre']:
