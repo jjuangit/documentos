@@ -175,6 +175,17 @@ apoderados_banco = [
         'tipo_apoderado': 'Especial',
         'tipo_poder': 'Autenticado',
         'escritura': '',
+    },
+    {
+        'nombre': 'Rosana Guevara Plata',
+        'tipo_identificacion': 'Cédula de Ciudadanía',
+        'numero_identificacion': '37.746.531',
+        'ciudad_expedicion_identificacion': 'Bucaramanga',
+        'ciudad_residencia': 'Bucaramanga',
+        'genero': 'Femenino',
+        'tipo_apoderado': 'General',
+        'tipo_poder': 'Escriturado',
+        'escritura': 'Escritura Pública Número 0020 de enero 7 de 2020 de la Notaría Catorce de Cali'
     }
 ]
 
