@@ -118,7 +118,6 @@ class TestCesionContrato(TestCase):
             'nombre_notaria': 'Notaria Primera',
             'ciudad_ubicacion_notaria': 'Santa Marta',
             'ciudad_ubicacion_camara_comercio': 'Santa Marta'
-
         }
 
         diccionario_compraventa = {

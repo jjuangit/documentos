@@ -226,5 +226,14 @@ aceptantes = [
         'ciudad_ubicacion_notaria': 'Bogotá',
         'ciudad_ubicacion_camara_comercio': 'Cali'
 
+    },
+    {
+        'nombre': 'Constructora Jimenez S.A',
+        'nit': '891702877-8',
+        'ciudad_ubicacion': 'Santa Marta',
+        'escritura': 'Escritura Pública Numero 300 de fecha 25 de febrero de 1986',
+        'nombre_notaria': 'Notaria Primera',
+        'ciudad_ubicacion_notaria': 'Santa Marta',
+        'ciudad_ubicacion_camara_comercio': 'Santa Marta'
     }
 ]
