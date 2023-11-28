@@ -21,7 +21,6 @@
     "inmueble": {
         "nombre": "APARTAMENTO",
         "numero": "201 UNIDAD NÚMERO 13",
-        "detalle": "",
         "direccion": "EDIFICIO GALICIA CALLE 5 #5-20,",
         "ciudad_y_o_departamento": "EN PABLO VI SAN GIL SANTANDER",
         "matricula": "319-87481",
@@ -77,7 +76,7 @@
 
     "prestamo": {
         "cantidad_banco_a_hipotecante": 150204375,
-        "cantidad_dada_a_constructora": 145125000,
+        "cantidad_dada_a_aceptante": 145125000,
         "gastos_de_gestion": 5079375
     }
 }

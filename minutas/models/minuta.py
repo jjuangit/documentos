@@ -183,8 +183,7 @@ class DocumentoMinuta(Document):
 
         if self.parqueaderos:
             for parqueadero in self.parqueaderos:
-                atributos_parqueaderos = parqueadero.__dict__
-    
+                atributos_parqueaderos = parqueadero.__dict__    
             Validator.validate_dict(
                 atributos_parqueaderos, dictionary_validator_parqueaderos, 'Parqueaderos')
 
@@ -194,8 +193,7 @@ class DocumentoMinuta(Document):
 
         if self.depositos:
             for deposito in self.depositos:
-                atributos_depositos = deposito.__dict__
-    
+                atributos_depositos = deposito.__dict__    
             Validator.validate_dict(
                 atributos_depositos, dictionary_validator_depositos, 'Depósitos')
 
@@ -285,8 +283,7 @@ class DocumentoMinuta(Document):
     def generar_direccion_inmueble(self):
         resultado = ''
         resultado += f'<p><b><u>{self.inmueble.nombre.upper()} {self.inmueble.numero.upper()} '
-        if self.inmueble.detalle:
-            resultado += f'{self.inmueble.detalle} '
+
         resultado += f'{self.inmueble.direccion.upper()} '
         resultado += f'{self.inmueble.ciudad_y_o_departamento.upper()}</u></b></p>'
         if self.inmueble.linderos_especiales:
@@ -408,9 +405,28 @@ class DocumentoMinuta(Document):
 
         return resultado
 
-    #TODO pendiente el tema de las escrituras, de momento se queda abierto linea 643
+    #TODO pendiente el tema de las escrituras, de momento se queda abierto linea 437
 
     def generar_regimen_propiedad_horizontal(self):
+        matriculas_presentes = False
+
+        for parqueadero in self.parqueaderos:
+            if parqueadero.matricula:
+                matriculas_presentes = True
+                break
+
+        if not matriculas_presentes:
+            for deposito in self.depositos:
+                if deposito.matricula:
+                    matriculas_presentes = True
+                    break
+
+        if matriculas_presentes:
+            inmuebles = 'en los Folios de Matrículas Inmobiliarias'
+        else:
+            inmuebles = 'en el Folio de Matrícula Inmobiliaria'
+
+
         if self.multiples_inmuebles():
             t_inmuebles = 'Los inmuebles objeto de la presente hipoteca fueron sometidos'
         else:
@@ -419,9 +435,16 @@ class DocumentoMinuta(Document):
         resultado += f'<p><b>RÉGIMEN DE PROPIEDAD HORIZONTAL:</b> {t_inmuebles} al régimen '
         resultado += 'legal de propiedad horizontal, de conformidad con la Ley 675 de '
         resultado += 'agosto 3 de 2001 por medio de _______________________________ , '
-        resultado += 'debidamente registrada en el Folio de Matrícula Inmobiliaria No. '
-        resultado += f'<b><u>{self.inmueble.matricula}</u></b> de la Oficina de Registro '
-        resultado += 'de Instrumentos Públicos de <b><u>'
+        resultado += 'debidamente registrada '
+        matriculas = [self.inmueble.matricula]
+        for parqueadero in self.parqueaderos:
+            if self.parqueaderos and parqueadero.matricula:
+                matriculas += [parqueadero.matricula]
+        for deposito in self.depositos:
+            if self.depositos and deposito.matricula:
+                matriculas += [deposito.matricula]
+        resultado += f'{inmuebles} No. <b><u>{", ".join(matriculas)}</u></b> '
+        resultado += 'de la Oficina de Registro de Instrumentos Públicos de <b><u>'
         resultado += f'{self.inmueble.municipio_de_registro_orip}.</u></b></p>'
         return resultado
 
@@ -508,9 +531,9 @@ class DocumentoMinuta(Document):
             self.prestamo.cantidad_banco_a_hipotecante, lang='es')
         number_format_hipotecante = f'{self.prestamo.cantidad_banco_a_hipotecante:,}'
 
-        number_to_word_constructora = num2words(
-            self.prestamo.cantidad_dada_a_constructora, lang='es')
-        number_format_constructora = f'{self.prestamo.cantidad_dada_a_constructora:,}'
+        number_to_word_aceptante = num2words(
+            self.prestamo.cantidad_dada_a_aceptante, lang='es')
+        number_format_aceptante = f'{self.prestamo.cantidad_dada_a_aceptante:,}'
 
         number_to_word_gastos = num2words(
             self.prestamo.gastos_de_gestion, lang='es')
@@ -529,8 +552,8 @@ class DocumentoMinuta(Document):
         resultado += f'{self.banco.nombre.upper()}</b>, en favor de <b>LA PARTE HIPOTECANTE'
         resultado += f'</b> asciende a la cantidad de <b><u>{number_to_word_hipotecante.upper()} '
         resultado += f'PESOS MCTE (${number_format_hipotecante})</u></b> de los cuales la '
-        resultado += f'suma de <b><u>{number_to_word_constructora.upper()} PESOS MCTE ('
-        resultado += f'${number_format_constructora})</u></b> corresponden al '
+        resultado += f'suma de <b><u>{number_to_word_aceptante.upper()} PESOS MCTE ('
+        resultado += f'${number_format_aceptante})</u></b> corresponden al '
         resultado += f'saldo del precio {t_inmuebles} objeto de esta hipoteca, que desembolsará '
         resultado += f'<b>{self.banco.nombre.upper()}</b>, a la parte vendedora, por cuenta del '
         resultado += 'deudor hipotecante y la diferencia es decir la suma de <b> '
@@ -807,6 +830,7 @@ class DocumentoMinuta(Document):
         vecino = self.apoderado_banco.vecino
         identificado = self.apoderado_banco.identificado
         doctor = self.apoderado_banco.doctor
+        el = self.apoderado_banco.el
 
         resultado += f'Presente {doctor}, <u><b>{nombre},</b></u> '
         resultado += f'{naturaleza}, mayor de edad, {vecino} de <u><b>'
@@ -816,9 +840,9 @@ class DocumentoMinuta(Document):
         resultado += f'<u><b>{ciudad_expedicion_identificacion}</b>'
         resultado += '</u> quien comparece en este acto en su calidad de '
         resultado += f'<u><b>{self.apoderado_banco.apoderado} {tipo_apoderado}</b>'
-        resultado += '</u> acorde con el Poder '
+        resultado += f'</u> acorde con el Poder {tipo_apoderado} '
         if self.apoderado_banco.tipo_poder == 'Autenticado':
-            resultado += 'a ella conferido por '
+            resultado += f'a {el} conferido por '
         elif self.apoderado_banco.tipo_poder == 'Escriturado':
             resultado += 'constituido por '
             resultado += f'<u><b>{escritura}</b></u> debidamente '
@@ -898,7 +922,7 @@ class DocumentoMinuta(Document):
         resultado += '<b>APLICACIÓN A LA LEY 0258 de 1996: AFECTACIÓN A VIVIENDA FAMILIAR:</b> '
         resultado += 'A continuación, el(la) notario(a) interroga bajo juramento a '
         if self.apoderado:
-            resultado += f'{self.apoderado.apoderado} de '
+            resultado += f'{self.apoderado.el_apoderado} de '
         resultado += '<b>LA PARTE HIPOTECANTE</b>, si '
         resultado += f'{inmuebles} por el presente Instrumento se encuentra Afectado al '
         resultado += 'Régimen de Vivienda Familiar, a lo que responde: <b>NO.</b> '

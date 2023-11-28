@@ -29,7 +29,6 @@
     "inmueble": {
         "nombre": "APARTAMENTO",
         "numero": "520",
-        "detalle": "",
         "direccion": "CALLE 122 9G-105 CONJUNTO CARIBE PLAZA 2 ETAPA I",
         "ciudad_y_o_departamento": "BARRANQUILLA, ATLÁNTICO",
         "matricula": "040-623000",
@@ -85,7 +84,7 @@
 
     "prestamo": {
         "cantidad_banco_a_hipotecante": 91390000,
-        "cantidad_dada_a_constructora": 88299517,
+        "cantidad_dada_a_aceptante": 88299517,
         "gastos_de_gestion": 3090483
     }
 }

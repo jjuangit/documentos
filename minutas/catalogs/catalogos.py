@@ -205,11 +205,15 @@ bancos = [
     }
 ]
 
-constructoras = [
+aceptantes = [
     {
         'nombre': 'Constructora Bolivar Cali S.A.',
         'nit': '860037900-4',
-        'ciudad_ubicacion': 'Cali'
+        'ciudad_ubicacion': 'Cali',
+        'escritura': 'Escritura Pública Numero 3747 de fecha 31 de agosto de 1973',
+        'nombre_notaria': 'Notaria Catorce de Santa Fe',
+        'ciudad_ubicacion_notaria': 'Bogotá',
+        'ciudad_ubicacion_camara_comercio': 'Cali'
 
     }
 ]

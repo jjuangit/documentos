@@ -11,7 +11,7 @@ from models.parqueaderos import Parqueadero
 from models.depositos import Deposito
 from models.banco import Banco
 from models.prestamo import Prestamo
-from models.minutas import DocumentoMinuta
+from models.minuta import DocumentoMinuta
 from utils.strip_spaces import strip_dict_or_list
 from utils.exceptions import GeneracionDeMinutaError
 

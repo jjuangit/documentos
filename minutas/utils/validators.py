@@ -40,11 +40,14 @@ class Validator:
     @staticmethod
     def validate_no_numbers(value, key=None):
         '''No se permiten números'''
-        pattern = r'^[^0-9]+$'
-        if not re.match(pattern, value):
-            raise ValidationError(
-                f'"{key}" contiene números y no está permitido.')
-        return True
+        if value:
+            pattern = r'^[^0-9]+$'
+            if not re.match(pattern, value):
+                raise ValidationError(
+                    f'"{key}" contiene números y no está permitido.')
+            return True
+        else:
+            return True
 
     @staticmethod
     def validate_only_numbers(value, key=None):
@@ -84,7 +87,7 @@ class Validator:
     @staticmethod
     def validate_letters_with_accents_dots_and_spaces(value, key=None):
         '''Solo se permiten letras incluyendo tildes y puntos(.)'''
-        pattern = r'^[a-zA-ZáéíóúüÁÉÍÓÚÜñÑ.,\s]+$'
+        pattern = r'^[a-zA-ZáéíóúüÁÉÍÓÚÜñÑ.,\s-]+$'
         if not re.match(pattern, value):
             raise ValidationError(
                 f'"{key}" contiene carácteres no permitidos.')
@@ -102,11 +105,14 @@ class Validator:
     @staticmethod
     def validate_numeric_string(value, key=None):
         '''Solo se permiten números y punto(.)'''
-        pattern = r'^[0-9.]+$'
-        if not re.match(pattern, value):
-            raise ValidationError(
-                f'"{key}" no es una cadena numérica válida.')
-        return True
+        if value:
+            pattern = r'^[0-9.]+$'
+            if not re.match(pattern, value):
+                raise ValidationError(
+                    f'"{key}" no es una cadena numérica válida.')
+            return True
+        else:
+            return True
 
     @staticmethod
     def validate_special_characters(value, key=None):

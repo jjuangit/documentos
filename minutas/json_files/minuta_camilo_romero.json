@@ -21,8 +21,7 @@
     "inmueble": {
         "nombre": "APARTAMENTO",
         "numero": "208 TORRE 1",
-        "detalle": "CONJUNTO BULEVAR DEL PORTAL PH VIS ",
-        "direccion": "CARRERA 10 #59-99 SUR",
+        "direccion": "CONJUNTO BULEVAR DEL PORTAL PH VIS CARRERA 10 #59-99 SUR",
         "ciudad_y_o_departamento": "EN PORVENIR BOGOTÁ D.C.",
         "matricula": "50S-40803060",
         "municipio_de_registro_orip": "BOGOTÁ ZONA SUR",
@@ -68,7 +67,7 @@
     
     "prestamo": {
         "cantidad_banco_a_hipotecante": 93150000,
-        "cantidad_dada_a_constructora": 90000000,
+        "cantidad_dada_a_aceptante": 90000000,
         "gastos_de_gestion": 3150000
     }
 }

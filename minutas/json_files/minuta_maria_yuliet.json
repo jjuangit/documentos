@@ -21,8 +21,7 @@
     "inmueble": {
         "nombre": "APARTAMENTO",
         "numero": "202 PISO 2 TORRE A ETAPA 4",
-        "detalle": "CONJUNTO RESIDENCIAL 'BOSQUES DE BAMBÚ' P.H.",
-        "direccion": "AVENIDA EL CAUCHO, CALLE 82 # 37 - 68",
+        "direccion": "CONJUNTO RESIDENCIAL 'BOSQUES DE BAMBÚ' P.H. AVENIDA EL CAUCHO, CALLE 82 # 37 - 68",
         "ciudad_y_o_departamento": "SECTOR CONDINA EN PEREIRA RISARALDA",
         "matricula": "290-247045",
         "municipio_de_registro_orip": "Pereira",
@@ -78,7 +77,7 @@
     
     "prestamo": {
         "cantidad_banco_a_hipotecante": 105719956,
-        "cantidad_dada_a_constructora": 102144885,
+        "cantidad_dada_a_aceptante": 102144885,
         "gastos_de_gestion": 3575071
     }
 }

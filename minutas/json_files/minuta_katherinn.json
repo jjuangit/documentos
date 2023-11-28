@@ -21,7 +21,6 @@
     "inmueble": {
         "nombre": "APARTAMENTO",
         "numero": "205",
-        "detalle": "",
         "direccion": "TORRE 7 ETAPA II, PRATTO PH. CARRERA 78 #11 C - 58,",
         "ciudad_y_o_departamento": "NUEVO TECHO BOGOTÁ D.C.",
         "matricula": "50C-2180229",
@@ -84,7 +83,7 @@
     
     "prestamo": {
         "cantidad_banco_a_hipotecante": 109844550,
-        "cantidad_dada_a_constructora": 106130000,
+        "cantidad_dada_a_aceptante": 106130000,
         "gastos_de_gestion": 3714550
     }
 }

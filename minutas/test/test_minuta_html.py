@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from models.minutas import DocumentoMinuta
+from models.minuta import DocumentoMinuta
 from models.apoderado import Apoderado
 from models.poderdantes import Poderdante
 from models.inmueble import InmueblePrincipal
@@ -27,37 +27,56 @@ class TestMinuta(TestCase):
 
     def test_init_minuta_success(self):
         """Funcion para imprimir el html de la minuta"""
-        diccionario_apoderado = None
+        diccionario_apoderado = {
+            'nombre': 'FRANCISCO BUSTAMANTE POSADA',
+            'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
+            'numero_identificacion': '7.436.307',
+            'ciudad_expedicion_identificacion': 'BARRANQUILLA',
+            'genero': genero['MASCULINO'],
+        }
 
         diccionario_poderdantes = [{
-            'nombre': 'SANDRA ISABEL HERRERA NIETO',
+            'nombre': 'LUISA AMELIA HERNANDEZ POSADA',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
-            'numero_identificacion': '1.126.398.298',
-            'ciudad_expedicion_identificacion': 'Con Lisboa Por',
-            'domicilio': 'Nyköping - Suecia',
-            'estado_civil': estado_civil['SOLTERO_SIN_UNION_MARITAL_DE_HECHO'],
+            'numero_identificacion': '55.220.020',
+            'ciudad_expedicion_identificacion': 'BARRANQUILLA',
+            'domicilio': 'HOFFMAN ESTATES - ILLINOIS',
+            'estado_civil': estado_civil['CASADO_CON_SOCIEDAD_CONYUGAL_VIGENTE'],
             'genero': genero['FEMENINO'],
+        },{
+            'nombre': 'WOJCIECH JAROSLAW URBAN',
+            'tipo_identificacion': tipos_identificacion_ciudadano['PASAPORTE']['nombre'],
+            'numero_identificacion': '520255366',
+            'ciudad_expedicion_identificacion': 'ESTADOS UNIDOS DE AMERICA',
+            'domicilio': 'HOFFMAN ESTATES - ILLINOIS',
+            'estado_civil': estado_civil['CASADO_CON_SOCIEDAD_CONYUGAL_VIGENTE'],
+            'genero': genero['MASCULINO'],
         }
         ]
 
         diccionario_inmueble = {
             'nombre': 'APARTAMENTO',
-            'numero': '706 TORRE 4 PISO 7,',
-            'detalle': 'CONJUNTO RESIDENCIAL FLORA PH',
-            'direccion': 'CARRERA 30 - 50-09',
-            'ciudad_y_o_departamento': 'EN SANTA CRUZ DE CURINCA, SANTA MARTA MAGDALENA',
-            'matricula': '3080-161856',
-            'municipio_de_registro_orip': 'Santa Marta',
+            'numero': '714 PISO 7 TORRE 2 ETAPA 1',
+            'direccion': 'CONJUNTO RESIDENCIAL RIVER PALMS CALLE 100 # 64 84',
+            'ciudad_y_o_departamento': 'EN RIO ALTO BARRANQUILLA ATLANTICO',
+            'matricula': '040-649403',
+            'municipio_de_registro_orip': 'Barranquilla',
             'tipo_ficha_catastral': ficha_catastral['MAYOR_EXTENSION'],
             'numero_ficha_catastral': [
-                {'ficha': '0002000000076974000000000'},
-                {'ficha': '0002000000076979000000000'},
-                {'ficha': '0002000000076978000000000'},
+                {'ficha': '01-03-00-00-0716-0226-0-00-00-0000'}
             ],
-            'linderos_especiales': '"TORRE 4 APARTAMENTO 706. LOCALIZACIÓN: Localizado en el Piso 7 de la TORRE 4 del Proyecto Flora, ubicado en Santa Marta. Las Áreas Generales se clasifican como: ÁREA CONSTRUIDA de cincuenta y ocho punto ochenta y cuatro metros cuadrados (58.84 m2). ÁREA PRIVADA CONSTRUIDA de cuarenta y nueve punto cuarenta y siete metros cuadrados (49.47 m2). Cuenta con una ÁREA PRIVADA CONSTRUIDA de BALCÓN y BALCÓN TÉCNICO de tres punto sesenta y tres metros cuadrados (3.63 m2). La diferencia entre el área construida y el área privada es de cinco punto sesenta y cuatro metros cuadrados (5.74 m2). DEPENDENCIAS: Sala-Comedor, cocina, ropas, disponible, dos (2) alcobas, un (1) baño y espacio para futuro baño. LINDEROS HORIZONTALES: Entre los puntos 1 y 2: Línea recta, en dimensión de cinco punto veinticuatro metros (5.24 m); con área privada construida. Entre los puntos 2 y 3: Línea quebrada, en dimensiones de dos punto ochenta y cinco metros (2.85 m); cero punto veintitrés metros (0.23 m), cero punto treinta y seis metros (0.36 m), cero punto sesenta y seis metros (0.66 m), cero punto diez metros (0.10 m), uno punto cincuenta metros (1.05 m), uno punto ochenta metros (1.80 m), tres punto diez metros (3.10 m), cero punto diez metros (0.10 m), tres punto diez metros (3.10 m), y dos punto cincuenta y cuatro metros (2.54 m); parte con área común libre, y parte con área privada construida de la misma unidad. Entre los puntos 3 y 4: Línea quebrada, en dimensiones de dos punto cuarenta y cinco metros (2.45 m), cero punto dieciocho metros (0.18 m), cero punto cincuenta y cinco metros (0.55 m), uno punto cincuenta y seis metros (1.56 m), cero punto diez metros (0.10 m), tres punto quince metros (3.15 m), y tres punto cincuenta y tres metros (3.53 m); parte con área común libre, y parte con área privada construida de la misma unidad. Entre los puntos 4 y 1: Línea quebrada, en dimensiones de dos punto setenta metros (2.70 m), cero punto cincuenta y uno metros (0.51 m), cero punto diez metros (0.10 m), cero punto cincuenta y uno metros (0.51 m), uno punto treinta y cinco metros (1.35 m), cero punto doce metros (0.12 m), cero punto ochenta metros (0.80 m), uno punto cero nueve metros (1.09 m), dos punto veinticinco metros (2.25 m), uno punto cincuenta y dos metros (1.52 m), cero punto diez metros (0.10 m), uno punto cuarenta y dos metros (1.42 m), uno punto treinta y cinco metros (1.35 m), cero punto veintiséis metros (0.26 m), cero punto ochenta metros (0.80 m), uno punto cero seis metros (1.06 m), uno punto veinte metros (1.20 m), cero punto diez metros (0.10 m), uno punto cero ocho metros (1.08 m), uno punto cero ocho metros (1.08 m), cero punto dieciocho metros (0.18 m), cero punto cincuenta metros (0.50 m), cero punto noventa y dos metros (0.92 m), cero punto dieciocho metros (0.18 m), cero punto noventa metros (0.90 m), uno punto diecisiete metros (1.17 m), cero punto cero ocho metros (0.08 m), cero punto setenta y dos metros (0.72 m), y dos metros (2.00 m); parte con área común construida, y parte con área privada construida. CONTORNOS INTERNOS: COLUMNA O MURO INTERIOR: Entre los puntos 5 y 6: Línea quebrada, en dimensiones de uno punto diez metros (1.10 m), y cero punto diez metros (0.10 m). Entre los puntos 6 y 5: Línea quebrada, en dimensiones de uno punto diez metros (1.10 m), y cero punto diez metros (0.10 m). BALCÓN. Las Áreas Generales se clasifican como: ÁREA PRIVADA CONSTRUIDA de dos punto cuarenta y tres metros cuadrados (2.43 m2). DEPENDENCIAS: Un (1) balcón. LINDEROS HORIZONTALES: Entre los puntos 7 y 8: Línea quebrada, en dimensiones de cero punto setenta y seis metros (0.76 m), y tres punto veinte metros (3.20 m); parte con área común libre, y parte con área privada construida. Entre los puntos 8 y 7: Línea quebrada, en dimensiones de cero punto setenta y seis metros (0.76 m), y tres punto veinte metros (3.20 m); parte con área común libre, y parte con dependencias de la misma unidad. BALCÓN TÉCNICO. Las Áreas Generales se clasifican como: ÁREA PRIVADA CONSTRUIDA de uno punto veinte metros cuadrados (1.20 m2). DEPENDENCIAS: Un (1) balcón técnico. LINDEROS HORIZONTALES: Entre los puntos 9 y 10: Línea quebrada, en dimensiones de cero punto ochenta y siete metros (0.87 m), y uno punto treinta y nueve metros (1.39 m); parte con área común libre, y parte con dependencias de la misma unidad. Entre los puntos 10 y 9: Línea quebrada, en dimensiones de cero punto ochenta y siete metros (0.87 m), y uno punto treinta y nueve metros (1.39 m); parte con área común libre, y parte con dependencias de la misma unidad. LINDEROS VERTICALES: La altura libre aproximada es de dos punto cuarenta metros (2.40 m). NADIR: Placa de entrepiso al medio, colindante con Piso 6. CENIT: Placa de entrepiso al medio, colindante con Piso 8."'
+            'linderos_especiales': 'TORRE 2 APARTAMENTO N° 714 ubicado en el piso 7 de la Torre número 2 de la etapa 1 del CONJUNTO RESIDENCIAL RIVER PALMS P.H., situada en la ciudad de Barranquilla, en la Calle 100 No. 64 -84 de la nomenclatura urbana, destinado a vivienda, con un área construida total aproximada de 69.05 metros cuadrados, un área privada construida aproximada de 64.61 metros cuadrados, y una altura libre aproximada entre 2.40 - 2.50 metros lineales. Su área y linderos están determinados por el perímetro marcado con los puntos del 133 al 150 y 133 punto de partida, del plano No. PH 9/12 que se protocoliza con el presente reglamento de Propiedad Horizontal; linda por el CENIT, o parte de encima, con losa de concreto que lo separa del piso 8, y por el NADIR, o parte de abajo, con losa de concreto que lo separa del piso 6.'
         }
         diccionario_parqueaderos = [
-
+            {
+                "nombre": "GARAJE CON CUARTO UTIL No.",
+                "numero": "714 PISO 7 TORRE 2 ETAPA 1",
+                "direccion": "CONJUNTO RESIDENCIAL RIVER PALMS CALLE 100 # 64 84, EN RIO ALTO BARRANQUILLA ATLANTICO",
+                "matricula": "040-649440",
+                "tipo_ficha_catastral": "",
+                "numero_ficha_catastral": "",
+                "linderos_especiales": "TORRE 2 PARQUEADERO CON CUARTO ÚTIL N° 81, Ubicado en el SOTANO 1 de la torre 2 de la etapa 1 en el CONJUNTO RESIDENCIAL RIVER PALMS P.H., situado en la ciudad de Barranquilla, en la Calle 100 No. 64 - 84 de la nomenclatura urbana, destinado a estacionamiento de un (1) vehículo y a depósito de objetos, con un área privada construida aproximada de 15.2 metros cuadrados y una altura mínima aproximada de 2.5 metros lineales. Su área y linderos están determinados por el perímetro marcado con los puntos 63 al 69 y 63, punto de partida, del plano No. PH 1/12 que se protocoliza con el presente reglamento de Propiedad Horizontal; linda por el CENIT, o parte de encima, con losa de concreto que lo separa del Primer Piso, y por el NADIR, o parte de abajo, con losa de concreto que lo separa del sótano 2."
+            }
         ]
 
         diccionario_depositos = [
@@ -65,7 +84,7 @@ class TestMinuta(TestCase):
         ]
 
         diccionario_apoderado_banco = {
-            'nombre': 'Gloria Esperanza Garcia Troncoso',
+            'nombre': 'Viviana del Pilar Olaciregui Escalante',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
             'numero_identificacion': '',
             'ciudad_expedicion_identificacion': '',
@@ -77,7 +96,7 @@ class TestMinuta(TestCase):
         }
 
         diccionario_representante_banco = {
-            'nombre': 'Héctor Fabio Rodríguez Prado',
+            'nombre': 'Juan Pablo Cruz López',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
             'numero_identificacion': '',
             'ciudad_expedicion_identificacion': '',
@@ -92,9 +111,9 @@ class TestMinuta(TestCase):
         }
 
         diccionario_prestamo = {
-            'cantidad_banco_a_hipotecante': 86422500,
-            'cantidad_dada_a_constructora': 83500000,
-            'gastos_de_gestion': 2922500
+            'cantidad_banco_a_hipotecante': 276370742,
+            'cantidad_dada_a_aceptante': 267024871,
+            'gastos_de_gestion': 9345871
         }
 
         diccionario_apoderado = strip_dict_or_list(diccionario_apoderado)

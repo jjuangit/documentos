@@ -1,8 +1,8 @@
-from typing import Optional, Text
+from typing import Optional, Type, Text
 
 class Banco:
-    nombre: Optional[Text]
-    nit: Optional[Text]
+    nombre: Type[Text]
+    nit: Type[Text]
 
     def __init__(
         self,
@@ -11,4 +11,3 @@ class Banco:
     ):
         self.nombre = nombre
         self.nit = nit
-

@@ -1,16 +1,18 @@
 from unittest import TestCase
 
 from models.cesion_contrato import DocumentoCesionContrato
-from models.apoderado import Apoderado
+from models.apoderado import ApoderadoCesionContrato
 from models.poderdantes import Poderdante
 from models.inmueble import InmueblePrincipal
 from models.depositos import Deposito
 from models.parqueaderos import Parqueadero
 from models.apoderado_banco import ApoderadoBanco
 from models.representante_banco import RepresentanteBanco
+from models.representante_aceptante import RepresentanteAceptante
 from models.banco import Banco
-from models.constructora import Constructora
+from models.aceptante import Aceptante
 from models.compraventa import Compraventa
+from models.organo_autorizador import OrganoAutorizador
 from catalogs.catalogos import tipos_identificacion_ciudadano
 from catalogs.catalogos import genero
 from catalogs.catalogos import estado_civil
@@ -20,7 +22,7 @@ from catalogs.catalogos import ficha_catastral
 from catalogs.catalogos import apoderados_banco
 from catalogs.catalogos import representantes_banco
 from catalogs.catalogos import bancos
-from catalogs.catalogos import constructoras
+from catalogs.catalogos import aceptantes
 from utils.strip_spaces import strip_dict_or_list
 
 
@@ -35,6 +37,11 @@ class TestCesionContrato(TestCase):
             'numero_identificacion': '31.951.464',
             'ciudad_expedicion_identificacion': 'Cali',
             'genero': genero['FEMENINO'],
+            'tipo_apoderado': 'Especial',
+            'fecha_autenticacion_poder': '28/08/2023',
+            'tipo_dependencia_autenticacion': 'Notaría',
+            'nombre_dependencia': 'Novena del Circulo',
+            'ciudad_dependencia': 'Cali'
         }
 
         diccionario_poderdantes = [{
@@ -51,8 +58,7 @@ class TestCesionContrato(TestCase):
         diccionario_inmueble = {
             'nombre': 'APARTAMENTO',
             'numero': '107 TORRE A',
-            'detalle': 'CONJUNTO RESIDENCIAL ALTEA PH.',
-            'direccion': 'CARRERA 24 5-269',
+            'direccion': 'CONJUNTO RESIDENCIAL ALTEA PH., CARRERA 24 5-269',
             'ciudad_y_o_departamento': 'EN PARQUE NATURA JAMUNDÍ VALLE DEL CAUCA',
             'matricula': '370-1097610',
             'municipio_de_registro_orip': 'Cali',
@@ -98,22 +104,42 @@ class TestCesionContrato(TestCase):
             'tipo_representante': tipo_representante_banco['SUPLENTE'],
         }
 
+        diccionario_representante_aceptante = {
+            'nombre': '',
+            'tipo_identificacion': '',
+            'numero_identificacion': '',
+            'ciudad_expedicion_identificacion': '',
+            'ciudad_residencia': '',
+            'genero': '',
+            'tipo_representante': ''
+        }
         diccionario_banco = {
             'nombre': 'banco unión s.a',
             'nit': '',
         }
 
-        diccionario_constructora = {
+        diccionario_aceptante = {
             'nombre': 'Constructora Bolivar Cali S.A.',
             'nit': '',
-            'ciudad_ubicacion': ''
+            'ciudad_ubicacion': '',
+            'escritura': 'Escritura Pública Numero 3747 de fecha 31 de agosto de 1973',
+            'nombre_notaria': 'Notaria Catorce de Santa Fe',
+            'ciudad_ubicacion_notaria': 'Bogotá',
+            'ciudad_ubicacion_camara_comercio': 'Cali'
+
         }
 
         diccionario_compraventa = {
             'cantidad_compraventa': 190236667,
             'cantidad_restante': 131444452,
             'cuota_inicial': 58792215,
-            'fecha_compraventa': '05/06/2023'
+            'fecha_compraventa': '05/07/2023'
+        }
+
+        diccionario_organo_autorizador = {
+            'ciudad_ubicacion_camara_comercio': 'Cali',
+            'numero_acta': '',
+            'fecha': ''
         }
 
         diccionario_apoderado = strip_dict_or_list(diccionario_apoderado)
@@ -124,10 +150,10 @@ class TestCesionContrato(TestCase):
         diccionario_apoderado_banco = strip_dict_or_list(diccionario_apoderado_banco)
         diccionario_representante_banco = strip_dict_or_list(diccionario_representante_banco)
         diccionario_banco = strip_dict_or_list(diccionario_banco)
-        diccionario_constructora = strip_dict_or_list(diccionario_constructora)
+        diccionario_aceptante = strip_dict_or_list(diccionario_aceptante)
         diccionario_compraventa = strip_dict_or_list(diccionario_compraventa)
 
-        apoderado = Apoderado(**diccionario_apoderado)
+        apoderado = ApoderadoCesionContrato(**diccionario_apoderado)
         poderdantes = [Poderdante(**poderdante)
                        for poderdante in diccionario_poderdantes]
         inmueble = InmueblePrincipal(**diccionario_inmueble)
@@ -149,6 +175,8 @@ class TestCesionContrato(TestCase):
         else:
             representante_banco = RepresentanteBanco(
                 **diccionario_representante_banco)
+        representante_aceptante = RepresentanteAceptante(
+            **diccionario_representante_aceptante)
                     
         for bank in bancos:
             if bank['nombre'] == diccionario_banco['nombre']:
@@ -156,15 +184,17 @@ class TestCesionContrato(TestCase):
                 break
         else:
             banco = Banco(**diccionario_banco)
-        for builder in constructoras:
-            if builder['nombre'] == diccionario_constructora['nombre']:
-                constructora = Constructora(**builder)
+        for builder in aceptantes:
+            if builder['nombre'] == diccionario_aceptante['nombre']:
+                aceptante = Aceptante(**builder)
                 break
         else:
-            constructora = Constructora(**diccionario_constructora)
+            aceptante = Aceptante(**diccionario_aceptante)
         compraventa = Compraventa(**diccionario_compraventa)
+        organo_autorizador = OrganoAutorizador(**diccionario_organo_autorizador)
         cesion_contrato = DocumentoCesionContrato(apoderado, poderdantes, inmueble, 
-                                 parqueaderos, depositos, apoderado_banco, representante_banco, banco, constructora, compraventa)
+                                 parqueaderos, depositos, apoderado_banco, representante_banco, 
+                                 representante_aceptante, banco, aceptante, compraventa, organo_autorizador)
         cesion_contrato.generate_html()
         print(cesion_contrato.html)
 

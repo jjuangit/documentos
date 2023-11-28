@@ -4,7 +4,6 @@ from typing import Optional, Type, Text
 class InmueblePrincipal:
     nombre: Type[Text]
     numero: Type[Text]
-    detalle: Optional[Text]
     direccion: Type[Text]
     ciudad_y_o_departamento: Type[Text]
     matricula: Type[Text]
@@ -17,7 +16,6 @@ class InmueblePrincipal:
         self,
         nombre: str,
         numero: str,
-        detalle: str,
         direccion: str,
         ciudad_y_o_departamento: str,
         matricula: str,
@@ -28,7 +26,6 @@ class InmueblePrincipal:
     ):
         self.nombre = nombre
         self.numero = numero
-        self.detalle = detalle
         self.direccion = direccion
         self.ciudad_y_o_departamento = ciudad_y_o_departamento
         self.matricula = matricula

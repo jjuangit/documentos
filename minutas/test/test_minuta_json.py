@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from unittest import TestCase
 
-from models.minutas import DocumentoMinuta
+from models.minuta import DocumentoMinuta
 from models.apoderado import Apoderado
 from models.poderdantes import Poderdante
 from models.inmueble import InmueblePrincipal

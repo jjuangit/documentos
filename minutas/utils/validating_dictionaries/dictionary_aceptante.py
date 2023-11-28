@@ -1,6 +1,6 @@
 from utils.validators import Validator
 
-dictionary_validator_constructora = {
+dictionary_validator_aceptante = {
     'nombre': [
         Validator.required,
         Validator.validate_string,

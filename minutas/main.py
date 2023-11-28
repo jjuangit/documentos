@@ -1,1 +1,1 @@
-from controllers.minutas_flask import app_flask
+from controllers.minuta_flask import app_flask

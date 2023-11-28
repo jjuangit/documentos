@@ -1,18 +1,17 @@
-from typing import Optional
-from typing import Text
+from typing import Optional, Type, Text
 
 
 class ApoderadoBanco:
 
-    nombre: Optional[Text]
-    tipo_identificacion: Optional[Text]
-    numero_identificacion: Optional[Text]
-    ciudad_expedicion_identificacion: Optional[Text]
-    ciudad_residencia: Optional[Text]
-    genero: Optional[Text]
-    tipo_apoderado: Optional[Text]
-    tipo_poder: Optional[Text]
-    poder_autenticado: bool = False
+    nombre: Type[Text]
+    tipo_identificacion: Type[Text]
+    numero_identificacion: Type[Text]
+    ciudad_expedicion_identificacion: Type[Text]
+    ciudad_residencia: Type[Text]
+    genero: Type[Text]
+    tipo_apoderado: Type[Text]
+    tipo_poder: Type[Text]
+    escritura : Optional[Text]
 
     def __init__(
         self,
@@ -63,6 +62,13 @@ class ApoderadoBanco:
             return 'el doctor'
         elif self.genero == 'Femenino':
             return 'la doctora'
+        
+    @property
+    def el(self):
+        if self.genero == 'Masculino':
+            return 'el'
+        elif self.genero == 'Femenino':
+            return 'ella'
         
     @property
     def naturaleza(self):

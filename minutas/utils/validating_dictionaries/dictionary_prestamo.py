@@ -5,7 +5,7 @@ dictionary_validator_prestamo = {
         Validator.required,
         Validator.validate_number,
     ],
-    'cantidad_dada_a_constructora': [
+    'cantidad_dada_a_aceptante': [
         Validator.required,
         Validator.validate_number,
     ],
