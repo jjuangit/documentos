@@ -40,7 +40,7 @@ class TestMinutaHipoteca(TestCase):
             'numero_identificacion': '1.015.457.203',
             'ciudad_expedicion_identificacion': 'BOGOTÁ D.C.',
             'domicilio': 'SWIEQI - MALTA',
-            'estado_civil': estado_civil['SOLTERO_CON_UNION_MARITAL_DE_HECHO'],
+            'estado_civil': estado_civil['SOLTERO_CON_UNION_MARITAL_Y_SOCIEDAD_PATRIMONIAL_VIGENTE'],
             'genero': genero['FEMENINO'],
         }
         ]

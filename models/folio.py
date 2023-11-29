@@ -1,3 +1,5 @@
-from utils.document import Document
-class Folio(Document):
+from models.hipoteca import DocumentoMinutaHipoteca
+
+
+class DocumentoHipoteca(DocumentoMinutaHipoteca):
     pass
