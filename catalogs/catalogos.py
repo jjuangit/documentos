@@ -211,7 +211,7 @@ representantes_banco = [
 
 bancos = [
     {
-        'nombre': 'banco unión s.a',
+        'nombre': 'Banco unión s.a',
         'nit': '860006797-9'
     }
 ]

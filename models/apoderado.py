@@ -60,7 +60,7 @@ class Apoderado:
         elif self.tipo_identificacion == 'Pasaporte':
             return 'Pasaporte'
 
-class ApoderadoCesionContrato(Apoderado):
+class ApoderadoPromesaCompraventa(Apoderado):
     tipo_apoderado: Optional[Text]
     escritura: Optional[Text]
     fecha_autenticacion_poder: Optional[Text]

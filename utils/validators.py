@@ -96,7 +96,7 @@ class Validator:
     @staticmethod
     def validate_alphanumeric_with_spaces_and_hyphen(value, key=None):
         '''Solo se permiten letras,espacios intermedios y guión(-)'''
-        pattern = r'^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜö\s-]+$'
+        pattern = r'^[a-zA-Z0-9áéíóúÁÉÍÓÚüÜöñÑ\s-]+$'
         if not re.match(pattern, value):
             raise ValidationError(
                 f'"{key}" contiene carácteres no permitidos.')

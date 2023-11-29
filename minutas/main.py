@@ -1,1 +1,0 @@
-from controllers.minuta_flask import app_flask

@@ -1,4 +1,4 @@
-from typing import Optional, Type, Text
+from typing import Optional, Text
 
 class Aceptante:
     nombre: Optional[Text]

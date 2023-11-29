@@ -1,16 +1,15 @@
-from typing import Optional
-from typing import Text
+from typing import Type, Text
 
 from utils.exceptions import ValorNoEncontrado
 
 class Poderdante:
-    nombre: Optional[Text]
-    tipo_identificacion: Optional[Text]
-    numero_identificacion: Optional[Text]
-    ciudad_expedicion_identificacion: Optional[Text]
-    domicilio: Optional[Text]
-    estado_civil: Optional[Text]
-    genero: Optional[Text]
+    nombre: Type[Text]
+    tipo_identificacion: Type[Text]
+    numero_identificacion: Type[Text]
+    ciudad_expedicion_identificacion: Type[Text]
+    domicilio: Type[Text]
+    estado_civil: Type[Text]
+    genero: Type[Text]
 
     def __init__(
         self,

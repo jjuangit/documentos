@@ -1,10 +1,9 @@
-from typing import Optional
-from typing import Text
+from typing import Type, Text
 
 class Prestamo:
-    cantidad_banco_a_hipotecante: Optional[Text]
-    cantidad_dada_a_aceptante: Optional[Text]
-    gastos_de_gestion: Optional[Text]
+    cantidad_banco_a_hipotecante: Type[Text]
+    cantidad_dada_a_aceptante: Type[Text]
+    gastos_de_gestion: Type[Text]
 
     def __init__(
         self,

@@ -1,4 +1,4 @@
-from typing import Optional, Type, Text
+from typing import Type, Text
 
 class Banco:
     nombre: Type[Text]

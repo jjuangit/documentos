@@ -25,7 +25,7 @@ from catalogs.catalogos import bancos
 from catalogs.catalogos import aceptantes
 from catalogs.fechas import MESES_INGLES_ESPANOL
 
-from .apoderado import ApoderadoCesionContrato
+from .apoderado import ApoderadoPromesaCompraventa
 from .apoderado_banco import ApoderadoBanco
 from .depositos import DepositoPromesaCompraventa
 from .inmueble import InmueblePromesaCompraventa
@@ -39,8 +39,8 @@ from .representante_aceptante import RepresentanteAceptante
 from .organo_autorizador import OrganoAutorizador
 
 
-class DocumentoCesionContrato(Document):
-    apoderado: ApoderadoCesionContrato
+class DocumentoPromesaCompraventa(Document):
+    apoderado: ApoderadoPromesaCompraventa
     poderdantes: List[Poderdante]
     inmueble: InmueblePromesaCompraventa
     depositos: List[DepositoPromesaCompraventa]
@@ -81,7 +81,7 @@ class DocumentoCesionContrato(Document):
 
     def __init__(
         self,
-        apoderado: ApoderadoCesionContrato,
+        apoderado: ApoderadoPromesaCompraventa,
         poderdantes: List[Poderdante],
         inmueble: InmueblePromesaCompraventa,
         parqueaderos: List[ParqueaderoPromesaCompraventa],

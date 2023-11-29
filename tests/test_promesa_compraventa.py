@@ -1,7 +1,7 @@
 from unittest import TestCase
 
-from models.cesion_contrato import DocumentoCesionContrato
-from models.apoderado import ApoderadoCesionContrato
+from models.promesa_compraventa import DocumentoPromesaCompraventa
+from models.apoderado import ApoderadoPromesaCompraventa
 from models.poderdantes import Poderdante
 from models.inmueble import InmueblePromesaCompraventa
 from models.depositos import DepositoPromesaCompraventa
@@ -26,10 +26,10 @@ from catalogs.catalogos import aceptantes
 from utils.strip_spaces import strip_dict_or_list
 
 
-class TestCesionContrato(TestCase):
+class TestPromesaCompraventa(TestCase):
     """Iniciar Test"""
 
-    def test_init_cesion_contrato_success(self):
+    def test_init_promesa_compraventa_success(self):
         """Funcion para imprimir el html de la cesión de contrato"""
         diccionario_apoderado = {
             'nombre': 'DAIRY PAOLA MEJIA PASTRANA',
@@ -83,7 +83,8 @@ class TestCesionContrato(TestCase):
             'ciudad_residencia': '',
             'genero': genero['FEMENINO'],
             'tipo_apoderado': tipo_apoderado_banco['GENERAL'],
-            'tipo_poder': ''
+            'tipo_poder': '',
+            'escritura': ''
         }
 
         diccionario_representante_banco = {
@@ -124,7 +125,7 @@ class TestCesionContrato(TestCase):
             'cantidad_compraventa': 190236667,
             'cantidad_restante': 131444452,
             'cuota_inicial': 58792215,
-            'fecha_compraventa': '05/07/2023'
+            'fecha_compraventa': '03/08/2023'
         }
 
         diccionario_organo_autorizador = {
@@ -138,13 +139,15 @@ class TestCesionContrato(TestCase):
         diccionario_inmueble = strip_dict_or_list(diccionario_inmueble)
         diccionario_parqueaderos = strip_dict_or_list(diccionario_parqueaderos)
         diccionario_depositos = strip_dict_or_list(diccionario_depositos)
-        diccionario_apoderado_banco = strip_dict_or_list(diccionario_apoderado_banco)
-        diccionario_representante_banco = strip_dict_or_list(diccionario_representante_banco)
+        diccionario_apoderado_banco = strip_dict_or_list(
+            diccionario_apoderado_banco)
+        diccionario_representante_banco = strip_dict_or_list(
+            diccionario_representante_banco)
         diccionario_banco = strip_dict_or_list(diccionario_banco)
         diccionario_aceptante = strip_dict_or_list(diccionario_aceptante)
         diccionario_compraventa = strip_dict_or_list(diccionario_compraventa)
 
-        apoderado = ApoderadoCesionContrato(**diccionario_apoderado)
+        apoderado = ApoderadoPromesaCompraventa(**diccionario_apoderado)
         poderdantes = [Poderdante(**poderdante)
                        for poderdante in diccionario_poderdantes]
         inmueble = InmueblePromesaCompraventa(**diccionario_inmueble)
@@ -168,7 +171,7 @@ class TestCesionContrato(TestCase):
                 **diccionario_representante_banco)
         representante_aceptante = RepresentanteAceptante(
             **diccionario_representante_aceptante)
-                    
+
         for bank in bancos:
             if bank['nombre'] == diccionario_banco['nombre']:
                 banco = Banco(**bank)
@@ -182,12 +185,13 @@ class TestCesionContrato(TestCase):
         else:
             aceptante = Aceptante(**diccionario_aceptante)
         compraventa = Compraventa(**diccionario_compraventa)
-        organo_autorizador = OrganoAutorizador(**diccionario_organo_autorizador)
-        cesion_contrato = DocumentoCesionContrato(apoderado, poderdantes, inmueble, 
-                                 parqueaderos, depositos, apoderado_banco, representante_banco, 
-                                 representante_aceptante, banco, aceptante, compraventa, organo_autorizador)
-        cesion_contrato.generate_html()
-        print(cesion_contrato.html)
+        organo_autorizador = OrganoAutorizador(
+            **diccionario_organo_autorizador)
+        promesa_compraventa = DocumentoPromesaCompraventa(apoderado, poderdantes, inmueble,
+                                                  parqueaderos, depositos, apoderado_banco, representante_banco,
+                                                  representante_aceptante, banco, aceptante, compraventa, organo_autorizador)
+        promesa_compraventa.generate_html()
+        print(promesa_compraventa.html)
 
 # command line for run this test:
-# python -m unittest test.test_cesion_contrato.TestCesionContrato.test_init_cesion_contrato_success
+# python -m unittest tests.test_promesa_compraventa.TestPromesaCompraventa.test_init_promesa_compraventa_success

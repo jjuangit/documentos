@@ -29,7 +29,7 @@ from .banco import Banco
 from .prestamo import Prestamo
 
 
-class DocumentoMinuta(Document):
+class DocumentoMinutaHipoteca(Document):
     apoderado: Apoderado
     poderdantes: List[Poderdante]
     inmueble: Inmueble

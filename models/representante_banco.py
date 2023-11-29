@@ -1,16 +1,15 @@
-from typing import Optional
-from typing import Text
+from typing import Type, Text
 
 
-class RepresentanteAceptante:
+class RepresentanteBanco:
 
-    nombre: Optional[Text]
-    tipo_identificacion: Optional[Text]
-    numero_identificacion: Optional[Text]
-    ciudad_expedicion_identificacion: Optional[Text]
-    ciudad_residencia: Optional[Text]
-    genero: Optional[Text]
-    tipo_representante: Optional[Text]
+    nombre: Type[Text]
+    tipo_identificacion: Type[Text]
+    numero_identificacion: Type[Text]
+    ciudad_expedicion_identificacion: Type[Text]
+    ciudad_residencia: Type[Text]
+    genero: Type[Text]
+    tipo_representante: Type[Text]
 
     def __init__(
         self,
@@ -36,8 +35,6 @@ class RepresentanteAceptante:
             return 'identificado'
         elif self.genero == 'Femenino':
             return 'identificada'
-        else:
-            return 'identificado(a)'
 
     @property
     def vecino(self):
@@ -45,23 +42,10 @@ class RepresentanteAceptante:
             return 'vecino'
         elif self.genero == 'Femenino':
             return 'vecina'
-        else:
-            return 'vecino(a)'
-        
+
     @property
     def doctor(self):
         if self.genero == 'Masculino':
-            return 'el Dr'
+            return 'el doctor'
         elif self.genero == 'Femenino':
-            return 'la Dr'
-        else:
-            return 'el Dr(a)'
-        
-    @property
-    def abreviacion_identificacion(self):
-        if self.tipo_identificacion == 'Cédula de Ciudadanía':
-            return 'C.C.'
-        elif self.tipo_identificacion == 'Cédula de Extranjería':
-            return 'C.E'
-        elif self.tipo_identificacion == 'Pasaporte':
-            return 'Pasaporte'
+            return 'la doctora'

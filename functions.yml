@@ -1,0 +1,10 @@
+create-hipoteca:
+  description: Crea el texto de una minuta de hipoteca
+  handler: controllers.minuta_hipoteca.create
+  memorySize: 128
+  timeout: 30
+create_promesa_compraventa:
+  description: Crea el texto de una minuta de promesa de compraventa
+  handler: controllers.
+  memorySize: 128
+  timeout: 30

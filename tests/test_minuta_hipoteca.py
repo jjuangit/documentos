@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from models.minuta import DocumentoMinuta
+from models.hipoteca import DocumentoMinutaHipoteca
 from models.apoderado import Apoderado
 from models.poderdantes import Poderdante
 from models.inmueble import Inmueble
@@ -21,45 +21,45 @@ from catalogs.catalogos import representantes_banco
 from catalogs.catalogos import bancos
 from utils.strip_spaces import strip_dict_or_list
 
-
-class TestMinuta(TestCase):
+class TestMinutaHipoteca(TestCase):
     """Iniciar Test"""
 
-    def test_init_minuta_success(self):
+    def test_init_minuta_hipoteca_success(self):
         """Funcion para imprimir el html de la minuta"""
         diccionario_apoderado = {
-            'nombre': 'JOSÉ FERNANDO SALAS CALA',
+            'nombre': 'NASLY BIBIANA OSPINA RIVERA',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
-            'numero_identificacion': '91.219.662',
-            'ciudad_expedicion_identificacion': 'Bucaramanga',
-            'genero': genero['MASCULINO'],
+            'numero_identificacion': '39.790.848',
+            'ciudad_expedicion_identificacion': 'BOGOTÁ D.C.',
+            'genero': genero['FEMENINO'],
         }
 
         diccionario_poderdantes = [{
-            'nombre': 'YHISELL FERNANDA MORA SALAS',
+            'nombre': 'MARIA PAULA OSPINA BARACALDO',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
-            'numero_identificacion': '1.232.892.499',
-            'ciudad_expedicion_identificacion': 'Bucaramanga',
-            'domicilio': 'Dacula Georgia',
-            'estado_civil': estado_civil['SOLTERO_SIN_UNION_MARITAL_DE_HECHO'],
+            'numero_identificacion': '1.015.457.203',
+            'ciudad_expedicion_identificacion': 'BOGOTÁ D.C.',
+            'domicilio': 'SWIEQI - MALTA',
+            'estado_civil': estado_civil['SOLTERO_CON_UNION_MARITAL_DE_HECHO'],
             'genero': genero['FEMENINO'],
         }
         ]
 
         diccionario_inmueble = {
             'nombre': 'APARTAMENTO',
-            'numero': '411 de la Torre 5, piso 4',
-            'direccion': 'CONJUNTO RESIDENCIAL NUEVA FORESTA ETAPA V, CARRERA 15 No. 92-164, B/ EL ANGELINO, BUCARAMANGA -SANTANDER',
-            'ciudad_y_o_departamento': 'EN SANTA CRUZ DE CURINCA, SANTA MARTA MAGDALENA',
-            'matricula': '300-466617',
-            'municipio_de_registro_orip': 'BUCARAMANGA',
+            'numero': '2008-TORRE 3-ETAPA 1',
+            'direccion': 'CONJUNTO RESIDENCIAL NATURA LIVING PH CARRERA 74 #152B-70',
+            'ciudad_y_o_departamento': 'EN EL PLAN BOGOTÁ D.C.',
+            'matricula': '50N-20919524',
+            'municipio_de_registro_orip': 'Cali',
             'tipo_ficha_catastral': ficha_catastral['MAYOR_EXTENSION'],
             'numero_ficha_catastral': [
-                {'ficha': '68001010404130005000'}
+                {'ficha': '009128260300000000'}
             ],
-            'linderos_especiales': 'APARTAMENTO 411 Torre 5 PISO 4 del conjunto residencial Nueva Foresta etapa V, ubicado en la Carrera 15 No. 92-164 del barrio El Angelino, del Municipio de Bucaramanga, Santander, el cual contiene: sala, comedor, balcón, cocina, ropas, baño 1, baño 2, habitación principal, habitación 2, espacio disponible. El inmueble posee un área total de cincuenta y tres metros cuadrados (53 mts2) de los cuales cuarenta y cinco metros con dieciséis centímetros cuadrados (45,16 mts2) son de área privada construida, seis metros con cuarenta centímetros cuadrados (6,40 mts2) son de área común y un metro con cuarenta y cuatro centímetros (1,44 mts2) son de área común de uso exclusivo. El inmueble está determinado por los siguientes linderos: por el NORTE: Del punto 1 con Foresta - coordenada este= 1105196,35 y coordenada norte= 1275891,06, al punto 2 con coordenada este= 1105188,93 y coordenada norte= 1275888,07 en línea quebrada de 10,75 mts con zona común de la torre; por el SUR: Del punto 3 con coordenada este= 1105191,35 y coordenada norte= 1275882,36, al punto 4 con coordenada este= 1105198,72 y coordenada norte= 1275885,50 en línea quebrada de 13,00 mtl con zona común del conjunto; ORIENTE: Del punto 1 con coordenada este= 1105196,35 y coordenada norte= 1275891,06, al punto 4 con coordenada este= 1105198,72 y coordenada norte= 1275885,50 en línea quebrada de 15,75 mtl con apto 409; por el OCCIDENTE: Del punto 2 con coordenada este= 1105188,93 y coordenada norte= 1275888,07, al punto 3 con coordenada este= 1105191,35 y coordenada norte= 1275882,36 en línea quebrada de 15,60 mtl con apto 413; por el NADIR: con el apto 311; por el CENIT: Con apartamento 511.'
+            'linderos_especiales': 'TORRE 3 APARTAMENTO 2008. LOCALIZACIÓN: Localizado en el Piso 20 de la TORRE 3, en la ETAPA 1 del Proyecto Natura Living, ubicado en Bogotá. Las Áreas Generales se clasifican como: ÁREA CONSTRUIDA de treinta y siete punto cincuenta y seis metros cuadrados (37.56 m2). ÁREA PRIVADA CONSTRUIDA de treinta y uno punto cuarenta y nueve metros cuadrados (31.49 m2). La diferencia entre el área construida y el área privada es de seis punto cero siete metros cuadrados (6.07 m2). DEPENDENCIAS: Salón comedor, cocina, ropas, alcoba 1, alcoba 2 y baño. LINDEROS HORIZONTALES: Entre los puntos 1 y 2: Línea quebrada, en dimensiones de uno punto dieciséis metros (1.16 m), uno punto treinta y tres metros (1.33 m), cero punto quince metros (0.15 m), un punto tres punto sesenta y nueve metros (3.69 m), cero punto setenta y tres metros (0.73 m), un punto treinta y dos metros (1.32 m), cero punto nueve metros (0.09 m), y cero punto ochenta y ocho metros (0.88 m); con área común libre. Entre los puntos 3 y 4: Línea quebrada, en dimensiones de dos punto treinta y nueve metros (2.39 m), uno punto cuarenta metros (1.40 m), cero punto dieciocho metros (0.18 m), uno punto cincuenta y ocho metros (1.58 m), cero punto cero nueve metros (0.09 m), uno punto veinticinco metros (1.25 m), y tres punto treinta y cuatro metros (3.34 m); parte con área común libre, y parte con área privada construida. Entre los puntos 4 y 1: Línea quebrada, en dimensiones de tres punto cincuenta y seis metros (3.56 m), cero punto noventa y cinco metros (0.95 m), cero punto veintiséis metros (0.26 m), uno punto treinta metros (1.30 m), cero punto cuarenta y ocho metros (0.48 m), cero punto veinte metros (0.20 m), cero punto setenta y tres metros (0.73 m), dos punto sesenta y uno metros (2.61 m), cero punto noventa metros (0.90 m), cero punto dieciséis metros (0.16 m), y uno punto treinta y tres metros (1.33 m); con área común construida. LINDEROS VERTICALES: La altura libre aproximada es de dos punto cuarenta metros (2.40 m). NADIR: Entre piso medio, colindante con Piso 19. CENIT: Entre piso al medio, colindante con Piso 21.'
         }
         diccionario_parqueaderos = [
+
         ]
 
         diccionario_depositos = [
@@ -67,19 +67,19 @@ class TestMinuta(TestCase):
         ]
 
         diccionario_apoderado_banco = {
-            'nombre': 'ROSANA GUEVARA PLATA',
+            'nombre': 'Germán Leonardo Kalil Méndez',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
-            'numero_identificacion': '37.746.531',
-            'ciudad_expedicion_identificacion': 'Bucaramanga',
-            'ciudad_residencia': 'Bucaramanga',
+            'numero_identificacion': '',
+            'ciudad_expedicion_identificacion': '',
+            'ciudad_residencia': '',
             'genero': genero['FEMENINO'],
             'tipo_apoderado': tipo_apoderado_banco['GENERAL'],
-            'tipo_poder': 'General',
-            'escritura': 'Escritura Pública Número 0020 de enero 7 de 2020 de la Notaría Catorce de Cali'
+            'tipo_poder': '',
+            'escritura': ''
         }
 
         diccionario_representante_banco = {
-            'nombre': 'Héctor Fabio Rodríguez Prado',
+            'nombre': 'Juan Pablo Cruz López',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
             'numero_identificacion': '',
             'ciudad_expedicion_identificacion': '',
@@ -89,14 +89,14 @@ class TestMinuta(TestCase):
         }
 
         diccionario_banco = {
-            'nombre': 'banco unión s.a',
+            'nombre': 'Banco unión s.a',
             'nit': '',
         }
 
         diccionario_prestamo = {
-            'cantidad_banco_a_hipotecante': 102879000,
-            'cantidad_dada_a_aceptante': 99400000,
-            'gastos_de_gestion': 3479000
+            'cantidad_banco_a_hipotecante': 97497000,
+            'cantidad_dada_a_aceptante': 94200000,
+            'gastos_de_gestion': 3297000
         }
 
         diccionario_apoderado = strip_dict_or_list(diccionario_apoderado)
@@ -142,10 +142,12 @@ class TestMinuta(TestCase):
         else:
             banco = Banco(**diccionario_banco)
         prestamo = Prestamo(**diccionario_prestamo)
-        minuta = DocumentoMinuta(apoderado, poderdantes, inmueble, depositos,
-                                 parqueaderos, apoderado_banco, representante_banco, banco, prestamo)
-        minuta.generate_html()
-        print(minuta.html)
+        minuta_hipoteca = DocumentoMinutaHipoteca(apoderado, poderdantes, inmueble, depositos,
+                                 parqueaderos, apoderado_banco, representante_banco, 
+                                 banco, prestamo
+                                 )
+        minuta_hipoteca.generate_html()
+        print(minuta_hipoteca.html)
 
 # command line for run this test:
-# python -m unittest test.test_minuta_html.TestMinuta.test_init_minuta_success
+# python -m unittest tests.test_minuta_hipoteca.TestMinutaHipoteca.test_init_minuta_hipoteca_success
