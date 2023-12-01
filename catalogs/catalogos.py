@@ -1,3 +1,8 @@
+respuesta = {
+    "SI": "Si",
+    "NO": "No"
+}
+
 tipos_identificacion_ciudadano = {
     "CEDULA_CIUDADANIA": {
         "nombre": "Cédula de Ciudadanía",
@@ -38,7 +43,7 @@ tipo_representante_banco = {
     'SUPLENTE': 'Suplente del Presidente'
 }
 
-ficha_catastral = {
+tipo_ficha_catastral = {
     'INDIVIDUAL': 'Individual',
     'MAYOR_EXTENSION': 'Mayor Extensión'
 }
@@ -80,7 +85,7 @@ apoderados_banco = [
     {
         'nombre': 'Lina Marcela Palau Zea',
         'tipo_identificacion': 'Cédula de Ciudadanía',
-        'numero_identificacion': '16650246',
+        'numero_identificacion': '1113517151',
         'ciudad_expedicion_identificacion': 'Ginebra',
         'ciudad_residencia': 'Cali',
         'genero': 'Femenino',
@@ -182,6 +187,17 @@ apoderados_banco = [
         'numero_identificacion': '37.746.531',
         'ciudad_expedicion_identificacion': 'Bucaramanga',
         'ciudad_residencia': 'Bucaramanga',
+        'genero': 'Femenino',
+        'tipo_apoderado': 'General',
+        'tipo_poder': 'Escriturado',
+        'escritura': 'Escritura Pública Número 0020 de enero 7 de 2020 de la Notaría Catorce de Cali'
+    },
+    {
+        'nombre': 'Diana Milena Salcedo Cardozo',
+        'tipo_identificacion': 'Cédula de Ciudadanía',
+        'numero_identificacion': '38364684',
+        'ciudad_expedicion_identificacion': 'Ibague',
+        'ciudad_residencia': 'Ibague',
         'genero': 'Femenino',
         'tipo_apoderado': 'General',
         'tipo_poder': 'Escriturado',

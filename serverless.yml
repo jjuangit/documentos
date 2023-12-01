@@ -1,13 +1,7 @@
 service: MINUTAS
-
+frameworkVersion: '3'
 provider:
   name: aws
   runtime: python3.11
 
-functions:
-  create_minuta_hipoteca:
-    handler: controllers.minuta_hipoteca.create_hipoteca
-    events:
-      - http:
-          path: /minuta/create/serverless
-          method: post
+functions: ${file(./functions.yml)}

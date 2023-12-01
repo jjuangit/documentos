@@ -2,7 +2,7 @@ import json
 from pathlib import Path
 from unittest import TestCase
 
-from models.hipoteca import DocumentoMinutaHipoteca
+from models.minuta_hipoteca import DocumentoHipoteca
 from models.apoderado import Apoderado
 from models.poderdantes import Poderdante
 from models.inmueble import Inmueble
@@ -70,7 +70,7 @@ class TestMinuta(TestCase):
                 else:
                     banco = Banco(**json_banco)
                 prestamo = Prestamo(**json_prestamo)
-                minuta = DocumentoMinutaHipoteca(apoderado, poderdantes, inmueble, depositos,
+                minuta = DocumentoHipoteca(apoderado, poderdantes, inmueble, depositos,
                                          parqueaderos, apoderado_banco, representante_banco, banco, prestamo)
             except Exception as error:
                 print(f'Error al crear la minuta: {error}')

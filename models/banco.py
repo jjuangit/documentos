@@ -11,3 +11,13 @@ class Banco:
     ):
         self.nombre = nombre
         self.nit = nit
+
+class BancoPoder(Banco):
+    def __init__(
+        self,
+        nombre: str,
+    ):
+        super().__init__(
+            nombre,
+            nit=None
+        )

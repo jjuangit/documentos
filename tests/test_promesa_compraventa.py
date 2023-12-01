@@ -18,7 +18,7 @@ from catalogs.catalogos import genero
 from catalogs.catalogos import estado_civil
 from catalogs.catalogos import tipo_apoderado_banco
 from catalogs.catalogos import tipo_representante_banco
-from catalogs.catalogos import ficha_catastral
+from catalogs.catalogos import tipo_ficha_catastral
 from catalogs.catalogos import apoderados_banco
 from catalogs.catalogos import representantes_banco
 from catalogs.catalogos import bancos
@@ -63,7 +63,7 @@ class TestPromesaCompraventa(TestCase):
             'ciudad_y_o_departamento': 'EN SANTA MARTA MAGDALENA',
             'matricula': '080-163243',
             'municipio_de_registro_orip': 'Santa Marta',
-            'tipo_ficha_catastral': ficha_catastral['MAYOR_EXTENSION'],
+            'tipo_ficha_catastral': tipo_ficha_catastral['MAYOR_EXTENSION'],
             'numero_ficha_catastral': [
                 {'ficha': '0002000000070001000000000'},
             ]
@@ -107,7 +107,7 @@ class TestPromesaCompraventa(TestCase):
             'tipo_representante': 'Representante Legal'
         }
         diccionario_banco = {
-            'nombre': 'banco unión s.a',
+            'nombre': 'Banco unión s.a',
             'nit': '',
         }
 
@@ -143,6 +143,7 @@ class TestPromesaCompraventa(TestCase):
             diccionario_apoderado_banco)
         diccionario_representante_banco = strip_dict_or_list(
             diccionario_representante_banco)
+        diccionario_representante_aceptante = strip_dict_or_list(diccionario_representante_aceptante)
         diccionario_banco = strip_dict_or_list(diccionario_banco)
         diccionario_aceptante = strip_dict_or_list(diccionario_aceptante)
         diccionario_compraventa = strip_dict_or_list(diccionario_compraventa)

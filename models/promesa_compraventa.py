@@ -300,16 +300,16 @@ class DocumentoPromesaCompraventa(Document):
             resultado += f'<b><u>{poderdante.domicilio.upper()},</u></b> de estado civil '
             resultado += f'<b><u>{poderdante.estado_civil_genero.upper()};</u></b> en su calidad '
             resultado += f'de {self.apoderado.apoderado} {self.apoderado.tipo_apoderado}, '
-            resultado += f'según acredita con el Poder {self.apoderado.tipo_apoderado} a '
-            resultado += f'{self.apoderado.el} otorgado '
             if self.apoderado.tipo_apoderado == 'Especial':
+                resultado += f'según acredita con el Poder {self.apoderado.tipo_apoderado} a '
+                resultado += f'{self.apoderado.el} otorgado '
                 resultado += f'y debidamente autenticado el día <b><u>{dia} de {mes} del {anio} '
                 resultado += f'</u></b>ante {self.apoderado.dependencia} '
                 resultado += f'<b><u>{self.apoderado.nombre_dependencia.upper()} de '
                 resultado += f'{self.apoderado.ciudad_dependencia.upper()},</u></b> '
             elif self.apoderado.tipo_apoderado == 'General':
-                resultado += 'mediante la <b><u>Escritura Pública No.'
-                resultado += f'{self.apoderado.escritura}</u></b>'
+                resultado += 'acorde con el Poder General amplio y suficiente, constituido '
+                resultado += f'mediante la <b><u>{self.apoderado.escritura}</u></b>'
 
             resultado += f'{quienes} para todos los efectos se {cedentes}, '
         return resultado

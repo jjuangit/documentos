@@ -15,7 +15,7 @@ from catalogs.catalogos import genero
 from catalogs.catalogos import estado_civil
 from catalogs.catalogos import tipo_apoderado_banco
 from catalogs.catalogos import tipo_representante_banco
-from catalogs.catalogos import ficha_catastral
+from catalogs.catalogos import tipo_ficha_catastral
 from catalogs.catalogos import apoderados_banco
 from catalogs.catalogos import representantes_banco
 from catalogs.catalogos import bancos
@@ -52,7 +52,7 @@ class TestCompraventaLeasing(TestCase):
             'ciudad_y_o_departamento': 'EN PARQUE NATURA JAMUNDÍ VALLE DEL CAUCA',
             'matricula': '370-1097610',
             'municipio_de_registro_orip': 'Cali',
-            'tipo_ficha_catastral': ficha_catastral['MAYOR_EXTENSION'],
+            'tipo_ficha_catastral': tipo_ficha_catastral['MAYOR_EXTENSION'],
             'numero_ficha_catastral': [
                 {'ficha': '763640100000007701796000000000'}
             ],

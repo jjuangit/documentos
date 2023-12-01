@@ -29,7 +29,7 @@ from .banco import Banco
 from .prestamo import Prestamo
 
 
-class DocumentoMinutaHipoteca(Document):
+class DocumentoHipoteca(Document):
     apoderado: Apoderado
     poderdantes: List[Poderdante]
     inmueble: Inmueble
@@ -295,8 +295,7 @@ class DocumentoMinutaHipoteca(Document):
         if self.parqueaderos:
             for parqueadero in self.parqueaderos:
                 resultado += f'<b><u>{parqueadero.nombre.upper()} {parqueadero.numero} '
-                resultado += f'{self.inmueble.direccion.upper()} '
-                resultado += f'{self.inmueble.ciudad_y_o_departamento.upper()}</u></b>'
+                resultado += f'{parqueadero.direccion.upper()}</u></b>'
                 if parqueadero.linderos_especiales:
                     resultado += f'<p>{parqueadero.linderos_especiales}</p>'
         return resultado
@@ -306,8 +305,7 @@ class DocumentoMinutaHipoteca(Document):
         if self.depositos:
             for deposito in self.depositos:
                 resultado += f'<b><u>{deposito.nombre.upper()} {deposito.numero} '
-                resultado += f'{self.inmueble.direccion.upper()} '
-                resultado += f'{self.inmueble.ciudad_y_o_departamento.upper()}</u></b>'
+                resultado += f'{deposito.direccion.upper()}</u></b>'
                 if deposito.linderos_especiales:
                     resultado += f'<p>{deposito.linderos_especiales}</p>'
         return resultado
@@ -344,7 +342,7 @@ class DocumentoMinutaHipoteca(Document):
             resultado += '</u></b> respectivamente '
 
         resultado += '</u></b> de la Oficina de Registro de Instrumentos Públicos de '
-        resultado += f'<b><u>{self.inmueble.municipio_de_registro_orip}</u></b>'
+        resultado += f'<b><u>{self.inmueble.municipio_de_registro_orip.upper()}</u></b>'
         return resultado
 
     def generar_fichas_catastrales(self):
@@ -445,7 +443,7 @@ class DocumentoMinutaHipoteca(Document):
                 matriculas += [deposito.matricula]
         resultado += f'{inmuebles} No. <b><u>{", ".join(matriculas)}</u></b> '
         resultado += 'de la Oficina de Registro de Instrumentos Públicos de <b><u>'
-        resultado += f'{self.inmueble.municipio_de_registro_orip}.</u></b></p>'
+        resultado += f'{self.inmueble.municipio_de_registro_orip.upper()}.</u></b></p>'
         return resultado
 
     def generar_paragrafo_primero(self):
@@ -563,7 +561,7 @@ class DocumentoMinutaHipoteca(Document):
         resultado += 'cliente directamente al Bróker. La garantía cubre también toda clase '
         resultado += 'de obligaciones que <b>LA PARTE HIPOTECANTE</b> conjunta o '
         resultado += 'separadamente contraiga en el futuro en favor de <b>'
-        resultado += f'{self.banco.nombre}</b>, conforme a lo ya expresado en esta cláusula '
+        resultado += f'{self.banco.nombre.upper()}</b>, conforme a lo ya expresado en esta cláusula '
         resultado += 'y a lo establecido en la cláusula séptima y décima de esta hipoteca. '
         resultado += 'Esta liquidación es con el fin de determinar los derechos notariales y '
         resultado += 'de registro de la presente hipoteca. Adicionalmente, para dar '

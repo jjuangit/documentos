@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from models.hipoteca import DocumentoMinutaHipoteca
+from models.minuta_hipoteca import DocumentoHipoteca
 from models.apoderado import Apoderado
 from models.poderdantes import Poderdante
 from models.inmueble import Inmueble
@@ -15,7 +15,7 @@ from catalogs.catalogos import genero
 from catalogs.catalogos import estado_civil
 from catalogs.catalogos import tipo_apoderado_banco
 from catalogs.catalogos import tipo_representante_banco
-from catalogs.catalogos import ficha_catastral
+from catalogs.catalogos import tipo_ficha_catastral
 from catalogs.catalogos import apoderados_banco
 from catalogs.catalogos import representantes_banco
 from catalogs.catalogos import bancos
@@ -27,39 +27,50 @@ class TestMinutaHipoteca(TestCase):
     def test_init_minuta_hipoteca_success(self):
         """Funcion para imprimir el html de la minuta"""
         diccionario_apoderado = {
-            'nombre': 'NASLY BIBIANA OSPINA RIVERA',
+            'nombre': 'MARTHA LUCILA ROJAS BETANCOURT',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
-            'numero_identificacion': '39.790.848',
-            'ciudad_expedicion_identificacion': 'BOGOTÁ D.C.',
+            'numero_identificacion': '31.580.309',
+            'ciudad_expedicion_identificacion': 'Cali',
             'genero': genero['FEMENINO'],
         }
 
         diccionario_poderdantes = [{
-            'nombre': 'MARIA PAULA OSPINA BARACALDO',
+            'nombre': 'NATHALIA VERGARA HERNANDEZ',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
-            'numero_identificacion': '1.015.457.203',
-            'ciudad_expedicion_identificacion': 'BOGOTÁ D.C.',
-            'domicilio': 'SWIEQI - MALTA',
-            'estado_civil': estado_civil['SOLTERO_CON_UNION_MARITAL_Y_SOCIEDAD_PATRIMONIAL_VIGENTE'],
+            'numero_identificacion': '1.143.871.401',
+            'ciudad_expedicion_identificacion': 'Cali',
+            'domicilio': 'Barcelona - España',
+            'estado_civil': estado_civil['SOLTERO_SIN_UNION_MARITAL_DE_HECHO'],
             'genero': genero['FEMENINO'],
         }
         ]
 
         diccionario_inmueble = {
             'nombre': 'APARTAMENTO',
-            'numero': '2008-TORRE 3-ETAPA 1',
-            'direccion': 'CONJUNTO RESIDENCIAL NATURA LIVING PH CARRERA 74 #152B-70',
-            'ciudad_y_o_departamento': 'EN EL PLAN BOGOTÁ D.C.',
-            'matricula': '50N-20919524',
-            'municipio_de_registro_orip': 'Cali',
-            'tipo_ficha_catastral': ficha_catastral['MAYOR_EXTENSION'],
+            'numero': 'TB-502 TORRE B',
+            'direccion': 'CARRERA 23 # 10-15 PORTERIA 1/ CARRERA 23 # 10-73 PORTERIA 2, CONJUNTO RESIDENCIAL ROSETO- APARTAMENTOS',
+            'ciudad_y_o_departamento': 'JAMUNDÍ - CALI',
+            'matricula': '370-1077247',
+            'municipio_de_registro_orip': 'CALI',
+            'tipo_ficha_catastral': tipo_ficha_catastral['MAYOR_EXTENSION'],
             'numero_ficha_catastral': [
-                {'ficha': '009128260300000000'}
+                {'ficha': '763640100000007700049000000000'},
+                {'ficha': '763640100000007700001000000000'},
+                {'ficha': '763640100000007700002000000000'},
+                {'ficha': '763640100000007700051000000000'},
             ],
-            'linderos_especiales': 'TORRE 3 APARTAMENTO 2008. LOCALIZACIÓN: Localizado en el Piso 20 de la TORRE 3, en la ETAPA 1 del Proyecto Natura Living, ubicado en Bogotá. Las Áreas Generales se clasifican como: ÁREA CONSTRUIDA de treinta y siete punto cincuenta y seis metros cuadrados (37.56 m2). ÁREA PRIVADA CONSTRUIDA de treinta y uno punto cuarenta y nueve metros cuadrados (31.49 m2). La diferencia entre el área construida y el área privada es de seis punto cero siete metros cuadrados (6.07 m2). DEPENDENCIAS: Salón comedor, cocina, ropas, alcoba 1, alcoba 2 y baño. LINDEROS HORIZONTALES: Entre los puntos 1 y 2: Línea quebrada, en dimensiones de uno punto dieciséis metros (1.16 m), uno punto treinta y tres metros (1.33 m), cero punto quince metros (0.15 m), un punto tres punto sesenta y nueve metros (3.69 m), cero punto setenta y tres metros (0.73 m), un punto treinta y dos metros (1.32 m), cero punto nueve metros (0.09 m), y cero punto ochenta y ocho metros (0.88 m); con área común libre. Entre los puntos 3 y 4: Línea quebrada, en dimensiones de dos punto treinta y nueve metros (2.39 m), uno punto cuarenta metros (1.40 m), cero punto dieciocho metros (0.18 m), uno punto cincuenta y ocho metros (1.58 m), cero punto cero nueve metros (0.09 m), uno punto veinticinco metros (1.25 m), y tres punto treinta y cuatro metros (3.34 m); parte con área común libre, y parte con área privada construida. Entre los puntos 4 y 1: Línea quebrada, en dimensiones de tres punto cincuenta y seis metros (3.56 m), cero punto noventa y cinco metros (0.95 m), cero punto veintiséis metros (0.26 m), uno punto treinta metros (1.30 m), cero punto cuarenta y ocho metros (0.48 m), cero punto veinte metros (0.20 m), cero punto setenta y tres metros (0.73 m), dos punto sesenta y uno metros (2.61 m), cero punto noventa metros (0.90 m), cero punto dieciséis metros (0.16 m), y uno punto treinta y tres metros (1.33 m); con área común construida. LINDEROS VERTICALES: La altura libre aproximada es de dos punto cuarenta metros (2.40 m). NADIR: Entre piso medio, colindante con Piso 19. CENIT: Entre piso al medio, colindante con Piso 21.'
+            'linderos_especiales': '"TORRE B APARTAMENTO TB-502. Carrera 23 No 10-15 Porteria 1/ Carrera 23 No 10-73 Porteria 2. NADIR: 10,20. CENIT: 12,65. ALTURA LIBRE: 2,45 (de losa a losa sin contar el acabado). ÁREA CONSTRUIDA: 44,65 m2. Discriminada así: ÁREA PRIVADA CONSTRUIDA: 40,84 m2. + MUROS COMUNES: 3,81 m2. Comprendido dentro de los siguientes linderos: NORTE: Del punto 1 al punto 2. En línea quebrada. Con una distancia de 8,69 metros. Colindando con vacio a zona de oficios común de uso exclusivo del apartamento TB-102, buitrón y vacío a circulación común. ORIENTE: Del punto 2 al punto 3. En linea quebrada. Con una distancia de 6,44 metros. Colindando con circulación común y apartamento TB- 501. SUR: Del punto 3 al punto 4. En linea quebrada. Con una distancia de 10,18 metros. Colindando con vacio a zona común y buitrón, OCCIDENTE: Del punto 4 al punto 1. En linea recta. Con una distancia de 4,53 metros. Colindando con vacio a zona común."'
         }
         diccionario_parqueaderos = [
-
+            {
+                "nombre": "PARQUEADERO",
+                "numero": "129",
+                "direccion": "CARRERA 23 # 10-15 PORTERIA 1/ CARRERA 23 # 10-73 PORTERIA 2",
+                "matricula": "370-1077782",
+                "tipo_ficha_catastral": "",
+                "numero_ficha_catastral": "",
+                "linderos_especiales": "PARQUEADERO 129: Localizado en primer piso. Ubicado en la Carrera 23 No 10-15 Porteria 1 / Carrera 23 No 10-73 Porteria 2. NADIR. 0,00 AREA PRIVADA: 12,00 M2. LINDEROS: NOR-OCCIDENTE: del punto 4 al punto 1 En línea recta. Con una distancia de 5,00 metros. Colindando con zona común. NOR-ORIENTE: del punto 1 al punto 2 En linea recta. Con una distancia de 2,40 metros. Colindando con área de circulación y maniobras. SUR-ORIENTE: del punto 2 al punto 3. En línea recta. Con una distancia de 5,00 metros. Colindando con parqueadero 130. SUR-OCCIDENTE: del punto 3 al punto 4. En línea recta. Con una distancia de 2,40 metros. Colindando con parqueadero 155."
+            }
         ]
 
         diccionario_depositos = [
@@ -67,7 +78,7 @@ class TestMinutaHipoteca(TestCase):
         ]
 
         diccionario_apoderado_banco = {
-            'nombre': 'Germán Leonardo Kalil Méndez',
+            'nombre': 'Lina Marcela Palau Zea',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
             'numero_identificacion': '',
             'ciudad_expedicion_identificacion': '',
@@ -79,7 +90,7 @@ class TestMinutaHipoteca(TestCase):
         }
 
         diccionario_representante_banco = {
-            'nombre': 'Juan Pablo Cruz López',
+            'nombre': 'Héctor Fabio Rodríguez Prado',
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
             'numero_identificacion': '',
             'ciudad_expedicion_identificacion': '',
@@ -94,9 +105,9 @@ class TestMinutaHipoteca(TestCase):
         }
 
         diccionario_prestamo = {
-            'cantidad_banco_a_hipotecante': 97497000,
-            'cantidad_dada_a_aceptante': 94200000,
-            'gastos_de_gestion': 3297000
+            'cantidad_banco_a_hipotecante': 112112000,
+            'cantidad_dada_a_aceptante': 108320773,
+            'gastos_de_gestion': 3791227
         }
 
         diccionario_apoderado = strip_dict_or_list(diccionario_apoderado)
@@ -142,7 +153,7 @@ class TestMinutaHipoteca(TestCase):
         else:
             banco = Banco(**diccionario_banco)
         prestamo = Prestamo(**diccionario_prestamo)
-        minuta_hipoteca = DocumentoMinutaHipoteca(apoderado, poderdantes, inmueble, depositos,
+        minuta_hipoteca = DocumentoHipoteca(apoderado, poderdantes, inmueble, depositos,
                                  parqueaderos, apoderado_banco, representante_banco, 
                                  banco, prestamo
                                  )

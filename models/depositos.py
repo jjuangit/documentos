@@ -30,7 +30,6 @@ class Deposito:
 
 
 class DepositoPromesaCompraventa(Deposito):
-    nueva_propiedad: Optional[Text]
 
     def __init__(
         self,

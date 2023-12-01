@@ -59,6 +59,20 @@ class Apoderado:
             return 'C.E'
         elif self.tipo_identificacion == 'Pasaporte':
             return 'Pasaporte'
+        
+    @property
+    def assignee(self):
+        if self.genero == 'Masculino':
+            return 'apoderado'
+        elif self.genero == 'Femenino':
+            return 'apoderada'
+        
+    @property
+    def facultado(self):
+        if self.genero == 'Masculino':
+            return 'facultado'
+        elif self.genero == 'Femenino':
+            return 'facultada'
 
 class ApoderadoPromesaCompraventa(Apoderado):
     tipo_apoderado: Optional[Text]
@@ -102,3 +116,26 @@ class ApoderadoPromesaCompraventa(Apoderado):
             return 'la'
         elif self.tipo_dependencia_autenticacion == 'Consulado':
             return 'el'
+        
+
+
+    @property
+    def identificado(self):
+        if self.genero == 'Masculino':
+            return 'identificado'
+        elif self.genero == 'Femenino':
+            return 'identificada'
+
+    @property
+    def assignee(self):
+        if self.genero == 'Masculino':
+            return 'apoderado'
+        elif self.genero == 'Femenino':
+            return 'apoderada'
+
+    @property
+    def el(self):
+        if self.genero == 'Masculino':
+            return 'el'
+        elif self.genero == 'Femenino':
+            return 'la'
