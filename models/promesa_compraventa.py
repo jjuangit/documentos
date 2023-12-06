@@ -7,11 +7,11 @@ from utils.exceptions import ValidationError
 from utils.validators import Validator
 
 from utils.validating_dictionaries.dictionary_poderdantes import dictionary_validator_poderdantes
-from utils.validating_dictionaries.dictionary_apoderado import dictionary_validator_apoderado
+from utils.validating_dictionaries.dictionary_apoderado import dictionary_validator_apoderado_promesa_compraventa
 from utils.validating_dictionaries.dictionary_representante_banco import dictionary_validator_representante_banco
-from utils.validating_dictionaries.dictionary_inmueble import dictionary_validator_inmueble
-from utils.validating_dictionaries.dictionary_parqueaderos import dictionary_validator_parqueaderos
-from utils.validating_dictionaries.dictionary_depositos import dictionary_validator_depositos
+from utils.validating_dictionaries.dictionary_inmueble import dictionary_validator_inmueble_promesa_compraventa
+from utils.validating_dictionaries.dictionary_parqueaderos import dictionary_validator_parqueaderos_promesa_compraventa
+from utils.validating_dictionaries.dictionary_depositos import dictionary_validator_depositos_promesa_compraventa
 from utils.validating_dictionaries.dictionary_apoderado_banco import dictionary_validator_apoderado_banco
 from utils.validating_dictionaries.dictionary_banco import dictionary_validator_banco
 from utils.validating_dictionaries.dictionary_aceptante import dictionary_validator_aceptante
@@ -122,6 +122,11 @@ class DocumentoPromesaCompraventa(Document):
         self.validar_compraventa()
         self.validar_organo_autorizador()
 
+    def validar_apoderado(self):
+        atributos_apoderado = self.apoderado.__dict__
+        Validator.validate_dict(
+            atributos_apoderado, dictionary_validator_apoderado_promesa_compraventa, 'Apoderado')
+
     def validar_poderdantes(self):
         if self.cantidad_poderdantes == 0 and self.cantidad_poderdantes > 2:
             raise ValidationError(
@@ -132,48 +137,10 @@ class DocumentoPromesaCompraventa(Document):
             Validator.validate_dict(
                 atributos_poderdante, dictionary_validator_poderdantes, 'Poderdantes')
 
-    def validar_apoderado(self):
-        if self.apoderado is None:
-            raise ValidationError(
-                'No hay datos de apoderado. Favor de agregar datos')
-
-        atributos_apoderado = self.apoderado.__dict__
-        Validator.validate_dict(
-            atributos_apoderado, dictionary_validator_apoderado, 'Apoderado')
-
-    def validar_apoderado_banco(self):
-        if self.apoderado_banco is None:
-            raise ValidationError(
-                'No hay datos de apoderado especial. Favor de agregar datos')
-
-        if self.apoderado_banco.nombre not in [apoderado['nombre'] for apoderado in apoderados_banco]:
-            atributos_apoderado_banco = self.apoderado_banco.__dict__
-            Validator.validate_dict(
-                atributos_apoderado_banco, dictionary_validator_apoderado_banco, 'Apoderado del banco')
-
-    def validar_representante_banco(self):
-        if self.representante_banco is None:
-            raise ValidationError(
-                'No hay datos de representante legal. Favor de agregar datos')
-
-        if self.representante_banco.nombre not in [representante['nombre'] for representante in representantes_banco]:
-            atributos_representante_banco = self.representante_banco.__dict__
-            Validator.validate_dict(
-                atributos_representante_banco, dictionary_validator_representante_banco, 'Representante del banco')
-            
-    def validar_representante_aceptante(self):
-        atributos_representante_aceptante = self.representante_aceptante.__dict__
-        Validator.validate_dict(
-            atributos_representante_aceptante, dictionary_validator_representante_aceptante, 'Representante del aceptante')
-
     def validar_inmueble(self):
-        if self.inmueble is None:
-            raise ValidationError(
-                'No hay datos de inmueble. Favor de agregar datos')
-
         atributos_inmueble = self.inmueble.__dict__
         Validator.validate_dict(
-            atributos_inmueble, dictionary_validator_inmueble, 'Inmueble')
+            atributos_inmueble, dictionary_validator_inmueble_promesa_compraventa, 'Inmueble')
 
     def validar_parqueaderos(self):
         if len(self.parqueaderos) > 2:
@@ -184,7 +151,7 @@ class DocumentoPromesaCompraventa(Document):
                 atributos_parqueaderos = parqueadero.__dict__
 
             Validator.validate_dict(
-                atributos_parqueaderos, dictionary_validator_parqueaderos, 'Parqueaderos')
+                atributos_parqueaderos, dictionary_validator_parqueaderos_promesa_compraventa, 'Parqueaderos')
 
     def validar_depositos(self):
         if len(self.depositos) > 2:
@@ -195,40 +162,43 @@ class DocumentoPromesaCompraventa(Document):
                 atributos_depositos = deposito.__dict__
 
             Validator.validate_dict(
-                atributos_depositos, dictionary_validator_depositos, 'Depósitos')
+                atributos_depositos, dictionary_validator_depositos_promesa_compraventa, 'Depósitos')
+
+    def validar_apoderado_banco(self):
+        if self.apoderado_banco.nombre not in [apoderado['nombre'] for apoderado in apoderados_banco]:
+            atributos_apoderado_banco = self.apoderado_banco.__dict__
+            Validator.validate_dict(
+                atributos_apoderado_banco, dictionary_validator_apoderado_banco, 'Apoderado del banco')
+
+    def validar_representante_banco(self):
+        if self.representante_banco.nombre not in [representante['nombre'] for representante in representantes_banco]:
+            atributos_representante_banco = self.representante_banco.__dict__
+            Validator.validate_dict(
+                atributos_representante_banco, dictionary_validator_representante_banco, 'Representante del banco')
 
     def validar_banco(self):
-        if self.banco is None:
-            raise ValidationError(
-                'No hay datos de banco. Favor de agregar datos')
-
         if self.banco.nombre not in [banco['nombre'] for banco in bancos]:
             atributos_banco = self.banco.__dict__
             Validator.validate_dict(
                 atributos_banco, dictionary_validator_banco, 'Banco')
 
-    def validar_aceptante(self):
-        if self.aceptante is None:
-            raise ValidationError(
-                'No hay datos de la aceptante. Favor de agregar datos')
+    def validar_compraventa(self):
+        atributos_compraventa = self.compraventa.__dict__
+        Validator.validate_dict(
+            atributos_compraventa, dictionary_validator_compraventa, 'Compraventa')
 
+    def validar_aceptante(self):
         if self.aceptante.nombre not in [aceptante['nombre'] for aceptante in aceptantes]:
             atributos_aceptante = self.aceptante.__dict__
             Validator.validate_dict(
                 atributos_aceptante, dictionary_validator_aceptante, 'Aceptante')
 
-    def validar_compraventa(self):
-        if self.compraventa is None:
-            raise ValidationError(
-                'No hay datos de la compraventa. Favor de agregar datos')
-        atributos_compraventa = self.compraventa.__dict__
+    def validar_representante_aceptante(self):
+        atributos_representante_aceptante = self.representante_aceptante.__dict__
         Validator.validate_dict(
-            atributos_compraventa, dictionary_validator_compraventa, 'Compraventa')
-        
+            atributos_representante_aceptante, dictionary_validator_representante_aceptante, 'Representante del aceptante')
+
     def validar_organo_autorizador(self):
-        if self.organo_autorizador is None:
-            raise ValidationError(
-                'No hay datos del Organo autorizador. Favor de agregar datos')
         atributos_organo_autorizador = self.organo_autorizador.__dict__
         Validator.validate_dict(
             atributos_organo_autorizador, dictionary_validator_organo_autorizador, 'Organo Autorizador')
@@ -257,15 +227,13 @@ class DocumentoPromesaCompraventa(Document):
         return inmuebles > 1
 
     def generar_titulo_documento(self):
-        resultado = ''
-        resultado += '<title>Cesión del contrato</title>'
+        resultado = '<title>Cesión del contrato</title>'
         resultado += '<div class="titulo"><p>'
         resultado += '<b>CESIÓN DEL CONTRATO PROMESA DE COMPRAVENTA</b></p></div>'
         return resultado
 
     def generar_parrafo_datos_apoderado(self):
-        resultado = ''
-        resultado += '<div class="parrafos"><p>Entre los suscritos a saber: de una parte, '
+        resultado = '<div class="parrafos"><p>Entre los suscritos a saber: de una parte, '
         resultado += f'<b><u>{self.apoderado.nombre.upper()},</u></b> mayor de edad, '
         resultado += f'{self.apoderado.identificado} con <b>{self.apoderado.tipo_identificacion} '
         resultado += f'No. <u>{self.apoderado.numero_identificacion}</u> de '
@@ -315,8 +283,7 @@ class DocumentoPromesaCompraventa(Document):
         return resultado
 
     def generar_parrafo_datos_apoderado_banco(self):
-        resultado = ''
-        resultado += f'y de otra parte {self.apoderado_banco.doctor}, <b><u>'
+        resultado = f'y de otra parte {self.apoderado_banco.doctor}, <b><u>'
         resultado += f'{self.apoderado_banco.nombre.upper()},</u></b> mayor de edad, '
         resultado += f'{self.apoderado_banco.vecino} de <b><u>{self.apoderado_banco.ciudad_residencia},'
         resultado += f'</b></u> {self.apoderado_banco.identificado} con <b>'
@@ -335,29 +302,20 @@ class DocumentoPromesaCompraventa(Document):
         return resultado
 
     def generar_parrafo_datos_representante_banco(self):
-        nombre = self.representante_banco.nombre.upper()
-        ciudad_residencia = self.representante_banco.ciudad_residencia
-        tipo_identificacion = self.representante_banco.tipo_identificacion
-        numero_identificacion = self.representante_banco.numero_identificacion
-        ciudad_expedicion_identificacion = self.representante_banco.ciudad_expedicion_identificacion
-        tipo_representante = self.representante_banco.tipo_representante
-        doctor = self.representante_banco.doctor
-        vecino = self.representante_banco.vecino
-        identificado = self.representante_banco.identificado
-
-        resultado = ''
-        resultado += f'{doctor} <u><b>{nombre},</b></u> mayor de edad, {vecino} de '
-        resultado += f'<u><b>{ciudad_residencia},</b></u> {identificado} con '
-        resultado += f'<u><b>{tipo_identificacion}</b></u> No. '
-        resultado += f'<u><b>{numero_identificacion}</b></u> de '
-        resultado += f'<u><b>{ciudad_expedicion_identificacion},</b></u> '
+        resultado = f'{self.representante_banco.doctor} <u><b>'
+        resultado += f'{self.representante_banco.nombre.upper()},</b></u> mayor de edad, '
+        resultado += f'{self.representante_banco.vecino} de '
+        resultado += f'<u><b>{self.representante_banco.ciudad_residencia},</b></u> '
+        resultado += f'{self.representante_banco.identificado} con '
+        resultado += f'<u><b>{self.representante_banco.tipo_identificacion}</b></u> No. '
+        resultado += f'<u><b>{self.representante_banco.numero_identificacion}</b></u> de '
+        resultado += f'<u><b>{self.representante_banco.ciudad_expedicion_identificacion},</b></u> '
         resultado += 'quien compareció en ese acto en nombre y por cuenta en su calidad  '
-        resultado += f'de {tipo_representante} de '
+        resultado += f'de {self.representante_banco.tipo_representante} de '
         return resultado
 
     def generar_constitucion_banco_union(self):
-        resultado = ''
-        resultado += f'<b>{self.banco.nombre.upper()}</b> antes <b>GIROS & FINANZAS COMPAÑÍA DE '
+        resultado = f'<b>{self.banco.nombre.upper()}</b> antes <b>GIROS & FINANZAS COMPAÑÍA DE '
         resultado += 'FINANCIAMIENTO S.A.</b>, sociedad con domicilio principal en Cali, '
         resultado += 'identificada Tributariamente con NIT número 860.006.797-9, sociedad '
         resultado += 'constituida legalmente mediante Escritura Pública No. 5938 del 05 de '
@@ -392,8 +350,7 @@ class DocumentoPromesaCompraventa(Document):
             cedentes = '<b>LOS CEDENTES</b> suscribieron'
         elif len(self.poderdantes) == 1:
             cedentes = '<b>EL CEDENTE</b> suscribió'
-        resultado = ''
-        resultado += f'<div class="parrafos"><ol><li>{cedentes} '
+        resultado = f'<div class="parrafos"><ol><li>{cedentes} '
         resultado += f'con la sociedad <b><u>{self.aceptante.nombre.upper()},</u></b>'
         resultado += f' identificada tributariamente con NIT <b><u>{self.aceptante.nit},'
         resultado += '</b></u> contrato de promesa de compraventa '
@@ -516,8 +473,7 @@ class DocumentoPromesaCompraventa(Document):
             cedentes = '<b>LOS CEDENTES</b> solicitaron'
         elif len(self.poderdantes) == 1:
             cedentes = '<b>EL CEDENTE</b> solicitó'
-        resultado = ''
-        resultado += f'<li>{cedentes} a <b>{self.banco.nombre.upper()}</b> crédito de vivienda, '
+        resultado = f'<li>{cedentes} a <b>{self.banco.nombre.upper()}</b> crédito de vivienda, '
         resultado += 'para cubrir el pago del precio de la promesa de compraventa '
         resultado += 'descrita en el numeral anterior, el cual le fue aprobado en la '
         resultado += 'modalidad de Leasing Habitacional.</li></ol>'
@@ -545,8 +501,7 @@ class DocumentoPromesaCompraventa(Document):
             de = f'del <b>{cedentes}</b>'
             realizan = 'realiza'
 
-        resultado = ''
-        resultado += '<p><b>SEGUNDO OBJETO:</b> El objeto del presente contrato es la '
+        resultado = '<p><b>SEGUNDO OBJETO:</b> El objeto del presente contrato es la '
         resultado += f'cesión que {los} {realizan} a favor de la <b>'
         resultado += 'CESIONARIA,</b> de su posición contractual en la promesa de compraventa '
         resultado += f'suscrita con la sociedad <b><u>{self.aceptante.nombre.upper()},</u> '
@@ -564,15 +519,13 @@ class DocumentoPromesaCompraventa(Document):
         return resultado
 
     def generar_clausula_cesion_instrumentada(self):
-        resultado = ''
-        resultado += '<p><b>TERCERO:</b> Que la cesión instrumentada en el presente documento '
+        resultado = '<p><b>TERCERO:</b> Que la cesión instrumentada en el presente documento '
         resultado += 'la hace el cedente de su libre y espontánea voluntad y para el '
         resultado += 'cumplimiento de los requisitos exigidos por <b>'
         resultado += f'{self.banco.nombre.upper()},</b> para el desembolso del crédito de '
         resultado += 'vivienda en la modalidad de Leasing Habitacional.</p>'
         return resultado
 
-    # TODO terminar funcón, validar datos con Angie
     def generar_clausula_aceptacion(self):
         if not self.representante_aceptante:
             self.representante_aceptante = RepresentanteAceptante(
@@ -628,14 +581,14 @@ class DocumentoPromesaCompraventa(Document):
         resultado += f'{self.aceptante.ciudad_ubicacion_camara_comercio},</b></u> cuya existencia, '
         resultado += 'vigencia y representación legal acreditada con el certificado que para los '
         resultado += 'efectos le ha expedido la <b><u>Camara de Comercio de '
-        resultado += f'{self.organo_autorizador.ciudad_ubicacion_camara_comercio}</b></u> debidamente '
-        resultado += 'autorizada por la Junta Directiva según consta en el acta No. <b><u>'
-        resultado += f'{numero_acta}</b></u> de fecha <b><u>{dia} {mes} de {anio}</u></b> hábil '
-        resultado += 'para contratar y obligarse, manifestó que acepta la cesión que por este '
-        resultado += f'instrumento hace <b>{cedentes}</b> a la <b>CESIONARIA. -----------------'
-        resultado += '</b><br><br><br>'
+        resultado += f'{self.organo_autorizador.ciudad_ubicacion_camara_comercio}</b></u> '
+        resultado += 'debidamente autorizada por la Junta Directiva según consta en el acta '
+        resultado += f'No. <b><u>{numero_acta}</b></u> de fecha <b><u>{dia} {mes} de '
+        resultado += f'{anio}</u></b> hábil para contratar y obligarse, manifestó que acepta '
+        resultado += f'la cesión que por este instrumento hace <b>{cedentes}</b> a la '
+        resultado += '<b>CESIONARIA. -----------------</b><br><br><br>'
         return resultado
-    
+
     def generar_fecha_firma(self):
         resultado = ''
         resultado += 'Para constancia se firma en la ciudad de ________ el  día ________ (_____) '

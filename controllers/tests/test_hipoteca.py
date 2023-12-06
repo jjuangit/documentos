@@ -1,69 +1,75 @@
 from unittest import TestCase
-from controllers.hipoteca import DocumentosController
+from controllers.documentos import DocumentosController
 
 class TestHipoteca(TestCase):
 
     def test_create_documento_hipoteca(self):
+        '''Crear documento Hipoteca'''
         event = {
-                    "apoderado": {
-                        "nombre": "LIGIA MILENA ROMERO PARRA",
-                        "tipo_identificacion": "Cédula de ciudadanía",
-                        "numero_identificacion": "52.823.286",
-                        "ciudad_expedicion_identificacion": "Bogotá D.C.",
-                        "genero": "Femenino"
+                    'apoderado': {
+                        'nombre': 'LUZ EDILMA BOLIVAR VALENCIA',
+                        'tipo_identificacion': 'Cédula de Ciudadanía',
+                        'numero_identificacion': '24.931.325',
+                        'ciudad_expedicion_identificacion': 'PEREIRA',
+                        'genero': 'Femenino'
                     },
-                    "poderdantes": [{
-                        "nombre": "CAMILO ROMERO PARRA",
-                        "tipo_identificacion": "Cédula de ciudadanía",
-                        "numero_identificacion": "1.110.446.328",
-                        "ciudad_expedicion_identificacion": "Ibague",
-                        "domicilio": "131 SPINDLE RD HICKSVILLE- NEW YORK",
-                        "estado_civil": "Casado con sociedad conyugal vigente",
-                        "genero": "Masculino"
+                    'poderdantes': [{
+                        'nombre': 'FERNEY VALENCIA BOLIVAR',
+                        'tipo_identificacion': 'Cédula de Ciudadanía',
+                        'numero_identificacion': '10.132.073',
+                        'ciudad_expedicion_identificacion': 'PEREIRA',
+                        'domicilio': 'MALAKOFF - FRANCIA',
+                        'estado_civil': 'Casado con sociedad conyugal vigente',
+                        'genero': 'Masculino'
                     }],
-                    "inmueble": {
-                        "nombre": "APARTAMENTO",
-                        "numero": "208 TORRE 1",
-                        "direccion": "CONJUNTO BULEVAR DEL PORTAL PH VIS CARRERA 10 #59-99 SUR",
-                        "ciudad_y_o_departamento": "EN PORVENIR BOGOTÁ D.C.",
-                        "matricula": "50S-40803060",
-                        "municipio_de_registro_orip": "BOGOTÁ ZONA SUR",
-                        "tipo_ficha_catastral": "Mayor Extensión",
-                        "numero_ficha_catastral": [
-                            {"ficha": "2589994300000000"}
+                    'inmueble': {
+                        'nombre': 'APARTAMENTO',
+                        'numero': '106 ESQUINERO TIPO 1 TORRE 4,',
+                        'direccion': 'CONJUNTO CERRADO MAJESTIC II P.H., TV 35 D G # 2 - 74, SECTOR FRAILES JAPON',
+                        'ciudad_y_o_departamento': 'DOSQUEBRADAS RISARALDA',
+                        'matricula': '294-103416',
+                        'municipio_de_registro_orip': 'DOSQUEBRADAS',
+                        'tipo_ficha_catastral': 'Individual',
+                        'numero_ficha_catastral': [
+                            {'ficha': '002000000011807000000000'}
                         ],
-                        "linderos_especiales": "Apartamento 208, LOCALIZACION: Esté localizado en el piso 2 de Ia torre 7 del conjunto residencial bulervar el portal accesos: acceso vehicular por la carrera 10 No. 59-89 Sur y acceso peatonal por la carrera 10 No, 59-99 Sur en la ciudad de Bogota D.C. DEPENDENGIAS: Sala-comedor cocina, ropas, proyeccién para futuro estar o estudio, dos (2) alcobas, un (1) baño, y proyección futuro baño (por parte del propietario). AREAS: Area construida de cincuenta metros cuadrados con ochenta y dos decimetros Cuadrados (50.82 M2). Area privada de cuarenta y cinco metros cuadrados con treinta y seis decimetros cuadrados (45.36 M2). La diferencia entre el área construida y el área privada es de cinco metros cuadrados con cuarenta y seis decimetros cuadrados (5.46 M2), que corresponden a: muros de fachada común, muros comunes, y ductos comunes, estos elementos y las placas estructurales, ya sean interiores o medianeros con otras unidades privadas, No se pueden demoler ni modificar, dado su carácter estructural y común. ALTURA: La altura libre aproximada es de dos metros con treinta centímetros (2.30 m). LINDEROS: Se encuentra comprendido dentro de los siguientes linderos: Entre los puntos 1 y 2: Línea quebrada, en dimensiones de cuatro metros con sesenta centímetros (4.60 m.), tres metros con cuarenta centímetros (3.40 m.), quince centímetros (0.15 m.), dos metros con diez centímetros (2.10 m.), y dos metros con cuarenta y un centímetros (2.41 m.), muro común al medio, colindante con el partamento 207; ventana y muro de fachada común, colindantes con vacío sobre zona común exterior; y muro común al interior del apartamento. Entre los puntos 2 y 3: Línea quebrada, en dimensiones de dos metros con noventa centímetros (2.90 m.), dos metros con cincuenta y seis centímetros (2.56 m.), quince centímetros (0.15 m.), dos metros con cincuenta y seis centímetros (2.56 m.), un metro con sesenta y cuatro centímetros (1.64 m.), sesenta y nueve centímetros (0.69 m.), veintiún centímetros (0.21 m.), tres centímetros (0.03 m.), y dos metros con noventa y nueve centímetros (2.99 m.), muros, ventanas y baranda de fachada común, colindantes con vacío sobre zona común exterior y con alero común; y muro común al interior del apartamento. Entre los puntos 3 y 4: Línea recta, en dimensión de cuatro metros con cincuenta centímetros (4.50 m.), muro de fachada común, colindante con alero común y con vacío sobre zona común exterior; y muro común al medio, colindante con el apartamento 201. Entre los puntos 4 y 1: Línea quebrada, (entre los cuales se halla el acceso al apartamento), en dimensiones de tres metros con setenta centímetros (3.70m.), un metro con setenta centímetros (1.70 m.), veinte centímetros (0.20 m.), noventa y nueve centímetros (0.99 m.), un metro con veinte centímetros (1.20 m.), noventa y nueve centímetros (0.99 m.), quince centímetros (0.15 m.), dos metros con veinticuatro centímetros (2.24 m.), un metro con veinte centímetros (1.20 m), dos metros con nueve centímetros (2.09 m.), cuarenta y nueve centímetros (0.49 m.), quince centímetros (0.15 m.), sesenta y cuatro centímetros (0.64 m.), tres metros con sesenta y nueve centímetros (3.69 m.), y dos metros con sesenta centímetros (2.60 m.), puerta y muro comunes, colindantes con zona común de circulación peatonal; muro común, colindante con ducto técnico y ascensor; ventanas y muros comunes, colindantes con vacío sobre ducto de ventilación; muros comunes al interior del apartamento; y muro común, colindante con alero común. CENIT: Placa estructural común al medio, colindante con el piso 3. NADIR: Placa estructural común al medio, colindante con el piso 1."
+                        'numero_chip': '',
+                        'linderos_especiales': '"APARTAMENTO 106 ESQUINERO (TIPO 1) TORRE 4: ÁREA PRIVADA APARTAMENTO: 52.84 M2. ÁREA MUROS Y BUITRONES COMUNES: 6.50 M2. ÁREA CONSTRUIDA APARTAMENTO: 59.34 M2. Ubicado en el Piso 1, a nivel de +0.00 m, destinado a vivienda con un área construida de 59.34 M2 aproximadamente, un área privada de 52.84 M2 Aproximadamente y un área común de muros y buitrones de 6.50 M2 aproximadamente, con entrada común Portería al CONJUNTO CERRADO “MAJESTIC II” PROPIEDAD HORIZONTAL, UBICADO en la TV 35 No. DG2-74, SECTOR VIA FRAILES JAPÓN, EN EL ÁREA URBANA DEL MUNICIPIO DE DOSQUEBRADAS, DEPARTAMENTO DE RISARALDA, cuyos linderos y dimensiones referenciados a los Planos 1/12, 2/12, 3/12, 4/12, 5/12, 6/12, 7/12, 8/12, 9/12, 10/12, 11/12 y 12/12, son los siguientes: ### Partiendo del punto 1, ubicado al lado izquierdo del acceso a este apartamento hasta el punto 2 en dirección Norte en longitud de 6.83 mts, con muro común, que lo separa del apartamento 105 de la Torre 4, del punto 2 en dirección Oriente al punto 3 en Longitud de 2.67 mts, con baranda de balcón, que lo separa del área común zona verde 27, del punto 3 en dirección Sur al punto 4 en longitud de 1.23 mts, con muro común, que lo separa del área común zona verde 27, del punto 4 en dirección Oriente al punto 5 en longitud de 1.15 mts, con muro común, que lo separa del área común zona verde 27, del punto 5 en dirección Sur al punto 6 en longitud de 0.60 mts, con muro común, que lo separa del área común zona verde 27, del punto 6 en dirección Oriente al punto 7 en longitud de 3.25 mts, con muro, ventana, muro, ventana, muro común respectivamente, que lo separa del área común zona verde 27, del punto 7 en dirección Sur al punto 8 en longitud de 0.75 mts, con muro común, que lo separa del área común zona verde 27, del punto 8 en dirección Oriente al punto 9 en longitud de 2.65 mts, con muro, ventana, muro común respectivamente, que lo separa del área común zona verde 27, del punto 9 en dirección Sur al punto 10 en longitud de 4.72 mts, con muro, ventana, muro, ventana de ventilación baño, muro común respectivamente, que lo separa del área común zona verde 27, del punto 10 en dirección Occidente al punto 11 en longitud de 1.00 mts, con muro común, que lo separa del Buitrón común, queda al apartamento 107 de la Torre 4, del punto 11 en dirección Sur al punto 12 en longitud de 0.23 mts, con muro común, que lo separa del Buitrón común, del punto 12 en dirección Occidente al punto 13 en longitud de 1.50 mts, con muro común, que lo separa del apartamento 107 de la Torre 4, del punto 13 en dirección Norte al punto 14 en longitud de 0.80 mts, con muro común y rejilla de ventilación baño, que lo separa del área común de uso exclusivo 107 del apartamento 107 de la Torre 4, del punto 14 en dirección Occidente al punto 15 en longitud de 4.00 mts, con muro, rejilla de ventilación baño, muro, rejilla de ventilación zona de ropas común respectivamente, que lo separa del área común de uso exclusivo 107 del apartamento 107 de la Torre 4, del punto 15 en dirección Sur al punto 16 en longitud de 0.77 mts, con muro común y rejilla de ventilación cocina, que lo separa del área común de uso exclusivo 107 del apartamento 107 de la Torre 4, del punto 16 en dirección Occidente al punto 17 en longitud de 2.10 mts, con muro común, que lo separa del apartamento 107 de la Torre 4, del punto 17 en dirección Norte al punto 18 en longitud de 0.68 mts, con muro común, que lo separa del área común (punto fijo) escaleras, circulación, ascensores, shut de basuras, medidores piso 1, del punto 18 en dirección Occidente al punto 1 de partida, en longitud de 1.15 mts, con muro común y puerta de acceso, que lo separa del área común (punto fijo) escaleras, circulación, asensores, shut de basuras, medidores piso 1. Por el CENIT: En toda su extensión con losa común que lo separa del apartamento 206 de la Torre 4. Por el NADIR: En toda su extensión con losa Común que lo separa del suelo. Este apartamento consta de: Sala - comedor, Alcoba Principal con baño y ducha, Dos alcobas auxiliares, cocina, zona de ropas, baño con ducha y un balcón. Todos los muros y buitrones de este apartamento son comunes y estructurales, por lo tanto, no se pueden alterar ni eliminar."'
                     },
-                    "parqueaderos": [],
-                    "depositos": [],
-                    "apoderado_banco": {
-                        "nombre": "Germán Leonardo Kalil Méndez",
-                        "tipo_identificacion": "",
-                        "numero_identificacion": "",
-                        "ciudad_expedicion_identificacion": "",
-                        "ciudad_residencia": "",
-                        "genero": "",
-                        "tipo_apoderado": "",
-                        "tipo_poder": "",
-                        "escritura": ""
+                    'parqueaderos': [
+
+                    ],
+                    'depositos': [
+
+                    ],
+                    'apoderado_banco': {
+                        'nombre': 'Carlos Alberto Agudelo Zapata',
+                        'tipo_identificacion': '',
+                        'numero_identificacion': '',
+                        'ciudad_expedicion_identificacion': '',
+                        'ciudad_residencia': '',
+                        'genero': '',
+                        'tipo_apoderado': '',
+                        'tipo_poder': '',
+                        'escritura': ''
                     },
-                    "representante_banco": {
-                        "nombre": "Juan Pablo Cruz López",
-                        "tipo_identificacion": "",
-                        "numero_identificacion": "",
-                        "ciudad_expedicion_identificacion": "",
-                        "ciudad_residencia": "",
-                        "genero": "",
-                        "tipo_representante": ""
+                    'representante_banco': {
+                        'nombre': 'Juan Pablo Cruz López',
+                        'tipo_identificacion': '',
+                        'numero_identificacion': '',
+                        'ciudad_expedicion_identificacion': '',
+                        'ciudad_residencia': '',
+                        'genero': '',
+                        'tipo_representante': ''
                     },
-                    "banco": {
-                        "nombre": "banco unión s.a",
-                        "nit": "860.006.797-9"
+                    'banco': {
+                        'nombre': 'banco unión s.a',
+                        'nit': '860.006.797-9'
                     },
-                    "prestamo": {
-                        "cantidad_banco_a_hipotecante": 93150000,
-                        "cantidad_dada_a_aceptante": 90000000,
-                        "gastos_de_gestion": 3150000
+                    'prestamo': {
+                        'cantidad_banco_a_hipotecante': 98150000,
+                        'cantidad_dada_a_aceptante': 94830918,
+                        'gastos_de_gestion': 3319082
                     }
                 }
         controller = DocumentosController(event, None)

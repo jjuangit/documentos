@@ -1,4 +1,5 @@
 import re
+from datetime import datetime
 
 from utils.exceptions import ValidationError
 
@@ -60,7 +61,7 @@ class Validator:
             return True
         else:
             return True
-        
+
     @staticmethod
     def validate_letters_numbers(value, key=None):
         '''Valida si la cadena contiene solo letras y números'''
@@ -190,7 +191,7 @@ class Validator:
             return True
         else:
             return True
-    
+
     @staticmethod
     def validate_date_format(value, key=None):
         '''Solo se permite fecha con el siguiente formato (dd/mm/yyyy)'''
@@ -198,7 +199,8 @@ class Validator:
             pattern = r'^\d{2}/\d{2}/\d{4}$'
 
             if not re.match(pattern, value):
-                raise ValueError(f'Error: La fecha "{key}" no tiene el formato correcto (dd/mm/yyyy).')
+                raise ValueError(
+                    f'Error: La fecha "{key}" no tiene el formato correcto (dd/mm/yyyy).')
 
             return True
         else:
@@ -210,6 +212,19 @@ class Validator:
         if value is None or (isinstance(value, str) and value.strip() == ''):
             raise ValidationError(f'"{key}" es un campo es requerido.')
         return True
+
+    @staticmethod
+    def validate_date_not_past(value, key=None):
+        '''Valida que la fecha no sea menor a la fecha actual'''
+        if value:
+            input_date = datetime.strptime(value, '%d/%m/%Y').date()
+            current_date = datetime.now().date()
+            if input_date < current_date:
+                raise ValidationError(f'"{key}" no puede ser una fecha pasada.')
+            return True
+            
+        else:
+            return True
 
     @staticmethod
     def validate_dict(dictionary, dictionary_validator, dictionary_name):

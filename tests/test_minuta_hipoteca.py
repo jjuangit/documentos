@@ -26,89 +26,90 @@ class TestMinutaHipoteca(TestCase):
 
     def test_init_minuta_hipoteca_success(self):
         """Funcion para imprimir el html de la minuta"""
-        diccionario_apoderado = {
-            'nombre': 'MARTHA LUCILA ROJAS BETANCOURT',
-            'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
-            'numero_identificacion': '31.580.309',
-            'ciudad_expedicion_identificacion': 'Cali',
-            'genero': genero['FEMENINO'],
-        }
-
-        diccionario_poderdantes = [{
-            'nombre': 'NATHALIA VERGARA HERNANDEZ',
-            'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
-            'numero_identificacion': '1.143.871.401',
-            'ciudad_expedicion_identificacion': 'Cali',
-            'domicilio': 'Barcelona - España',
-            'estado_civil': estado_civil['SOLTERO_SIN_UNION_MARITAL_DE_HECHO'],
-            'genero': genero['FEMENINO'],
-        }
-        ]
-
+        diccionario_apoderado= {
+                    'nombre': 'DANIELA FERNANDA QUICENO COLORADO',
+                    'tipo_identificacion': 'Cédula de Ciudadanía',
+                    'numero_identificacion': '1.053.799.880',
+                    'ciudad_expedicion_identificacion': 'Manizales',
+                    'genero': 'Femenino'
+                    }
+        diccionario_poderdantes = [
+                    {
+                        'nombre': 'JHONNY ALEJANDRO OSPINA QUICENO',
+                        'tipo_identificacion': 'Cédula de Ciudadanía',
+                        'numero_identificacion': '1.053.825.607',
+                        'ciudad_expedicion_identificacion': 'Manizales',
+                        'domicilio': 'TICINIO- BELLINZONA',
+                        'estado_civil': 'Soltero sin unión marital de hecho',
+                        'genero': 'Masculino'
+                    },
+                    {
+                        'nombre': 'PALOMA ALEJANDRA OSPINA QUICENO',
+                        'tipo_identificacion': 'Cédula de Ciudadanía',
+                        'numero_identificacion': '1.053.823.744',
+                        'ciudad_expedicion_identificacion': 'Manizales',
+                        'domicilio': 'TICINIO- BELLINZONA',
+                        'estado_civil': 'Soltero sin unión marital de hecho',
+                        'genero': 'Femenino'
+                    }
+                    ]
         diccionario_inmueble = {
-            'nombre': 'APARTAMENTO',
-            'numero': 'TB-502 TORRE B',
-            'direccion': 'CARRERA 23 # 10-15 PORTERIA 1/ CARRERA 23 # 10-73 PORTERIA 2, CONJUNTO RESIDENCIAL ROSETO- APARTAMENTOS',
-            'ciudad_y_o_departamento': 'JAMUNDÍ - CALI',
-            'matricula': '370-1077247',
-            'municipio_de_registro_orip': 'CALI',
-            'tipo_ficha_catastral': tipo_ficha_catastral['MAYOR_EXTENSION'],
-            'numero_ficha_catastral': [
-                {'ficha': '763640100000007700049000000000'},
-                {'ficha': '763640100000007700001000000000'},
-                {'ficha': '763640100000007700002000000000'},
-                {'ficha': '763640100000007700051000000000'},
-            ],
-            'linderos_especiales': '"TORRE B APARTAMENTO TB-502. Carrera 23 No 10-15 Porteria 1/ Carrera 23 No 10-73 Porteria 2. NADIR: 10,20. CENIT: 12,65. ALTURA LIBRE: 2,45 (de losa a losa sin contar el acabado). ÁREA CONSTRUIDA: 44,65 m2. Discriminada así: ÁREA PRIVADA CONSTRUIDA: 40,84 m2. + MUROS COMUNES: 3,81 m2. Comprendido dentro de los siguientes linderos: NORTE: Del punto 1 al punto 2. En línea quebrada. Con una distancia de 8,69 metros. Colindando con vacio a zona de oficios común de uso exclusivo del apartamento TB-102, buitrón y vacío a circulación común. ORIENTE: Del punto 2 al punto 3. En linea quebrada. Con una distancia de 6,44 metros. Colindando con circulación común y apartamento TB- 501. SUR: Del punto 3 al punto 4. En linea quebrada. Con una distancia de 10,18 metros. Colindando con vacio a zona común y buitrón, OCCIDENTE: Del punto 4 al punto 1. En linea recta. Con una distancia de 4,53 metros. Colindando con vacio a zona común."'
-        }
-        diccionario_parqueaderos = [
-            {
-                "nombre": "PARQUEADERO",
-                "numero": "129",
-                "direccion": "CARRERA 23 # 10-15 PORTERIA 1/ CARRERA 23 # 10-73 PORTERIA 2",
-                "matricula": "370-1077782",
-                "tipo_ficha_catastral": "",
-                "numero_ficha_catastral": "",
-                "linderos_especiales": "PARQUEADERO 129: Localizado en primer piso. Ubicado en la Carrera 23 No 10-15 Porteria 1 / Carrera 23 No 10-73 Porteria 2. NADIR. 0,00 AREA PRIVADA: 12,00 M2. LINDEROS: NOR-OCCIDENTE: del punto 4 al punto 1 En línea recta. Con una distancia de 5,00 metros. Colindando con zona común. NOR-ORIENTE: del punto 1 al punto 2 En linea recta. Con una distancia de 2,40 metros. Colindando con área de circulación y maniobras. SUR-ORIENTE: del punto 2 al punto 3. En línea recta. Con una distancia de 5,00 metros. Colindando con parqueadero 130. SUR-OCCIDENTE: del punto 3 al punto 4. En línea recta. Con una distancia de 2,40 metros. Colindando con parqueadero 155."
-            }
-        ]
+                        'nombre': 'APARTAMENTO',
+                        'numero': '1104 PISO 11',
+                        'direccion': 'EDIFICIO CENTRIKO"P.H. CALLE 11 B # 4 D - 34 BARRIO VILLA PILAR',
+                        'ciudad_y_o_departamento': 'EN CHIPRE MANIZALES CALDAS',
+                        'matricula': '100-252001',
+                        'municipio_de_registro_orip': 'Manizales',
+                        'tipo_ficha_catastral': 'Mayor Extensión',
+                        'numero_ficha_catastral': [
+                            {'ficha': '170010104000003170001000000000'}
+                        ],
+                        'numero_chip': '',
+                        'linderos_especiales': ''
+                    }
+        diccionario_parqueaderos = [{
+                        "nombre": "PARQUEADERO DE CARROS ",
+                        "numero": "18 SÓTANO -1",
+                        "direccion": 'EDIFICIO CENTRIKO"P.H. CALLE 11 B # 4 D - 34 BARRIO VILLA PILAR, EN CHIPRE MANIZALES CALDAS',
+                        "matricula": "100-252091",
+                        "tipo_ficha_catastral": "Individual",
+                        "numero_ficha_catastral": "170010104000003170001000000000",
+                        "linderos_especiales": ""
+                    }
 
+                    ]
         diccionario_depositos = [
 
-        ]
-
+                    ]
         diccionario_apoderado_banco = {
-            'nombre': 'Lina Marcela Palau Zea',
-            'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
-            'numero_identificacion': '',
-            'ciudad_expedicion_identificacion': '',
-            'ciudad_residencia': '',
-            'genero': genero['FEMENINO'],
-            'tipo_apoderado': tipo_apoderado_banco['GENERAL'],
-            'tipo_poder': '',
-            'escritura': ''
-        }
-
+                        'nombre': 'Alejandra Perez Rodriguez',
+                        'tipo_identificacion': '',
+                        'numero_identificacion': '',
+                        'ciudad_expedicion_identificacion': '',
+                        'ciudad_residencia': '',
+                        'genero': '',
+                        'tipo_apoderado': '',
+                        'tipo_poder': '',
+                        'escritura': ''
+                    }
         diccionario_representante_banco = {
-            'nombre': 'Héctor Fabio Rodríguez Prado',
-            'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
-            'numero_identificacion': '',
-            'ciudad_expedicion_identificacion': '',
-            'ciudad_residencia': '',
-            'genero': genero['FEMENINO'],
-            'tipo_representante': tipo_representante_banco['SUPLENTE'],
-        }
-
+                                'nombre': 'Juan Pablo Cruz López',
+                                'tipo_identificacion': '',
+                                'numero_identificacion': '',
+                                'ciudad_expedicion_identificacion': '',
+                                'ciudad_residencia': '',
+                                'genero': '',
+                                'tipo_representante': ''
+                            }
         diccionario_banco = {
-            'nombre': 'Banco unión s.a',
-            'nit': '',
-        }
-
+                    'nombre': 'banco unión s.a',
+                    'nit': '860.006.797-9'
+                }
         diccionario_prestamo = {
-            'cantidad_banco_a_hipotecante': 112112000,
-            'cantidad_dada_a_aceptante': 108320773,
-            'gastos_de_gestion': 3791227
-        }
+                        'cantidad_banco_a_hipotecante': 203770000,
+                        'cantidad_dada_a_aceptante': 196879227,
+                        'gastos_de_gestion': 6890773
+                    }
 
         diccionario_apoderado = strip_dict_or_list(diccionario_apoderado)
         diccionario_poderdantes = strip_dict_or_list(diccionario_poderdantes)

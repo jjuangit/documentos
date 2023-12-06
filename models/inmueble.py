@@ -10,6 +10,7 @@ class Inmueble:
     municipio_de_registro_orip: Type[Text]
     tipo_ficha_catastral: Type[Text]
     numero_ficha_catastral: Type[Text]
+    numero_chip: Optional[Text]
     linderos_especiales: Optional[Text]
 
     def __init__(
@@ -22,6 +23,7 @@ class Inmueble:
         municipio_de_registro_orip: str,
         tipo_ficha_catastral: str,
         numero_ficha_catastral: str,
+        numero_chip: str,
         linderos_especiales: str,
     ):
         self.nombre = nombre
@@ -32,6 +34,7 @@ class Inmueble:
         self.municipio_de_registro_orip = municipio_de_registro_orip
         self.tipo_ficha_catastral = tipo_ficha_catastral
         self.numero_ficha_catastral = numero_ficha_catastral
+        self.numero_chip = numero_chip
         self.linderos_especiales = linderos_especiales
 
 class InmueblePromesaCompraventa(Inmueble):
@@ -46,6 +49,7 @@ class InmueblePromesaCompraventa(Inmueble):
         municipio_de_registro_orip: str,
         tipo_ficha_catastral: str,
         numero_ficha_catastral: str,
+        numero_chip: str
     ):
         super().__init__(
             nombre,
@@ -56,17 +60,21 @@ class InmueblePromesaCompraventa(Inmueble):
             municipio_de_registro_orip,
             tipo_ficha_catastral,
             numero_ficha_catastral,
+            numero_chip,
             linderos_especiales=None
         )
 
 class InmueblePoder(Inmueble):
+    departamento: Type[Text]
+    ciudad: Type[Text]
 
     def __init__(
         self,
         nombre: str,
         numero: str,
         direccion: str,
-        ciudad_y_o_departamento: str,
+        departamento: str,
+        ciudad: str,
         matricula: str,
         tipo_ficha_catastral: str,
         numero_ficha_catastral: str,
@@ -75,10 +83,13 @@ class InmueblePoder(Inmueble):
             nombre,
             numero,
             direccion,
-            ciudad_y_o_departamento,
+            '',
             matricula,
             '',
             tipo_ficha_catastral,
             numero_ficha_catastral,
-            ''
+            '',
+            '',
         )
+        self.departamento = departamento
+        self.ciudad = ciudad

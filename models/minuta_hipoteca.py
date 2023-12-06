@@ -104,15 +104,21 @@ class DocumentoHipoteca(Document):
         self.validate_data()
 
     def validate_data(self):
-        self.validar_poderdantes()
         self.validar_apoderado()
-        self.validar_apoderado_banco()
-        self.validar_representante_banco()
+        self.validar_poderdantes()
         self.validar_inmueble()
         self.validar_parqueaderos()
         self.validar_depositos()
+        self.validar_apoderado_banco()
+        self.validar_representante_banco()
         self.validar_banco()
         self.validar_prestamo()
+
+    def validar_apoderado(self):
+        if self.apoderado:
+            atributos_apoderado = self.apoderado.__dict__
+            Validator.validate_dict(
+                atributos_apoderado, dictionary_validator_apoderado, 'Apoderado')
 
     def validar_poderdantes(self):
         if self.cantidad_poderdantes == 0 and self.cantidad_poderdantes > 2:
@@ -124,55 +130,7 @@ class DocumentoHipoteca(Document):
             Validator.validate_dict(
                 atributos_poderdante, dictionary_validator_poderdantes, 'Poderdantes')
 
-    def validar_apoderado(self):
-        if self.apoderado:
-            atributos_apoderado = self.apoderado.__dict__
-            Validator.validate_dict(
-                atributos_apoderado, dictionary_validator_apoderado, 'Apoderado')
-
-    def validar_apoderado_banco(self):
-        if self.apoderado_banco is None:
-            raise ValidationError(
-                'No hay datos del banco. Favor de agregar datos')
-
-        if self.apoderado_banco.nombre not in [apoderado['nombre'] for apoderado in apoderados_banco]:
-            atributos_apoderado_banco = self.apoderado_banco.__dict__
-            Validator.validate_dict(
-                atributos_apoderado_banco, dictionary_validator_apoderado_banco, 'Apoderado del banco')
-
-    def validar_representante_banco(self):
-        if self.representante_banco is None:
-            raise ValidationError(
-                'No hay datos de representante legal. Favor de agregar datos')
-
-        if self.representante_banco.nombre not in [representante['nombre'] for representante in representantes_banco]:
-            atributos_representante_banco = self.representante_banco.__dict__
-            Validator.validate_dict(
-                atributos_representante_banco, dictionary_validator_representante_banco, 'Representante del banco')
-
-    def validar_banco(self):
-        if self.banco is None:
-            raise ValidationError(
-                'No hay datos de banco. Favor de agregar datos')
-
-        if self.banco.nombre not in [banco['nombre'] for banco in bancos]:
-            atributos_banco = self.banco.__dict__
-            Validator.validate_dict(
-                atributos_banco, dictionary_validator_banco, 'Banco')
-
-    def validar_prestamo(self):
-        if self.prestamo is None:
-            raise ValidationError(
-                'No hay datos del prestamo. Favor de agregar datos')
-        atributos_prestamo = self.prestamo.__dict__
-        Validator.validate_dict(
-            atributos_prestamo, dictionary_validator_prestamo, 'Prestamo')
-
     def validar_inmueble(self):
-        if self.inmueble is None:
-            raise ValidationError(
-                'No hay datos de inmueble. Favor de agregar datos')
-
         atributos_inmueble = self.inmueble.__dict__
         Validator.validate_dict(
             atributos_inmueble, dictionary_validator_inmueble, 'Inmueble')
@@ -183,7 +141,7 @@ class DocumentoHipoteca(Document):
 
         if self.parqueaderos:
             for parqueadero in self.parqueaderos:
-                atributos_parqueaderos = parqueadero.__dict__    
+                atributos_parqueaderos = parqueadero.__dict__
             Validator.validate_dict(
                 atributos_parqueaderos, dictionary_validator_parqueaderos, 'Parqueaderos')
 
@@ -193,9 +151,32 @@ class DocumentoHipoteca(Document):
 
         if self.depositos:
             for deposito in self.depositos:
-                atributos_depositos = deposito.__dict__    
+                atributos_depositos = deposito.__dict__
             Validator.validate_dict(
                 atributos_depositos, dictionary_validator_depositos, 'Depósitos')
+
+    def validar_apoderado_banco(self):
+        if self.apoderado_banco.nombre not in [apoderado['nombre'] for apoderado in apoderados_banco]:
+            atributos_apoderado_banco = self.apoderado_banco.__dict__
+            Validator.validate_dict(
+                atributos_apoderado_banco, dictionary_validator_apoderado_banco, 'Apoderado del banco')
+
+    def validar_representante_banco(self):
+        if self.representante_banco.nombre not in [representante['nombre'] for representante in representantes_banco]:
+            atributos_representante_banco = self.representante_banco.__dict__
+            Validator.validate_dict(
+                atributos_representante_banco, dictionary_validator_representante_banco, 'Representante del banco')
+
+    def validar_banco(self):
+        if self.banco.nombre not in [banco['nombre'] for banco in bancos]:
+            atributos_banco = self.banco.__dict__
+            Validator.validate_dict(
+                atributos_banco, dictionary_validator_banco, 'Banco')
+
+    def validar_prestamo(self):
+        atributos_prestamo = self.prestamo.__dict__
+        Validator.validate_dict(
+            atributos_prestamo, dictionary_validator_prestamo, 'Prestamo')
 
     def estado_civil_es_union(self, estado_civil):
         estados_civiles_union = [
@@ -221,26 +202,25 @@ class DocumentoHipoteca(Document):
         return len(self.poderdantes)
 
     def generar_titulo_documento(self):
-        resultado = ''
-        resultado += '<title>Minuta</title>'
-        resultado += '<div class="titulo"><p>'
+        resultado = '<title>Minuta</title>'
+        resultado += "<div class='titulo'><p>"
         resultado += '<b>---------------------------------'
         resultado += 'CONTRATO DE HIPOTECA---------------------------------</b></p></div>'
         return resultado
 
     # TODO Pendiente en relación a la escritura, de momento se queda abierto linea 523
     def generar_parrafo_apoderado(self):
-        resultado = ''
-        resultado += '<div class="parrafos"><p>Presente nuevamente '
+        resultado = '<div class="parrafos"><p>Presente nuevamente '
         if self.apoderado:
             resultado += f'<b><u>{self.apoderado.nombre}</u>,</b> mayor de edad, '
-            resultado += f'{self.apoderado.identificado} con <b><u>{self.apoderado.tipo_identificacion}'
-            resultado += f'</u></b> No. <b><u>{self.apoderado.numero_identificacion}</u></b> de '
-            resultado += f'<b><u>{self.apoderado.ciudad_expedicion_identificacion}</u></b>, quien '
-            resultado += 'conforme al Poder General a él otorgado por medio de la __________________ '
+            resultado += f'{self.apoderado.identificado} con <b><u>'
+            resultado += f'{self.apoderado.tipo_identificacion}</u></b> No. <b><u>'
+            resultado += f'{self.apoderado.numero_identificacion}</u></b> de <b><u>'
+            resultado += f'{self.apoderado.ciudad_expedicion_identificacion}</u></b>, quien '
+            resultado += 'conforme al Poder General a él otorgado por medio de la ________________ '
             resultado += 'el cual se protocoliza con la presente escritura para los fines legales, '
-            resultado += 'cuya vigencia, autenticidad y alcance se hace responsable; actúa en nombre y '
-            resultado += 'representación de '
+            resultado += 'cuya vigencia, autenticidad y alcance se hace responsable; actúa en '
+            resultado += 'nombre y representación de '
         return resultado
 
     def generar_parrafo_poderdantes(self):
@@ -270,8 +250,7 @@ class DocumentoHipoteca(Document):
             t_inmuebles = 'los siguientes inmuebles, los cuales se hipotecan'
         else:
             t_inmuebles = 'el siguiente inmueble, el cual se hipoteca'
-        resultado = ''
-        resultado += '<b>PRIMERO. CONSTITUCIÓN DE HIPOTECA ABIERTA SIN LÍMITE DE CUANTÍA:</b> '
+        resultado = '<b>PRIMERO. CONSTITUCIÓN DE HIPOTECA ABIERTA SIN LÍMITE DE CUANTÍA:</b> '
         resultado += 'Que <b>LA PARTE HIPOTECANTE</b> con el propósito de garantizar a '
         resultado += f'<b>“{self.banco.nombre.upper()}”</b>, el pago del crédito de vivienda '
         resultado += 'a largo plazo, que éste le conceda, y ejercitando la facultad prevista '
@@ -281,8 +260,7 @@ class DocumentoHipoteca(Document):
         return resultado
 
     def generar_direccion_inmueble(self):
-        resultado = ''
-        resultado += f'<p><b><u>{self.inmueble.nombre.upper()} {self.inmueble.numero.upper()} '
+        resultado = f'<p><b><u>{self.inmueble.nombre.upper()} {self.inmueble.numero.upper()} '
 
         resultado += f'{self.inmueble.direccion.upper()} '
         resultado += f'{self.inmueble.ciudad_y_o_departamento.upper()}</u></b></p>'
@@ -294,10 +272,12 @@ class DocumentoHipoteca(Document):
         resultado = ''
         if self.parqueaderos:
             for parqueadero in self.parqueaderos:
-                resultado += f'<b><u>{parqueadero.nombre.upper()} {parqueadero.numero} '
+                resultado = f'<b><u>{parqueadero.nombre.upper()} {parqueadero.numero} '
                 resultado += f'{parqueadero.direccion.upper()}</u></b>'
                 if parqueadero.linderos_especiales:
                     resultado += f'<p>{parqueadero.linderos_especiales}</p>'
+                else:
+                    resultado += '<br><br>'
         return resultado
 
     def generar_direccion_depositos(self):
@@ -308,6 +288,8 @@ class DocumentoHipoteca(Document):
                 resultado += f'{deposito.direccion.upper()}</u></b>'
                 if deposito.linderos_especiales:
                     resultado += f'<p>{deposito.linderos_especiales}</p>'
+                else:
+                    resultado += '<br><br>'
         return resultado
 
     def generar_matriculas_inmobiliarias(self):
@@ -336,8 +318,7 @@ class DocumentoHipoteca(Document):
         for deposito in self.depositos:
             if self.depositos and deposito.matricula:
                 matriculas += [deposito.matricula]
-        resultado = ''
-        resultado += f'{inmuebles} No. <b><u>{", ".join(matriculas)}'
+        resultado = f'{inmuebles} No. <b><u>{", ".join(matriculas)}'
         if matriculas_presentes:
             resultado += '</u></b> respectivamente '
 
@@ -351,11 +332,14 @@ class DocumentoHipoteca(Document):
             fichas = getattr(self.inmueble, 'numero_ficha_catastral')
             if isinstance(fichas, list) and all(isinstance(ficha, dict) for ficha in fichas):
                 resultado += ' y ficha catastral No. <b><u>'
-                resultado += ', '.join([', '.join(ficha_values.values()) for ficha_values in fichas[:-1]])
+                resultado += ', '.join([', '.join(ficha_values.values())
+                                       for ficha_values in fichas[:-1]])
                 if len(fichas) > 1:
                     resultado += ' y ' + ', '.join(fichas[-1].values())
                 elif len(fichas) == 1:
                     resultado += ', '.join(fichas[-1].values())
+                if self.inmueble.numero_chip:
+                    resultado += f'<b><u> y CHIP {self.inmueble.numero_chip}'
                 resultado += ' En Mayor Extensión.</u></b> '
         elif self.inmueble.tipo_ficha_catastral == "Individual":
             fichas_presentes = False
@@ -403,7 +387,7 @@ class DocumentoHipoteca(Document):
 
         return resultado
 
-    #TODO pendiente el tema de las escrituras, de momento se queda abierto linea 437
+    # TODO pendiente el tema de las escrituras, de momento se queda abierto linea 437
 
     def generar_regimen_propiedad_horizontal(self):
         matriculas_presentes = False
@@ -419,18 +403,17 @@ class DocumentoHipoteca(Document):
                     matriculas_presentes = True
                     break
 
+        if self.multiples_inmuebles():
+            t_inmuebles = 'Los inmuebles objeto de la presente hipoteca fueron sometidos'
+        else:
+            t_inmuebles = 'El inmueble objeto de la presente hipoteca fue sometido'
+
         if matriculas_presentes:
             inmuebles = 'en los Folios de Matrículas Inmobiliarias'
         else:
             inmuebles = 'en el Folio de Matrícula Inmobiliaria'
 
-
-        if self.multiples_inmuebles():
-            t_inmuebles = 'Los inmuebles objeto de la presente hipoteca fueron sometidos'
-        else:
-            t_inmuebles = 'El inmueble objeto de la presente hipoteca fue sometido'
-        resultado = ''
-        resultado += f'<p><b>RÉGIMEN DE PROPIEDAD HORIZONTAL:</b> {t_inmuebles} al régimen '
+        resultado = f'<p><b>RÉGIMEN DE PROPIEDAD HORIZONTAL:</b> {t_inmuebles} al régimen '
         resultado += 'legal de propiedad horizontal, de conformidad con la Ley 675 de '
         resultado += 'agosto 3 de 2001 por medio de _______________________________ , '
         resultado += 'debidamente registrada '
@@ -451,8 +434,7 @@ class DocumentoHipoteca(Document):
             t_inmuebles = 'a los inmuebles hipotecados'
         else:
             t_inmuebles = 'al inmueble hipotecado'
-        resultado = ''
-        resultado += '<p><b>PARÁGRAFO PRIMERO:</b> La hipoteca se extiende a muebles que por '
+        resultado = '<p><b>PARÁGRAFO PRIMERO:</b> La hipoteca se extiende a muebles que por '
         resultado += f'accesión {t_inmuebles} se reputen inmuebles, a todas las '
         resultado += 'edificaciones, mejoras e instalaciones existentes y a las que llegaren '
         resultado += 'a levantarse o a integrarse a el inmueble en el futuro y se extiende '
@@ -462,8 +444,7 @@ class DocumentoHipoteca(Document):
         return resultado
 
     def generar_paragrafo_segundo(self):
-        resultado = ''
-        resultado += '<b>PARÁGRAFO SEGUNDO:</b> El producto inicial del mutuo se destinará '
+        resultado = '<b>PARÁGRAFO SEGUNDO:</b> El producto inicial del mutuo se destinará '
         resultado += 'de conformidad con la ley 546 de 1999 a la adquisición de vivienda nueva o '
         resultado += 'usada, o la construcción de vivienda individual, o al mejoramiento de esta '
         resultado += 'tratándose de vivienda de interés social. ------<br>'
@@ -474,8 +455,7 @@ class DocumentoHipoteca(Document):
             t_inmuebles = 'los inmuebles dados en garantía hipotecaria fueron adquiridos'
         else:
             t_inmuebles = 'el inmueble dado en garantía hipotecaria fue adquirido'
-        resultado = ''
-        resultado += f'<b>SEGUNDO: TÍTULO DE ADQUISICIÓN:</b> Que {t_inmuebles} '
+        resultado = f'<b>SEGUNDO: TÍTULO DE ADQUISICIÓN:</b> Que {t_inmuebles} '
         resultado += 'por la PARTE HIPOTECANTE por medio de la presente escritura '
         resultado += 'pública. ------<br>'
         return resultado
@@ -491,8 +471,7 @@ class DocumentoHipoteca(Document):
             han = 'ha sido afectado'
             dados = 'dado'
             hallan = 'halla libre'
-        resultado = ''
-        resultado += '<b>TERCERO: GARANTÍA DE PROPIEDAD Y LIBERTAD:</b> Que garantiza que '
+        resultado = '<b>TERCERO: GARANTÍA DE PROPIEDAD Y LIBERTAD:</b> Que garantiza que '
         resultado += f'{t_inmuebles} de su propiedad exclusiva, que no {han} a vivienda '
         resultado += f'familiar, ni {dados} en arrendamiento por escritura pública, '
         resultado += f'ni en anticresis y que se {hallan} de hipotecas, embargos, censos, '
@@ -503,8 +482,7 @@ class DocumentoHipoteca(Document):
         return resultado
 
     def generar_obligaciones_garantizadas(self):
-        resultado = ''
-        resultado += '<b>CUARTO: OBLIGACIONES GARANTIZADAS:</b> Teniendo en cuenta que la '
+        resultado = '<b>CUARTO: OBLIGACIONES GARANTIZADAS:</b> Teniendo en cuenta que la '
         resultado += 'hipoteca constituida en el presente instrumento es de naturaleza abierta '
         resultado += 'y sin límite en la cuantía, garantiza el cumplimiento de todas las '
         resultado += 'obligaciones que <b>LA PARTE HIPOTECANTE</b> conjunta o separadamente '
@@ -545,8 +523,7 @@ class DocumentoHipoteca(Document):
             deudores = 'los deudores certifican que a la fecha no han'
         elif self.cantidad_poderdantes == 1:
             deudores = 'el deudor certifica que a la fecha no ha'
-        resultado = ''
-        resultado += '<b>PARÁGRAFO PRIMERO:</b> El crédito inicialmente aprobado por <b>'
+        resultado = '<b>PARÁGRAFO PRIMERO:</b> El crédito inicialmente aprobado por <b>'
         resultado += f'{self.banco.nombre.upper()}</b>, en favor de <b>LA PARTE HIPOTECANTE'
         resultado += f'</b> asciende a la cantidad de <b><u>{number_to_word_hipotecante.upper()} '
         resultado += f'PESOS MCTE (${number_format_hipotecante})</u></b> de los cuales la '
@@ -559,10 +536,10 @@ class DocumentoHipoteca(Document):
         resultado += f'${number_format_gastos})</u></b> corresponden a los gastos de gestión y '
         resultado += 'trámite del crédito en el exterior que se giran por instrucción del '
         resultado += 'cliente directamente al Bróker. La garantía cubre también toda clase '
-        resultado += 'de obligaciones que <b>LA PARTE HIPOTECANTE</b> conjunta o '
-        resultado += 'separadamente contraiga en el futuro en favor de <b>'
-        resultado += f'{self.banco.nombre.upper()}</b>, conforme a lo ya expresado en esta cláusula '
-        resultado += 'y a lo establecido en la cláusula séptima y décima de esta hipoteca. '
+        resultado += 'de obligaciones que <b>LA PARTE HIPOTECANTE</b> conjunta o separadamente '
+        resultado += f'contraiga en el futuro en favor de <b>{self.banco.nombre.upper()}</b>, '
+        resultado += 'conforme a lo ya expresado en esta cláusula y a lo establecido en la '
+        resultado += 'cláusula séptima y décima de esta hipoteca. '
         resultado += 'Esta liquidación es con el fin de determinar los derechos notariales y '
         resultado += 'de registro de la presente hipoteca. Adicionalmente, para dar '
         resultado += 'cumplimiento a lo ordenado por el artículo 58 de la ley 788 de 2002, '
@@ -572,8 +549,7 @@ class DocumentoHipoteca(Document):
         return resultado
 
     def generar_paragrafo_segundo_prestamos(self):
-        resultado = ''
-        resultado += '<b>PARÁGRAFO SEGUNDO:</b> La entrega del(los) préstamo(s) se hará '
+        resultado = '<b>PARÁGRAFO SEGUNDO:</b> La entrega del(los) préstamo(s) se hará '
         resultado += 'de acuerdo con las disponibilidades de tesorería de <b> '
         resultado += f'{self.banco.nombre.upper()}</b> y el(los) contrato(s) de mutuo '
         resultado += 'constará(n) en el(los) documento(s) que contenga(n) la(s) '
@@ -581,8 +557,7 @@ class DocumentoHipoteca(Document):
         return resultado
 
     def generar_paragrafo_tercero_no_se_extingue_hipoteca(self):
-        resultado = ''
-        resultado += '<b>PARÁGRAFO TERCERO:</b> La hipoteca no se extingue por el hecho de '
+        resultado = '<b>PARÁGRAFO TERCERO:</b> La hipoteca no se extingue por el hecho de '
         resultado += 'ampliarse, cambiarse o renovarse la obligación u obligaciones '
         resultado += 'garantizadas por ella. La hipoteca garantiza y se extiende a cualquier '
         resultado += 'saldo a cargo de <b>LA PARTE HIPOTECANTE,</b> sea que provenga de '
@@ -606,8 +581,7 @@ class DocumentoHipoteca(Document):
         elif self.cantidad_poderdantes == 1:
             hipotecantes = 'El hipotecante enajena'
 
-        resultado = ''
-        resultado += '<b>QUINTO. ACELERACIÓN DEL PLAZO:</b> Que <b> LA PARTE HIPOTECANTE</b> '
+        resultado = '<b>QUINTO. ACELERACIÓN DEL PLAZO:</b> Que <b> LA PARTE HIPOTECANTE</b> '
         resultado += f'reconoce y acepta el derecho de <b>{self.banco.nombre.upper()}</b> '
         resultado += 'para declarar por sí mísma y unilateralmente extinguido el plazo de la '
         resultado += 'deuda y para exigir de inmediato el pago de la totalidad de ella, con '
@@ -644,8 +618,7 @@ class DocumentoHipoteca(Document):
             inmuebles = 'de los inmuebles'
         else:
             inmuebles = 'del inmueble'
-        resultado = ''
-        resultado += '<b>SEXTO: CESIÓN DE CRÉDITO Y GARANTÍA:</b> Que <b>LA PARTE HIPOTECANTE</b> '
+        resultado = '<b>SEXTO: CESIÓN DE CRÉDITO Y GARANTÍA:</b> Que <b>LA PARTE HIPOTECANTE</b> '
         resultado += 'acepta desde ahora, con todas las consecuencias señaladas en la ley sin '
         resultado += 'necesidad de notificación alguna, en cuanto la ley lo permita, cualquier '
         resultado += f'endoso o traspaso que <b>{self.banco.nombre.upper()}</b> haga de las '
@@ -659,8 +632,7 @@ class DocumentoHipoteca(Document):
         return resultado
 
     def generar_septimo_costos_y_gastos_judiciales(self):
-        resultado = ''
-        resultado += '<b>SÉPTIMO. COSTAS Y GASTOS JUDICIALES:</b> Que serán de cargo de '
+        resultado = '<b>SÉPTIMO. COSTAS Y GASTOS JUDICIALES:</b> Que serán de cargo de '
         resultado += '<b>LA PARTE HIPOTECANTE</b> el valor de las costas y gastos judiciales '
         resultado += 'a que hubiere lugar, agencias en derecho, honorarios de abogados que en '
         resultado += f'nombre de <b>{self.banco.nombre.upper()}</b>, promuevan la acción o las '
@@ -686,8 +658,7 @@ class DocumentoHipoteca(Document):
         return resultado
 
     def generar_octavo_secuestre(self):
-        resultado = ''
-        resultado += '<b>OCTAVO. SECUESTRE:</b> Que en caso de acción judicial <b>LA PARTE '
+        resultado = '<b>OCTAVO. SECUESTRE:</b> Que en caso de acción judicial <b>LA PARTE '
         resultado += 'HIPOTECANTE</b> se adhiere al nombramiento del secuestre que haga '
         resultado += f'<b>{self.banco.nombre.upper()}</b>, de acuerdo con lo establecido en '
         resultado += ' el numeral 4°, literal D, del artículo cuarenta y ocho (48°) del Código '
@@ -696,8 +667,7 @@ class DocumentoHipoteca(Document):
         return resultado
 
     def generar_noveno_vigencia_de_hipoteca(self):
-        resultado = ''
-        resultado += '<b>NOVENO. VIGENCIA DE LA HIPOTECA:</b> Que la hipoteca aquí constituida '
+        resultado = '<b>NOVENO. VIGENCIA DE LA HIPOTECA:</b> Que la hipoteca aquí constituida '
         resultado += f'estará vigente mientras <b>{self.banco.nombre.upper()}</b> no la cancele, '
         resultado += 'y mientras exista a su favor y a cargo de <b>LA PARTE HIPOTECANTE '
         resultado += '</b> conjunta o separadamente cualquier obligación pendiente y sin '
@@ -719,8 +689,7 @@ class DocumentoHipoteca(Document):
             inmuebles = 'el inmueble'
             inmuebles_hipotecados = f'{inmuebles} hipotecado'
             inmuebles_asegurados = f'asegurado {inmuebles}'
-        resultado = ''
-        resultado += '<b>DÉCIMO. SEGUROS:</b> Que <b>LA PARTE HIPOTECANTE</b> se obliga a '
+        resultado = '<b>DÉCIMO. SEGUROS:</b> Que <b>LA PARTE HIPOTECANTE</b> se obliga a '
         resultado += f'contratar en favor de <b>{self.banco.nombre.upper()}</b> un seguro de '
         resultado += 'vida y un seguro de incendio y terremoto o todo riesgo en construcción '
         resultado += f'por {inmuebles_hipotecados} en un plazo máximo de treinta (30) días'
@@ -792,8 +761,7 @@ class DocumentoHipoteca(Document):
         return resultado
 
     def generar_decimo_segundo_poder(self):
-        resultado = ''
-        resultado += '<b>DÉCIMO SEGUNDO. PODER:</b> Que, en caso de pérdida o '
+        resultado = '<b>DÉCIMO SEGUNDO. PODER:</b> Que, en caso de pérdida o '
         resultado += 'destrucción de la primera copia para exigir mérito ejecutivo, '
         resultado += 'el (los) comparecientes mediante este mismo instrumento confieren '
         resultado += 'poder especial hasta la cancelación total del crédito, al '
@@ -803,8 +771,7 @@ class DocumentoHipoteca(Document):
         return resultado
 
     def generar_decimo_tercero_inputacion_de_pago(self):
-        resultado = ''
-        resultado += '<b>DÉCIMO TERCERO. IMPUTACIÓN DE PAGO.</b> Cualquier pago que hiciera '
+        resultado = '<b>DÉCIMO TERCERO. IMPUTACIÓN DE PAGO.</b> Cualquier pago que hiciera '
         resultado += f'<b>LA PARTE HIPOTECANTE</b> a <b>{self.banco.nombre.upper()}</b> '
         resultado += 'se imputará de la siguiente manera: 1) Pólizas de incendio, terremoto '
         resultado += 'y vida, 2) Garantía del Fondo Nacional de Garantías, 3) Impuestos y/o '
@@ -816,65 +783,43 @@ class DocumentoHipoteca(Document):
 
     # TODO Agregar datos de escritura linea 1030
     def generar_datos_apoderado_banco(self):
-        resultado = ''
-        nombre = self.apoderado_banco.nombre.upper()
-        ciudad_residencia = self.apoderado_banco.ciudad_residencia
-        tipo_identificacion = self.apoderado_banco.tipo_identificacion
-        numero_identificacion = self.apoderado_banco.numero_identificacion
-        ciudad_expedicion_identificacion = self.apoderado_banco.ciudad_expedicion_identificacion
-        tipo_apoderado = self.apoderado_banco.tipo_apoderado
-        escritura = self.apoderado_banco.escritura
-        naturaleza = self.apoderado_banco.naturaleza
-        vecino = self.apoderado_banco.vecino
-        identificado = self.apoderado_banco.identificado
-        doctor = self.apoderado_banco.doctor
-        el = self.apoderado_banco.el
-
-        resultado += f'Presente {doctor}, <u><b>{nombre},</b></u> '
-        resultado += f'{naturaleza}, mayor de edad, {vecino} de <u><b>'
-        resultado += f'{ciudad_residencia}</b></u> {identificado} con '
-        resultado += f'<u><b>{tipo_identificacion}</b></u> No. '
-        resultado += f'<u><b>{numero_identificacion}</b></u> de '
-        resultado += f'<u><b>{ciudad_expedicion_identificacion}</b>'
+        resultado = f'Presente {self.apoderado_banco.doctor}, '
+        resultado += f'<u><b>{self.apoderado_banco.nombre.upper()},</b></u> '
+        resultado += f'{self.apoderado_banco.naturaleza}, mayor de edad, '
+        resultado += f'{self.apoderado_banco.vecino} de <u><b>'
+        resultado += f'{self.apoderado_banco.ciudad_residencia}</b></u> '
+        resultado += f'{self.apoderado_banco.identificado} con '
+        resultado += f'<u><b>{self.apoderado_banco.tipo_identificacion}</b></u> No. '
+        resultado += f'<u><b>{self.apoderado_banco.numero_identificacion}</b></u> de '
+        resultado += f'<u><b>{self.apoderado_banco.ciudad_expedicion_identificacion}</b>'
         resultado += '</u> quien comparece en este acto en su calidad de '
-        resultado += f'<u><b>{self.apoderado_banco.apoderado} {tipo_apoderado}</b>'
-        resultado += f'</u> acorde con el Poder {tipo_apoderado} '
+        resultado += f'<u><b>{self.apoderado_banco.apoderado} {self.apoderado_banco.tipo_apoderado}'
+        resultado += f'</b></u> acorde con el Poder {self.apoderado_banco.tipo_apoderado} '
         if self.apoderado_banco.tipo_poder == 'Autenticado':
-            resultado += f'a {el} conferido por '
+            resultado += f'a {self.apoderado_banco.el} conferido por '
         elif self.apoderado_banco.tipo_poder == 'Escriturado':
             resultado += 'constituido por '
-            resultado += f'<u><b>{escritura}</b></u> debidamente '
+            resultado += f'<u><b>{self.apoderado_banco.escritura}</b></u> debidamente '
             resultado += 'inscrito en la Cámara de Comercio de Cali según certificado '
             resultado += 'de la Existencia Representación legal que se protocoliza '
             resultado += 'con este instrumento, conferido por '
-
         return resultado
 
     def generar_datos_representante_banco(self):
-        resultado = ''
-        nombre = self.representante_banco.nombre.upper()
-        ciudad_residencia = self.representante_banco.ciudad_residencia
-        tipo_identificacion = self.representante_banco.tipo_identificacion
-        numero_identificacion = self.representante_banco.numero_identificacion
-        ciudad_expedicion_identificacion = self.representante_banco.ciudad_expedicion_identificacion
-        tipo_representante = self.representante_banco.tipo_representante
-        doctor = self.representante_banco.doctor
-        vecino = self.representante_banco.vecino
-        identificado = self.representante_banco.identificado
-
-        resultado += f'{doctor} <u><b>{nombre},</b></u> mayor de edad, {vecino} de '
-        resultado += f'<u><b>{ciudad_residencia},</b></u> {identificado} con '
-        resultado += f'<u><b>{tipo_identificacion}</b></u> No. '
-        resultado += f'<u><b>{numero_identificacion}</b></u> de '
-        resultado += f'<u><b>{ciudad_expedicion_identificacion},</b></u> '
+        resultado = f'{self.representante_banco.doctor} '
+        resultado += f'<u><b>{self.representante_banco.nombre.upper()},</b></u> mayor de edad, '
+        resultado += f'{self.representante_banco.vecino} de '
+        resultado += f'<u><b>{self.representante_banco.ciudad_residencia},</b></u> '
+        resultado += f'{self.representante_banco.identificado} con '
+        resultado += f'<u><b>{self.representante_banco.tipo_identificacion}</b></u> No. '
+        resultado += f'<u><b>{self.representante_banco.numero_identificacion}</b></u> de '
+        resultado += f'<u><b>{self.representante_banco.ciudad_expedicion_identificacion},</b></u> '
         resultado += 'quien comparece en este acto en calidad de '
-        resultado += f'<u><b>{tipo_representante}</b></u> '
-
+        resultado += f'<u><b>{self.representante_banco.tipo_representante}</b></u> '
         return resultado
 
     def generar_constitucion_banco_union(self):
-        resultado = ''
-        resultado += f'de <b>{self.banco.nombre.upper()}</b> antes <b>GIROS & FINANZAS COMPAÑÍA DE '
+        resultado = f'de <b>{self.banco.nombre.upper()}</b> antes <b>GIROS & FINANZAS COMPAÑÍA DE '
         resultado += 'FINANCIAMIENTO S.A.</b>, sociedad constituida legalmente mediante Escritura '
         resultado += 'Escritura Pública No. 5938 del 05 de diciembre de 1963, otorgada en la '
         resultado += 'Notaria Cuarta (04) del Círculo de Bogotá, inscrita en la Cámara de '
@@ -899,8 +844,7 @@ class DocumentoHipoteca(Document):
         number_to_word_hipotecante = num2words(
             self.prestamo.cantidad_banco_a_hipotecante, lang='es')
         number_format_hipotecante = f'{self.prestamo.cantidad_banco_a_hipotecante:,}'
-        resultado = ''
-        resultado += 'Para dar cumplimiento a lo ordenado en la Resolución No. 00536 del 22 de '
+        resultado = 'Para dar cumplimiento a lo ordenado en la Resolución No. 00536 del 22 de '
         resultado += 'Enero de 2021, aclarada por Resolución 0545 del 25 de Enero de 2021 '
         resultado += 'proferida por la Superintendencia de Notariado y Registro, se adjunta con '
         resultado += f'esta escritura la carta expedida por <b>"{self.banco.nombre.upper()}"</b>, '
@@ -916,8 +860,7 @@ class DocumentoHipoteca(Document):
             inmuebles = 'los inmuebles que hipotecan'
         else:
             inmuebles = 'el inmueble que hipoteca'
-        resultado = ''
-        resultado += '<b>APLICACIÓN A LA LEY 0258 de 1996: AFECTACIÓN A VIVIENDA FAMILIAR:</b> '
+        resultado = '<b>APLICACIÓN A LA LEY 0258 de 1996: AFECTACIÓN A VIVIENDA FAMILIAR:</b> '
         resultado += 'A continuación, el(la) notario(a) interroga bajo juramento a '
         if self.apoderado:
             resultado += f'{self.apoderado.el_apoderado} de '
@@ -930,8 +873,7 @@ class DocumentoHipoteca(Document):
         return resultado
 
     def generar_lectura_escritura_por_otorgantes(self):
-        resultado = ''
-        resultado += 'Leída la presente escritura por los otorgantes, la aceptan, la aprueban y '
+        resultado = 'Leída la presente escritura por los otorgantes, la aceptan, la aprueban y '
         resultado += 'la firman por ante mí el Notario, que de lo expuesto doy fé, advertidos de '
         resultado += 'las formalidades legales del registro, dentro del término perentorio de dos '
         resultado += '(2) meses contados a partir de la fecha de otorgamiento de este instrumento, '
@@ -950,8 +892,7 @@ class DocumentoHipoteca(Document):
         return resultado
 
     def generar_paz_y_salvo(self):
-        resultado = ''
-        resultado += 'EXENTOS DE PAZ Y SALVO NACIONAL Decrero 2503 Diciembre 29 de 1987.'
+        resultado = 'EXENTOS DE PAZ Y SALVO NACIONAL Decrero 2503 Diciembre 29 de 1987.'
         resultado += 'Se agregan comprobantes. Presentaron PAZ Y SALVO MUNICIPAL No.(s) ________, '
         resultado += 'por concepto de PREDIAL UNIFICADO, a nombre de ______________., '
         resultado += 'PREDIOS GLOBALES: ______________, ubicado(s) En: _________; AVALUO(S):$'
@@ -969,8 +910,7 @@ class DocumentoHipoteca(Document):
         return resultado
 
     def generar_firma_comprador(self):
-        resultado = ''
-        resultado += f'<b>{self.apoderado.nombre.upper()}<br>'
+        resultado = f'<b>{self.apoderado.nombre.upper()}<br>'
         resultado += f'{self.apoderado.abreviacion_identificacion} '
         resultado += f'{self.apoderado.numero_identificacion} de '
         resultado += f'{self.apoderado.ciudad_expedicion_identificacion}</b><br>'
@@ -989,8 +929,7 @@ class DocumentoHipoteca(Document):
         return resultado
 
     def generar_firma_apoderado_banco(self):
-        resultado = ''
-        resultado += 'EL ACREEDOR,<br><br><br><br>'
+        resultado = 'EL ACREEDOR,<br><br><br><br>'
         resultado += '____________________________<br>'
         resultado += f'<b>{self.apoderado_banco.nombre.upper()}<br>'
         resultado += f'{self.apoderado_banco.abreviacion_identificacion} '
@@ -1003,8 +942,7 @@ class DocumentoHipoteca(Document):
         return resultado
 
     def generar_estilos(self):
-        resultado = ''
-        resultado += '<style>'
+        resultado = '<style>'
         resultado += 'div.titulo {text-align: center; font-weight: bold; font-size: 17px; '
         resultado += 'font-family: Arial, Helvetica, sans-serif;}'
         resultado += 'div.parrafos {text-align: justify; font-size: 16px; list-style: '

@@ -1,5 +1,5 @@
 from unittest import TestCase
-from controllers.hipoteca import DocumentosController
+from controllers.documentos import DocumentosController
 
 class TestHipoteca(TestCase):
 

@@ -50,3 +50,25 @@ class ParqueaderoPromesaCompraventa(Parqueadero):
             numero_ficha_catastral,
             linderos_especiales=None
         )
+
+class ParqueaderoPoder(Parqueadero):
+    nueva_propiedad: Optional[Text]
+
+    def __init__(
+        self,
+        nombre: str,
+        numero: str,
+        direccion: str,
+        matricula: str,
+        tipo_ficha_catastral: str,
+        numero_ficha_catastral: str,
+    ):
+        super().__init__(
+            nombre,
+            numero,
+            direccion,
+            matricula,
+            tipo_ficha_catastral,
+            numero_ficha_catastral,
+            linderos_especiales=None
+        )

@@ -4,31 +4,42 @@ import re
 from datetime import datetime
 from utils.document import Document
 from utils.exceptions import ValidationError
+from utils.validators import Validator
+from utils.validating_dictionaries.dictionary_pareja_poderdante import dictionary_validator_pareja_poderdante
+from utils.validating_dictionaries.dictionary_poderdantes import dictionary_validator_poderdantes_poder
+from utils.validating_dictionaries.dictionary_apoderado import dictionary_validator_apoderado_poder
+from utils.validating_dictionaries.dictionary_banco import dictionary_validator_banco_poder
+from utils.validating_dictionaries.dictionary_declaraciones import dictionary_validator_declaraciones
+from utils.validating_dictionaries.dictionary_depositos import dictionary_validator_depositos_poder
+from utils.validating_dictionaries.dictionary_parqueaderos import dictionary_validator_parqueaderos_poder
+from utils.validating_dictionaries.dictionary_inmueble import dictionary_validator_inmueble_poder
 from catalogs.fechas import MESES_INGLES_ESPANOL
 
 from .poderdantes import PoderdantePoder
-from .apoderado import Apoderado
+from .apoderado import ApoderadoPoder
 from .pareja_poderdante import ParejaPoderdante
 from .inmueble import InmueblePoder
-from .parqueaderos import ParqueaderoPromesaCompraventa
-from .depositos import DepositoPromesaCompraventa
-from .banco import Banco
+from .parqueaderos import ParqueaderoPoder
+from .depositos import DepositoPoder
+from .banco import BancoPoder
 from .declaraciones import Declaraciones
 
 
 class DocumentoPoder(Document):
     poderdantes: List[PoderdantePoder]
     pareja_poderdante: ParejaPoderdante
-    apoderado: Apoderado
+    apoderado: ApoderadoPoder
     inmueble: InmueblePoder
-    parqueaderos: List[ParqueaderoPromesaCompraventa]
+    parqueaderos: List[ParqueaderoPoder]
     declaraciones: Declaraciones
-    banco: Banco
-    depositos: List[DepositoPromesaCompraventa]
+    banco: BancoPoder
+    depositos: List[DepositoPoder]
 
     generate_html_functions = [
         'generar_html_titulo_documento',
-        'generar_html_datos_inmuebles',
+        'generar_html_datos_inmueble',
+        'generar_html_datos_parqueaderos',
+        'generar_html_datos_depositos',
         'generar_html_parrafo_poderdantes',
         'generar_html_datos_apoderado',
         'generar_html_numerales',
@@ -42,12 +53,12 @@ class DocumentoPoder(Document):
         self,
         poderdantes: List[PoderdantePoder],
         pareja_poderdante: ParejaPoderdante,
-        apoderado: Apoderado,
+        apoderado: ApoderadoPoder,
         inmueble: InmueblePoder,
-        parqueaderos: List[ParqueaderoPromesaCompraventa],
+        parqueaderos: List[ParqueaderoPoder],
         declaraciones: Declaraciones,
-        banco: Banco,
-        depositos: List[DepositoPromesaCompraventa]
+        banco: BancoPoder,
+        depositos: List[DepositoPoder]
     ):
         self.poderdantes = poderdantes
         self.pareja_poderdante = pareja_poderdante
@@ -60,17 +71,22 @@ class DocumentoPoder(Document):
         self.validate_data()
 
     def validate_data(self):
-        self.validar_poderdantes()
         self.validar_apoderado()
+        self.validar_poderdantes()
+        self.validar_pareja_poderdante()
+        self.validar_inmueble()
         self.validar_parqueaderos()
         self.validar_depositos()
         self.validar_banco()
-        self.validar_pareja_poderdante()
-        self.validar_inmueble()
         self.validar_declaraciones()
 
-    def validar_poderdantes(self):
+    def validar_apoderado(self):
+        atributos = self.apoderado.__dict__
+        Validator.validate_dict(
+            atributos, dictionary_validator_apoderado_poder, 'Apoderado'
+        )
 
+    def validar_poderdantes(self):
         if self.cantidad_poderdantes == 0 and self.cantidad_poderdantes > 2:
             raise ValidationError(
                 'Debe haber al menos un poderdante y no más de dos poderdantes.')
@@ -79,169 +95,60 @@ class DocumentoPoder(Document):
             raise ValidationError(
                 'No puede haber dos poderdantes y pareja poderdante.')
 
-        obligatorios = {
-            "nombre": "nombre",
-            "tipo_identificacion": "tipo de identificación",
-            "numero_identificacion": "número de identificación",
-            "ciudad_expedicion_identificacion": "ciudad de expedición de identificación",
-            "domicilio_pais": "país de domicilio",
-            "domicilio_municipio": "municipio de domicilio",
-            "domicilio_departamento": "departamento de domicilio",
-            "estado_civil": "estado civil",
-            "genero": "genero",
-        }
         for poderdante in self.poderdantes:
-            for obligatorio, value in obligatorios.items():
-                has_valor = hasattr(poderdante, obligatorio)
-                if not has_valor:
-                    raise ValidationError(f'Atributo faltante de poderdante: {value}')
-                get_valor = getattr(poderdante, obligatorio)
-                if not get_valor:
-                    raise ValidationError(f'Dato faltante de poderdante: {value}')
-
-        atributos = poderdante.__dict__
-        patron = r'[@_!#$%^&*()<>?/\|}{~:]'
-        for atributo in atributos:
-            if re.search(patron, atributos[atributo]):
-                raise ValidationError(f'Error en poderdantes: "{atributos[atributo]}" no puede contener carácteres especiales.')
+            atributos_poderdante = poderdante.__dict__
+            Validator.validate_dict(
+                atributos_poderdante, dictionary_validator_poderdantes_poder, "Poderdante")
 
     def validar_pareja_poderdante(self):
         poderdante = self.poderdantes[0]
         if self.cantidad_poderdantes == 1 and self.estado_civil_es_union(
                 poderdante.estado_civil):
-            if self.declaraciones.pareja_hace_parte_de_compraventa == 'Si' or self.declaraciones.pareja_hace_parte_de_compraventa == 'No':
+            if self.declaraciones.pareja_hace_parte_compraventa == 'Si' or self.declaraciones.pareja_hace_parte_compraventa == 'No':
                 if self.pareja_poderdante is None:
-                    raise ValidationError('No hay datos de pareja de poderdante. Favor de agregar datos')
+                    raise ValidationError(
+                        'No hay datos de pareja de poderdante. Favor de agregar datos')
 
-                obligatorios = {
-                    "nombre": "nombre",
-                    "tipo_identificacion": "tipo de identificación",
-                    "ciudad_expedicion_identificacion": "ciudad de expedición de identificación",
-                    "numero_identificacion": "número de identificación",
-                    "domicilio_pais": "país de domicilio",
-                    "domicilio_municipio": "municipio de domicilio",
-                    "domicilio_departamento": "departamento de domicilio",
-                    "estado_civil": "estado civil",
-                    "genero": "genero",
-                }
-                for obligatorio,value in obligatorios.items():
-                    valor = getattr(self.pareja_poderdante, obligatorio)
-                    if not valor:
-                        raise ValidationError(f'Dato faltante de pareja poderdante: {value}')
-                if self.pareja_poderdante.tipo_identificacion.isspace() is True:
-                    raise ValidationError('Error en pareja poderdante: nombre no puede ser espacio vacío.')
-                atributos = self.pareja_poderdante.__dict__
-                patron = r'[@_!#$%^&*()<>?/\|}{~:]'
-                for atributo in atributos:
-                    if re.search(patron, atributos[atributo]):
-                        raise ValidationError(f'Error en pareja poderdante: "{atributos[atributo]}" no puede contener carácteres especiales.')
-
-    def validar_apoderado(self):
-        if self.apoderado is None:
-            raise ValidationError(
-                'No hay datos de apoderado. Favor de agregar datos')
-
-        obligatorios = {
-            "nombre": "nombre",
-            "tipo_identificacion": "tipo de identificación",
-            "numero_identificacion": "número de identificación",
-            "ciudad_expedicion_identificacion": "ciudad de expedición de identificación",
-            "genero": "genero",
-        }
-        for obligatorio, value in obligatorios.items():
-            valor = getattr(self.apoderado, obligatorio)
-            if not valor:
-                raise ValidationError(f'Dato faltante de apoderado: {value}')
-            atributos = self.apoderado.__dict__
-            patron = r'[@_!#$%^&*()<>?/\|}{~:]'
-            for atributo in atributos:
-                if re.search(patron, atributos[atributo]):
-                    raise ValidationError(f'Error en apoderado: "{atributos[atributo]}" no puede contener carácteres especiales.')
-
+        if self.pareja_poderdante:
+            atributos_pareja_poderdante = self.pareja_poderdante.__dict__
+            Validator.validate_dict(
+                atributos_pareja_poderdante, dictionary_validator_pareja_poderdante,
+                'Pareja Poderdante')
 
     def validar_inmueble(self):
-        if self.inmueble is None:
-            raise ValidationError(
-                'No hay datos de inmueble. Favor de agregar datos')
-
-        obligatorios = {
-            "nombre": "nombre",
-            "numero": "número",
-            "direccion": "dirección",
-            "ciudad_y_o_departamento": "ciudad y/o departamento",
-            "matricula": "matrícula",
-            "tipo_ficha_catastral": "validación si es Cédula Catastral Individual o de Mayor Extensión",
-            "numero_ficha_catastral": "número de ficha catastral",
-        }
-        for obligatorio, value in obligatorios.items():
-            valor = getattr(self.inmueble, obligatorio)
-            if not valor:
-                raise ValidationError(f'Dato faltante de inmueble: {value}')
-        atributos = self.inmueble.__dict__
-        patron = r'[@_!#$%^&*()<>?/\|}{~:]'
-        for atributo in atributos:
-            if re.search(patron, atributos[atributo]):
-                raise ValidationError(f'Error en inmueble: "{atributos[atributo]}" no puede contener carácteres especiales.')
+        atributos_inmueble = self.inmueble.__dict__
+        Validator.validate_dict(
+            atributos_inmueble, dictionary_validator_inmueble_poder, "Inmueble")
 
     def validar_parqueaderos(self):
         if len(self.parqueaderos) > 2:
             raise ValidationError('No puede haber más de dos "parqueaderos".')
 
-        obligatorios = {
-            "nombre": "nombre",
-            "numero": "número",
-        }
-        for parqueadero in self.parqueaderos:
-            for obligatorio, value in obligatorios.items():
-                valor = getattr(parqueadero, obligatorio)
-                if parqueadero.tipo_ficha_catastral and not parqueadero.numero_ficha_catastral:
-                    raise ValidationError('Dato faltante de parqueaderos: número de cédula catastral')
-                if self.parqueaderos and not valor:
-                    raise ValidationError(f'Dato faltante de parqueaderos: {value}')
+        if self.parqueaderos:
+            for parqueadero in self.parqueaderos:
+                atributos_parqueaderos = parqueadero.__dict__
+                Validator.validate_dict(
+                    atributos_parqueaderos, dictionary_validator_parqueaderos_poder, 'Parqueaderos')
 
     def validar_depositos(self):
         if len(self.depositos) > 2:
             raise ValidationError('No puede haber más de dos "depósitos".')
 
-        obligatorios = {
-            "nombre": "nombre",
-            "numero": "número",
-        }
-        for deposito in self.depositos:
-            for obligatorio, value in obligatorios.items():
-                valor = getattr(deposito, obligatorio)
-                if deposito.tipo_ficha_catastral and not deposito.numero_ficha_catastral:
-                    raise ValidationError('Dato faltante de depósitos: número de cédula catastral')
-                if self.depositos and not valor:
-                    raise ValidationError(f'Dato faltante de depósitos: {value}')
+        if self.depositos:
+            for deposito in self.depositos:
+                atributos_depositos = deposito.__dict__
+                Validator.validate_dict(
+                    atributos_depositos, dictionary_validator_depositos_poder, 'Depósitos')
 
     def validar_banco(self):
-        if self.banco is None:
-            raise ValidationError('No hay datos de banco. Favor de agregarlos')
-        if not self.banco.nombre:
-            raise ValidationError('Dato faltante de banco: "nombre".')
-        if self.banco.nombre.isspace() is True:
-            raise ValidationError(f'Error en banco: nombre "{self.banco.nombre}" no puede ser un espacio vacío.')
+        atributos_banco = self.banco.__dict__
+        Validator.validate_dict(atributos_banco, dictionary_validator_banco_poder, 'Banco'
+                                )
 
     def validar_declaraciones(self):
-        poderdante = self.poderdantes[0]
-        if self.cantidad_poderdantes == 1 and self.estado_civil_es_union(
-                poderdante.estado_civil):
-            if not self.declaraciones.pareja_hace_parte_de_compraventa:
-                raise ValidationError(
-                    'Dato faltante de declaraciones: "pareja hace parte de la compraventa"')
-
-            if self.declaraciones.pareja_hace_parte_de_compraventa == 'No' and not self.declaraciones.afectar_vivienda_familiar:
-                raise ValidationError(
-                    'Dato faltante de declaraciones: "afectar a vivienda familiar".')
-
-        if self.declaraciones.fecha_de_firma:
-            fecha = datetime.strptime(
-                self.declaraciones.fecha_de_firma, "%d/%m/%Y").date()
-            fecha_actual = datetime.now().date()
-
-            if fecha < fecha_actual:
-                raise ValidationError('Fecha incorrecta: ingresaste una "fecha de firma" anterior a la actual.')
+        atributos_declaraciones = self.declaraciones.__dict__
+        Validator.validate_dict(
+            atributos_declaraciones, dictionary_validator_declaraciones, "Declaraciones")
 
     def multiples_inmuebles(self):
         inmuebles = 0
@@ -272,7 +179,7 @@ class DocumentoPoder(Document):
         resultado += '</b></p></div>'
         return resultado
 
-    def generar_html_datos_inmuebles(self):
+    def generar_html_datos_inmueble(self):
         if self.multiples_inmuebles():
             t_inmuebles = 'DE LOS INMUEBLES'
         else:
@@ -281,20 +188,24 @@ class DocumentoPoder(Document):
         resultado = ''
         resultado += '<div class="datos_inmuebles"><p><b>DATOS DE IDENTIFICACIÓN '
         resultado += f'{t_inmuebles}</b></p><p><b>DEPARTAMENTO Y CIUDAD DE '
-        resultado += f'UBICACIÓN:</b> {self.inmueble.ciudad_y_o_departamento} '
+        resultado += f'UBICACIÓN:</b> {self.inmueble.departamento.upper()} '
+        resultado += f'{self.inmueble.ciudad.upper()}'
         resultado += '</p><p><b>DIRECCIÓN:</b> '
-        resultado += f'{self.inmueble.direccion}</p>'
-        resultado += f'<p><b>APARTAMENTO O CASA:</b> {self.inmueble.nombre} '
+        resultado += f'{self.inmueble.direccion.upper()}</p>'
+        resultado += f'<p><b>APARTAMENTO O CASA:</b> {self.inmueble.nombre.upper()} '
         resultado += f'{self.inmueble.numero}, <b>'
-        resultado += f'Matrícula No.</b> {self.inmueble.matricula}, '
+        resultado += f'Matrícula No.</b> {self.inmueble.matricula}'
         if self.inmueble.tipo_ficha_catastral == "Individual":
-            resultado += '<b>Cédula Catastral Individual:</b> '
+            resultado += ' <b>Cédula Catastral Individual:</b> '
             resultado += f'{self.inmueble.numero_ficha_catastral}</p>'
-
+        return resultado
+    
+    def generar_html_datos_parqueaderos(self):
+        resultado = ''
         if self.parqueaderos and len(self.parqueaderos) > 1:
             resultado += '<p><b>PARQUEADEROS:</b></p><ol>'
             for parqueadero in self.parqueaderos:
-                resultado += f'<li><p>{parqueadero.nombre} No. {parqueadero.numero}, '
+                resultado += f'<li><p>{parqueadero.nombre.upper()} No. {parqueadero.numero}, '
                 if parqueadero.matricula:
                     resultado += f'<b>Matrícula No.</b> {parqueadero.matricula}, '
                 if parqueadero.tipo_ficha_catastral == 'Individual':
@@ -304,13 +215,16 @@ class DocumentoPoder(Document):
         elif self.parqueaderos and len(self.parqueaderos) == 1:
             resultado += '<p><b>PARQUEADERO:</b> '
             for parqueadero in self.parqueaderos:
-                resultado += f'{parqueadero.nombre} No. {parqueadero.numero}, '
+                resultado += f'{parqueadero.nombre.upper()} No. {parqueadero.numero}, '
                 if parqueadero.matricula:
                     resultado += f'<b>Matrícula No.</b> {parqueadero.matricula}, '
                 if parqueadero.tipo_ficha_catastral == 'Individual':
                     resultado += '<b>Cédula Catastral Individual:</b>'
                     resultado += f' {parqueadero.numero_ficha_catastral}</p>'
-
+        return resultado
+    
+    def generar_html_datos_depositos(self):
+        resultado = ''
         if self.depositos:
             if len(self.depositos) > 1:
                 resultado += '<p><b>DEPÓSITOS:</b></p><ol>'
@@ -343,14 +257,15 @@ class DocumentoPoder(Document):
             poderdante = self.poderdantes[0]
             if poderdante.estado_civil == 'Soltero sin unión marital de hecho':
                 t_nosotros = 'Yo'
-            elif self.declaraciones.pareja_hace_parte_de_compraventa == 'No' \
+            elif self.declaraciones.pareja_hace_parte_compraventa == 'No' \
                     and self.estado_civil_es_union(poderdante.estado_civil):
                 t_nosotros = 'Yo'
-            elif self.declaraciones.pareja_hace_parte_de_compraventa == 'Si' \
+            elif self.declaraciones.pareja_hace_parte_compraventa == 'Si' \
                     and self.estado_civil_es_union(poderdante.estado_civil):
                 t_nosotros = 'Nosotros'
         elif self.cantidad_poderdantes == 2:
-            generos = set([poderdante.genero for poderdante in self.poderdantes])
+            generos = set(
+                [poderdante.genero for poderdante in self.poderdantes])
             if len(generos) == 1 and 'Femenino' in generos:
                 t_nosotros = 'Nosotras'
             else:
@@ -365,7 +280,7 @@ class DocumentoPoder(Document):
                 resultado += ' y '
 
             # Nombres
-            resultado += f'<b>{poderdante.nombre}</b>'
+            resultado += f'<b>{poderdante.nombre.upper()}</b>'
 
             if poderdante.genero == 'Masculino':
                 t_identificado = 'identificado'
@@ -384,11 +299,12 @@ class DocumentoPoder(Document):
                 t_domiciliado = 'domiciliada'
 
             # Estado civil
-            resultado += f'<b>{poderdante.estado_civil_genero}</b> y {t_domiciliado} en<b> '
+            resultado += f'<b>{poderdante.estado_civil_genero.upper()}</b> y {t_domiciliado} en<b> '
             # Domiciliados
-            resultado += f'{poderdante.domicilio_municipio}, {poderdante.domicilio_departamento}, '
-            resultado += f'{poderdante.domicilio_pais}</b>'
-            if self.cantidad_poderdantes == 1 and self.declaraciones.pareja_hace_parte_de_compraventa == 'Si'\
+            resultado += f'{poderdante.domicilio_municipio.upper()}, '
+            resultado += f'{poderdante.domicilio_departamento.upper()}, '
+            resultado += f'{poderdante.domicilio_pais.upper()}</b>'
+            if self.cantidad_poderdantes == 1 and self.declaraciones.pareja_hace_parte_compraventa == 'Si'\
                     and self.estado_civil_es_union(poderdante.estado_civil):
                 resultado += self.generar_html_datos_pareja_poderdante()
 
@@ -403,13 +319,16 @@ class DocumentoPoder(Document):
 
     def generar_html_datos_pareja_poderdante(self):
         resultado = ''
-        resultado += f' y <b>{self.pareja_poderdante.nombre}</b>, mayor de edad, {self.pareja_poderdante.identificado} con '
-        resultado += f'<b>{self.pareja_poderdante.tipo_identificacion}</b> No. <b>'
-        resultado += f'{self.pareja_poderdante.numero_identificacion}</b> '
-        resultado += f'de <b>{self.pareja_poderdante.ciudad_expedicion_identificacion}</b>, de estado civil '
-        resultado += f'<b>{self.pareja_poderdante.estado_civil_genero_pareja}</b> y {self.pareja_poderdante.domiciliado} en '
-        resultado += f'<b>{self.pareja_poderdante.domicilio_municipio}, {self.pareja_poderdante.domicilio_departamento}, '
-        resultado += f'{self.pareja_poderdante.domicilio_pais}</b>'
+        resultado += f' y <b>{self.pareja_poderdante.nombre.upper()}</b>, mayor de edad, '
+        resultado += f'{self.pareja_poderdante.identificado} con '
+        resultado += f'<b>{self.pareja_poderdante.tipo_identificacion}</b> No. '
+        resultado += f'<b>{self.pareja_poderdante.numero_identificacion}</b> de '
+        resultado += f'<b>{self.pareja_poderdante.ciudad_expedicion_identificacion.upper()}</b>, de estado civil '
+        resultado += f'<b>{self.pareja_poderdante.estado_civil_genero_pareja.upper()}</b> '
+        resultado += f'y {self.pareja_poderdante.domiciliado} en '
+        resultado += f'<b>{self.pareja_poderdante.domicilio_municipio.upper()}, '
+        resultado += f'{self.pareja_poderdante.domicilio_departamento.upper()}, '
+        resultado += f'{self.pareja_poderdante.domicilio_pais.upper()}</b>'
         return resultado
 
     def generar_html_datos_apoderado(self):
@@ -418,11 +337,11 @@ class DocumentoPoder(Document):
             if poderdante.estado_civil == 'Soltero sin unión marital de hecho':
                 t_conferir = 'confiero'
                 t_nuestro = 'mi'
-            elif self.declaraciones.pareja_hace_parte_de_compraventa == 'No' \
+            elif self.declaraciones.pareja_hace_parte_compraventa == 'No' \
                     and self.estado_civil_es_union(poderdante.estado_civil):
                 t_conferir = 'confiero'
                 t_nuestro = 'mi'
-            elif self.declaraciones.pareja_hace_parte_de_compraventa == 'Si' \
+            elif self.declaraciones.pareja_hace_parte_compraventa == 'Si' \
                     and self.estado_civil_es_union(poderdante.estado_civil):
                 t_conferir = 'conferimos'
                 t_nuestro = 'nuestro'
@@ -432,11 +351,11 @@ class DocumentoPoder(Document):
 
         resultado = ''
         resultado += f'mediante el presente escrito, {t_conferir} <b>PODER ESPECIAL, AMPLIO Y '
-        resultado += f'SUFICIENTE</b> a <b>{self.apoderado.nombre}</b>, mayor de edad, '
+        resultado += f'SUFICIENTE</b> a <b>{self.apoderado.nombre.upper()}</b>, mayor de edad, '
         resultado += f'{self.apoderado.identificado} con '
         resultado += f'<b>{self.apoderado.tipo_identificacion}</b> No. <b>'
         resultado += f'{self.apoderado.numero_identificacion}</b> de <b>'
-        resultado += f'{self.apoderado.ciudad_expedicion_identificacion},</b> para que, en '
+        resultado += f'{self.apoderado.ciudad_expedicion_identificacion.upper()},</b> para que, en '
         resultado += f'{t_nuestro} nombre y representación, efectúe los siguientes actos: '
         resultado += '</p></div>'
         return resultado
@@ -446,10 +365,10 @@ class DocumentoPoder(Document):
             poderdante = self.poderdantes[0]
             if poderdante.estado_civil == 'Soltero sin unión marital de hecho':
                 t_nuestro = 'mi'
-            elif self.declaraciones.pareja_hace_parte_de_compraventa == 'No' \
+            elif self.declaraciones.pareja_hace_parte_compraventa == 'No' \
                     and self.estado_civil_es_union(poderdante.estado_civil):
                 t_nuestro = 'mi'
-            elif self.declaraciones.pareja_hace_parte_de_compraventa == 'Si' \
+            elif self.declaraciones.pareja_hace_parte_compraventa == 'Si' \
                     and self.estado_civil_es_union(poderdante.estado_civil):
                 t_nuestro = 'nuestro'
         elif self.cantidad_poderdantes == 2:
@@ -505,7 +424,7 @@ class DocumentoPoder(Document):
         else:
             t_inmuebles = 'el inmueble objeto'
         resultado = ''
-        resultado += f'Para que celebre con {self.banco.nombre} el contrato mutuo para la '
+        resultado += f'Para que celebre con {self.banco.nombre.upper()} el contrato mutuo para la '
         resultado += f'adquisición de {t_inmuebles} del presente mandato, con facultades para:<br>'
         resultado += self.generar_html_incisos_celebracion()
         return resultado
@@ -528,14 +447,14 @@ class DocumentoPoder(Document):
 
     def generar_html_inciso_seguros_exigidos(self):
         resultado = ''
-        resultado += f'Tomar los seguros exigidos por {self.banco.nombre}, o endosar pólizas a su'
+        resultado += f'Tomar los seguros exigidos por {self.banco.nombre.upper()}, o endosar pólizas a su'
         resultado += ' favor.'
         return resultado
 
     def generar_html_inciso_firmar_pagare(self):
         resultado = ''
         resultado += 'Firmar pagaré diligenciado y/o en blanco, carta de instrucciones y demás documentos requeridos'
-        resultado += f' por {self.banco.nombre}, incluyendo los documentos necesarios para tramitar'
+        resultado += f' por {self.banco.nombre.upper()}, incluyendo los documentos necesarios para tramitar'
         resultado += ' subsidios de tasa u otros que ofrezca el Gobierno Nacional.'
         return resultado
 
@@ -573,11 +492,11 @@ class DocumentoPoder(Document):
             if poderdante.estado_civil == 'Soltero sin unión marital de hecho':
                 t_nuestro = 'mi'
                 t_declaramos = 'declaro'
-            elif self.declaraciones.pareja_hace_parte_de_compraventa == 'No' \
+            elif self.declaraciones.pareja_hace_parte_compraventa == 'No' \
                     and self.estado_civil_es_union(poderdante.estado_civil):
                 t_nuestro = 'mi'
                 t_declaramos = 'declaro'
-            elif self.declaraciones.pareja_hace_parte_de_compraventa == 'Si' \
+            elif self.declaraciones.pareja_hace_parte_compraventa == 'Si' \
                     and self.estado_civil_es_union(poderdante.estado_civil):
                 t_declaramos = 'declaramos'
                 if self.apoderado.genero == 'Masculino':
@@ -617,10 +536,10 @@ class DocumentoPoder(Document):
             poderdante = self.poderdantes[0]
             if poderdante.estado_civil == 'Soltero sin unión marital de hecho':
                 t_nuestro = 'mi'
-            elif self.declaraciones.pareja_hace_parte_de_compraventa == 'No' \
+            elif self.declaraciones.pareja_hace_parte_compraventa == 'No' \
                     and self.estado_civil_es_union(poderdante.estado_civil):
                 t_nuestro = 'mi'
-            elif self.declaraciones.pareja_hace_parte_de_compraventa == 'Si' \
+            elif self.declaraciones.pareja_hace_parte_compraventa == 'Si' \
                     and self.estado_civil_es_union(poderdante.estado_civil):
                 if self.apoderado.genero == 'Masculino':
                     t_nuestro = 'nuestro'
@@ -643,13 +562,13 @@ class DocumentoPoder(Document):
         resultado += 'la constitución o no de patrimonio familiar bajo los '
         resultado += 'supuestos legales correspondientes para tal efecto.'
 
-        if self.declaraciones.pareja_hace_parte_de_compraventa == "Si":
+        if self.declaraciones.pareja_hace_parte_compraventa == "Si":
             resultado += '<br></br>'
-        if not self.declaraciones.pareja_hace_parte_de_compraventa:
+        if not self.declaraciones.pareja_hace_parte_compraventa:
             resultado += '<br></br>'
         if self.cantidad_poderdantes == 1:
             poderdante = self.poderdantes[0]
-            if self.declaraciones.pareja_hace_parte_de_compraventa == 'No' \
+            if self.declaraciones.pareja_hace_parte_compraventa == 'No' \
                     and self.estado_civil_es_union(poderdante.estado_civil):
                 resultado += self.generar_html_paragrafo()
         return resultado
@@ -688,11 +607,11 @@ class DocumentoPoder(Document):
             if poderdante.estado_civil == 'Soltero sin unión marital de hecho':
                 t_estuvieramos = 'estuviera presente'
                 t_nuestro = 'mi'
-            elif self.declaraciones.pareja_hace_parte_de_compraventa == 'No' \
+            elif self.declaraciones.pareja_hace_parte_compraventa == 'No' \
                     and self.estado_civil_es_union(poderdante.estado_civil):
                 t_estuvieramos = 'estuviera presente'
                 t_nuestro = 'mi'
-            elif self.declaraciones.pareja_hace_parte_de_compraventa == 'Si' \
+            elif self.declaraciones.pareja_hace_parte_compraventa == 'Si' \
                     and self.estado_civil_es_union(poderdante.estado_civil):
                 t_estuvieramos = 'estuviéramos presentes'
                 if self.apoderado.genero == 'Masculino':
@@ -719,7 +638,7 @@ class DocumentoPoder(Document):
         resultado += 'tal forma que no quede sin representación en ninguna actuación'
         resultado += ' que se requiera y que tenga relación directa con la '
         resultado += f'adquisición {t_inmuebles} y los trámites de crédito '
-        resultado += f'hipotecario ante {self.banco.nombre}.'
+        resultado += f'hipotecario ante {self.banco.nombre.upper()}.'
         return resultado
 
     def generar_html_incisos_seccion_inmuebles(self):
@@ -774,9 +693,9 @@ class DocumentoPoder(Document):
         return resultado
 
     def generar_html_lugar_y_fecha(self):
-        if self.declaraciones.fecha_de_firma:
+        if self.declaraciones.fecha_firma:
             fecha = datetime.strptime(
-                self.declaraciones.fecha_de_firma, "%d/%m/%Y").date()
+                self.declaraciones.fecha_firma, "%d/%m/%Y").date()
             dia = fecha.day
             mes = MESES_INGLES_ESPANOL[fecha.strftime('%B')]
             anio = fecha.year
@@ -785,8 +704,8 @@ class DocumentoPoder(Document):
             mes = "_____"
             anio = "_____"
 
-        if self.declaraciones.municipio_de_firma and self.declaraciones.departamento_de_firma and self.declaraciones.pais_de_firma:
-            t_lugar_firma = f"{self.declaraciones.municipio_de_firma}, {self.declaraciones.departamento_de_firma}, {self.declaraciones.pais_de_firma}"
+        if self.declaraciones.municipio_firma and self.declaraciones.departamento_firma and self.declaraciones.pais_firma:
+            t_lugar_firma = f"{self.declaraciones.municipio_firma}, {self.declaraciones.departamento_firma}, {self.declaraciones.pais_firma}"
         else:
             t_lugar_firma = "__________________"
 
@@ -806,7 +725,7 @@ class DocumentoPoder(Document):
             resultado += '</div><br><br><br>'
 
         if self.cantidad_poderdantes == 1:
-            if self.declaraciones.pareja_hace_parte_de_compraventa == 'No' \
+            if self.declaraciones.pareja_hace_parte_compraventa == 'No' \
                     and self.estado_civil_es_union(poderdante.estado_civil):
                 resultado += ''
                 resultado += '<div class="firma_pareja">'
@@ -815,7 +734,7 @@ class DocumentoPoder(Document):
                 resultado += f'<br>{self.pareja_poderdante.tipo_identificacion} No. '
                 resultado += f'{self.pareja_poderdante.numero_identificacion}</div>'
                 resultado += '<br><br>'
-            elif self.declaraciones.pareja_hace_parte_de_compraventa == 'Si' \
+            elif self.declaraciones.pareja_hace_parte_compraventa == 'Si' \
                     and self.estado_civil_es_union(poderdante.estado_civil):
                 resultado += ''
                 resultado += '<div class="firma_pareja">'
@@ -830,18 +749,18 @@ class DocumentoPoder(Document):
         resultado += f'<br><b>{self.apoderado.nombre}</b><br>'
         resultado += f'{self.apoderado.tipo_identificacion} No. '
         resultado += f'{self.apoderado.numero_identificacion}</div><style>'
-        resultado += 'div.titulo {text-align: center; font-weight: bold; font-size: 14px; font-family: Arial, Helvetica, sans-serif;}'
-        resultado += 'div.datos_inmuebles {text-align: left; font-size: 12px; font-family: Arial, Helvetica, sans-serif;}'
-        resultado += 'div.parrafo_poderdantes {text-align: justify; font-size: 12px; font-family: Arial, Helvetica, sans-serif;}'
+        resultado += 'div.titulo {text-align: center; font-weight: bold; font-size: 17px; font-family: Arial, Helvetica, sans-serif;}'
+        resultado += 'div.datos_inmuebles {text-align: left; font-size: 16px; font-family: Arial, Helvetica, sans-serif;}'
+        resultado += 'div.parrafo_poderdantes {text-align: justify; font-size: 16px; font-family: Arial, Helvetica, sans-serif;}'
         resultado += 'ol ::marker {font-weight: bold;}'
         resultado += 'li {text-align: justify;}'
-        resultado += 'ol.seccion_numerales {text-align: justify; font-size: 12px; font-family: Arial, Helvetica, sans-serif;}'
-        resultado += 'ol.incisos_seccion_inmuebles {text-align: justify; font-size: 12px; list-style: lower-alpha; font-family: Arial, Helvetica, sans-serif;}'
-        resultado += 'ol.incisos_celebracion {text-align: justify; font-size: 12px; list-style: lower-alpha; font-family: Arial, Helvetica, sans-serif;}'
-        resultado += 'div.lugar_y_fecha_de_firma {font-size: 12px; font-family: Arial, Helvetica, sans-serif; margin-bottom: 60px;}'
-        resultado += 'div.firmas_poderdantes {font-size: 12px; font-family: Arial, Helvetica, sans-serif; margin-top: 20px; line-height: 0.4cm;}'
-        resultado += 'div.acepto {font-size: 12px; font-family: Arial, Helvetica, sans-serif; margin-top: 10px; margin-bottom: 60px}'
-        resultado += 'div.firma_apoderado {font-size: 12px; font-family: Arial, Helvetica, sans-serif; margin-top: 20px; line-height: 0.4cm;}'
-        resultado += 'div.firma_pareja {font-size: 12px; font-family: Arial, Helvetica, sans-serif; margin-top: 20px; line-height: 0.4cm;}'
+        resultado += 'ol.seccion_numerales {text-align: justify; font-size: 16px; font-family: Arial, Helvetica, sans-serif;}'
+        resultado += 'ol.incisos_seccion_inmuebles {text-align: justify; font-size: 16px; list-style: lower-alpha; font-family: Arial, Helvetica, sans-serif;}'
+        resultado += 'ol.incisos_celebracion {text-align: justify; font-size: 16px; list-style: lower-alpha; font-family: Arial, Helvetica, sans-serif;}'
+        resultado += 'div.lugar_y_fecha_de_firma {font-size: 16px; font-family: Arial, Helvetica, sans-serif; margin-bottom: 60px;}'
+        resultado += 'div.firmas_poderdantes {font-size: 16px; font-family: Arial, Helvetica, sans-serif; margin-top: 20px; line-height: 0.4cm;}'
+        resultado += 'div.acepto {font-size: 16px; font-family: Arial, Helvetica, sans-serif; margin-top: 10px; margin-bottom: 60px}'
+        resultado += 'div.firma_apoderado {font-size: 16px; font-family: Arial, Helvetica, sans-serif; margin-top: 20px; line-height: 0.4cm;}'
+        resultado += 'div.firma_pareja {font-size: 16px; font-family: Arial, Helvetica, sans-serif; margin-top: 20px; line-height: 0.4cm;}'
         resultado += 'div.padding {padding-top: 50px; padding-right: 50px; padding-bottom: 30px; padding-left: 50px;}</style>'
         return resultado
