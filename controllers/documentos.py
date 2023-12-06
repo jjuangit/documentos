@@ -4,8 +4,8 @@ from catalogs.catalogos import (aceptantes, apoderados_banco, bancos,
                                 representantes_banco)
 from models.aceptante import Aceptante
 from models.apoderado import Apoderado, ApoderadoPromesaCompraventa
-from models.apoderado_banco import ApoderadoBanco
-from models.banco import Banco, BancoPoder
+from models.apoderado_banco import ApoderadoBanco, ApoderadoBancoPromesaCompraventa
+from models.banco import Banco, BancoPoder, BancoPromesaCompraventa
 from models.compraventa import Compraventa
 from models.declaraciones import Declaraciones
 from models.depositos import Deposito, DepositoPromesaCompraventa, DepositoPoder
@@ -15,11 +15,11 @@ from models.organo_autorizador import OrganoAutorizador
 from models.pareja_poderdante import ParejaPoderdante
 from models.parqueaderos import Parqueadero, ParqueaderoPromesaCompraventa, ParqueaderoPoder
 from models.poder import DocumentoPoder
-from models.poderdantes import Poderdante, PoderdantePoder
+from models.poderdantes import Poderdante, PoderdantePromesaCompraventa, PoderdantePoder
 from models.prestamo import Prestamo
 from models.promesa_compraventa import DocumentoPromesaCompraventa
 from models.representante_aceptante import RepresentanteAceptante
-from models.representante_banco import RepresentanteBanco
+from models.representante_banco import RepresentanteBanco, RepresentanteBancoPromesaCompraventa
 from utils.controller import LambdaController, try_catch
 from utils.strip_spaces import strip_dict_or_list
 
@@ -121,7 +121,7 @@ class DocumentosController(LambdaController):
             event.get("organo_autorizador"))
 
         apoderado = ApoderadoPromesaCompraventa(**apoderado_data)
-        poderdantes = [Poderdante(**poderdante)
+        poderdantes = [PoderdantePromesaCompraventa(**poderdante)
                        for poderdante in poderdantes_data]
         inmueble = InmueblePromesaCompraventa(**inmueble_data)
         depositos = [DepositoPromesaCompraventa(**deposito)
@@ -130,27 +130,27 @@ class DocumentosController(LambdaController):
                         for parqueadero in parqueaderos_data]
         for banck_apoderado in apoderados_banco:
             if banck_apoderado['nombre'] == apoderado_banco_data['nombre']:
-                apoderado_banco = ApoderadoBanco(**banck_apoderado)
+                apoderado_banco = ApoderadoBancoPromesaCompraventa(**banck_apoderado)
                 break
         else:
-            apoderado_banco = ApoderadoBanco(
+            apoderado_banco = ApoderadoBancoPromesaCompraventa(
                 **apoderado_banco_data)
         for representante in representantes_banco:
             if representante['nombre'] == representante_banco_data['nombre']:
-                representante_banco = RepresentanteBanco(**representante)
+                representante_banco = RepresentanteBancoPromesaCompraventa(**representante)
                 break
         else:
-            representante_banco = RepresentanteBanco(
+            representante_banco = RepresentanteBancoPromesaCompraventa(
                 **representante_banco_data)
         representante_aceptante = RepresentanteAceptante(
             **representante_aceptante_data)
 
         for bank in bancos:
             if bank['nombre'] == banco_data['nombre']:
-                banco = Banco(**bank)
+                banco = BancoPromesaCompraventa(**bank)
                 break
         else:
-            banco = Banco(**banco_data)
+            banco = BancoPromesaCompraventa(**banco_data)
         for builder in aceptantes:
             if builder['nombre'] == aceptante_data['nombre']:
                 aceptante = Aceptante(**builder)
@@ -176,10 +176,11 @@ class DocumentosController(LambdaController):
         )
 
         promesa_compraventa.generate_html()
-        print(json.dumps({
+        print(promesa_compraventa.html)
+        json.dumps({
             "statusCode": 201,
             "body": {"html": promesa_compraventa.html}
-        }, ensure_ascii=False))
+        }, ensure_ascii=False)
         self.response["statusCode"] = 201
         self.response["body"] = json.dumps(promesa_compraventa.generate_html())
         return self.response

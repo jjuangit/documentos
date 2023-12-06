@@ -59,14 +59,14 @@ class Apoderado:
             return 'C.E'
         elif self.tipo_identificacion == 'Pasaporte':
             return 'Pasaporte'
-        
+
     @property
     def assignee(self):
         if self.genero == 'Masculino':
             return 'apoderado'
         elif self.genero == 'Femenino':
             return 'apoderada'
-        
+
     @property
     def facultado(self):
         if self.genero == 'Masculino':
@@ -74,14 +74,8 @@ class Apoderado:
         elif self.genero == 'Femenino':
             return 'facultada'
 
-class ApoderadoPoder:
 
-    nombre: Optional[Text]
-    tipo_identificacion: Optional[Text]
-    numero_identificacion: Optional[Text]
-    ciudad_expedicion_identificacion: Optional[Text]
-    genero: Optional[Text]
-
+class ApoderadoPoder(Apoderado):
     def __init__(
         self,
         nombre: str,
@@ -90,11 +84,13 @@ class ApoderadoPoder:
         ciudad_expedicion_identificacion: str,
         genero: str,
     ):
-        self.nombre = nombre
-        self.tipo_identificacion = tipo_identificacion
-        self.numero_identificacion = numero_identificacion
-        self.ciudad_expedicion_identificacion = ciudad_expedicion_identificacion
-        self.genero = genero
+        super().__init__(
+            nombre,
+            tipo_identificacion,
+            numero_identificacion,
+            ciudad_expedicion_identificacion,
+            genero)
+
 
 class ApoderadoPromesaCompraventa(Apoderado):
     tipo_apoderado: Optional[Text]
@@ -131,15 +127,12 @@ class ApoderadoPromesaCompraventa(Apoderado):
         self.nombre_dependencia = nombre_dependencia
         self.ciudad_dependencia = ciudad_dependencia
 
-
     @property
     def dependencia(self):
         if self.tipo_dependencia_autenticacion == 'Notaría':
             return 'la'
         elif self.tipo_dependencia_autenticacion == 'Consulado':
             return 'el'
-        
-
 
     @property
     def identificado(self):
@@ -161,3 +154,26 @@ class ApoderadoPromesaCompraventa(Apoderado):
             return 'el'
         elif self.genero == 'Femenino':
             return 'la'
+
+    @property
+    def ellos(self):
+        if self.genero == 'Masculino':
+            return 'el'
+        elif self.genero == 'Femenino':
+            return 'ella'
+
+    @property
+    def abreviacion_identificacion(self):
+        if self.tipo_identificacion == 'Cédula de Ciudadanía':
+            return 'C.C.'
+        elif self.tipo_identificacion == 'Cédula de Extranjería':
+            return 'C.E'
+        elif self.tipo_identificacion == 'Pasaporte':
+            return 'Pasaporte'
+
+    @property
+    def facultado(self):
+        if self.genero == 'Masculino':
+            return 'facultado'
+        elif self.genero == 'Femenino':
+            return 'facultada'

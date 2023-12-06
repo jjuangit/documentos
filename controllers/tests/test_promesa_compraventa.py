@@ -37,7 +37,8 @@ class TestHipoteca(TestCase):
                     'tipo_ficha_catastral': 'Mayor Extensión',
                     'numero_ficha_catastral': [
                         {'ficha': '0002000000070001000000000'},
-                    ]
+                    ],
+                    'numero_chip': ''
                 },
                 "parqueaderos": [
 

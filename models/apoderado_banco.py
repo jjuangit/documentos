@@ -11,7 +11,7 @@ class ApoderadoBanco:
     genero: Type[Text]
     tipo_apoderado: Type[Text]
     tipo_poder: Type[Text]
-    escritura : Optional[Text]
+    escritura: Optional[Text]
 
     def __init__(
         self,
@@ -55,28 +55,28 @@ class ApoderadoBanco:
             return 'Apoderado'
         elif self.genero == 'Femenino':
             return 'Apoderada'
-        
+
     @property
-    def doctor(self):    
+    def doctor(self):
         if self.genero == 'Masculino':
             return 'el doctor'
         elif self.genero == 'Femenino':
             return 'la doctora'
-        
+
     @property
     def el(self):
         if self.genero == 'Masculino':
             return 'el'
         elif self.genero == 'Femenino':
             return 'ella'
-        
+
     @property
     def naturaleza(self):
         if self.genero == 'Masculino':
             return 'varón'
         elif self.genero == 'Femenino':
             return 'mujer'
-        
+
     @property
     def abreviacion_identificacion(self):
         if self.tipo_identificacion == 'Cédula de Ciudadanía':
@@ -85,3 +85,30 @@ class ApoderadoBanco:
             return 'C.E'
         elif self.tipo_identificacion == 'Pasaporte':
             return 'Pasaporte'
+
+
+class ApoderadoBancoPromesaCompraventa(ApoderadoBanco):
+    def __init__(
+        self,
+        nombre: str,
+        tipo_identificacion: str,
+        numero_identificacion: str,
+        ciudad_expedicion_identificacion: str,
+        ciudad_residencia: str,
+        genero: str,
+        tipo_apoderado: str,
+        tipo_poder: str,
+        escritura: str,
+    ):
+
+        super().__init__(
+            nombre,
+            tipo_identificacion,
+            numero_identificacion,
+            ciudad_expedicion_identificacion,
+            ciudad_residencia,
+            genero,
+            tipo_apoderado,
+            tipo_poder,
+            escritura
+        )

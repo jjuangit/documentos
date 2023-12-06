@@ -6,14 +6,14 @@ from utils.document import Document
 from utils.exceptions import ValidationError
 from utils.validators import Validator
 
-from utils.validating_dictionaries.dictionary_poderdantes import dictionary_validator_poderdantes
 from utils.validating_dictionaries.dictionary_apoderado import dictionary_validator_apoderado_promesa_compraventa
-from utils.validating_dictionaries.dictionary_representante_banco import dictionary_validator_representante_banco
+from utils.validating_dictionaries.dictionary_poderdantes import dictionary_validator_poderdantes_promesa_compraventa
+from utils.validating_dictionaries.dictionary_representante_banco import dictionary_validator_representante_banco_promesa_compraventa
 from utils.validating_dictionaries.dictionary_inmueble import dictionary_validator_inmueble_promesa_compraventa
 from utils.validating_dictionaries.dictionary_parqueaderos import dictionary_validator_parqueaderos_promesa_compraventa
 from utils.validating_dictionaries.dictionary_depositos import dictionary_validator_depositos_promesa_compraventa
-from utils.validating_dictionaries.dictionary_apoderado_banco import dictionary_validator_apoderado_banco
-from utils.validating_dictionaries.dictionary_banco import dictionary_validator_banco
+from utils.validating_dictionaries.dictionary_apoderado_banco import dictionary_validator_apoderado_banco_promesa_compraventa
+from utils.validating_dictionaries.dictionary_banco import dictionary_validator_banco_promesa_compraventa
 from utils.validating_dictionaries.dictionary_aceptante import dictionary_validator_aceptante
 from utils.validating_dictionaries.dictionary_compraventa import dictionary_validator_compraventa
 from utils.validating_dictionaries.dictionary_representante_aceptante import dictionary_validator_representante_aceptante
@@ -26,13 +26,13 @@ from catalogs.catalogos import aceptantes
 from catalogs.fechas import MESES_INGLES_ESPANOL
 
 from .apoderado import ApoderadoPromesaCompraventa
-from .apoderado_banco import ApoderadoBanco
+from .apoderado_banco import ApoderadoBancoPromesaCompraventa
 from .depositos import DepositoPromesaCompraventa
 from .inmueble import InmueblePromesaCompraventa
 from .parqueaderos import ParqueaderoPromesaCompraventa
-from .poderdantes import Poderdante
-from .representante_banco import RepresentanteBanco
-from .banco import Banco
+from .poderdantes import PoderdantePromesaCompraventa
+from .representante_banco import RepresentanteBancoPromesaCompraventa
+from .banco import BancoPromesaCompraventa
 from .aceptante import Aceptante
 from .compraventa import Compraventa
 from .representante_aceptante import RepresentanteAceptante
@@ -41,14 +41,14 @@ from .organo_autorizador import OrganoAutorizador
 
 class DocumentoPromesaCompraventa(Document):
     apoderado: ApoderadoPromesaCompraventa
-    poderdantes: List[Poderdante]
+    poderdantes: List[PoderdantePromesaCompraventa]
     inmueble: InmueblePromesaCompraventa
     depositos: List[DepositoPromesaCompraventa]
     parqueaderos: List[ParqueaderoPromesaCompraventa]
-    apoderado_banco: ApoderadoBanco
-    representante_banco: RepresentanteBanco
+    apoderado_banco: ApoderadoBancoPromesaCompraventa
+    representante_banco: RepresentanteBancoPromesaCompraventa
     representante_aceptante: RepresentanteAceptante
-    banco: Banco
+    banco: BancoPromesaCompraventa
     aceptante: Aceptante
     compraventa: Compraventa
     organo_autorizador: OrganoAutorizador
@@ -82,14 +82,14 @@ class DocumentoPromesaCompraventa(Document):
     def __init__(
         self,
         apoderado: ApoderadoPromesaCompraventa,
-        poderdantes: List[Poderdante],
+        poderdantes: List[PoderdantePromesaCompraventa],
         inmueble: InmueblePromesaCompraventa,
         parqueaderos: List[ParqueaderoPromesaCompraventa],
         depositos: List[DepositoPromesaCompraventa],
-        apoderado_banco: ApoderadoBanco,
-        representante_banco: RepresentanteBanco,
+        apoderado_banco: ApoderadoBancoPromesaCompraventa,
+        representante_banco: RepresentanteBancoPromesaCompraventa,
         representante_aceptante: RepresentanteAceptante,
-        banco: Banco,
+        banco: BancoPromesaCompraventa,
         aceptante: Aceptante,
         compraventa: Compraventa,
         organo_autorizador: OrganoAutorizador
@@ -135,7 +135,7 @@ class DocumentoPromesaCompraventa(Document):
         for poderdante in self.poderdantes:
             atributos_poderdante = poderdante.__dict__
             Validator.validate_dict(
-                atributos_poderdante, dictionary_validator_poderdantes, 'Poderdantes')
+                atributos_poderdante, dictionary_validator_poderdantes_promesa_compraventa, 'Poderdantes')
 
     def validar_inmueble(self):
         atributos_inmueble = self.inmueble.__dict__
@@ -168,19 +168,19 @@ class DocumentoPromesaCompraventa(Document):
         if self.apoderado_banco.nombre not in [apoderado['nombre'] for apoderado in apoderados_banco]:
             atributos_apoderado_banco = self.apoderado_banco.__dict__
             Validator.validate_dict(
-                atributos_apoderado_banco, dictionary_validator_apoderado_banco, 'Apoderado del banco')
+                atributos_apoderado_banco, dictionary_validator_apoderado_banco_promesa_compraventa, 'Apoderado del banco')
 
     def validar_representante_banco(self):
         if self.representante_banco.nombre not in [representante['nombre'] for representante in representantes_banco]:
             atributos_representante_banco = self.representante_banco.__dict__
             Validator.validate_dict(
-                atributos_representante_banco, dictionary_validator_representante_banco, 'Representante del banco')
+                atributos_representante_banco, dictionary_validator_representante_banco_promesa_compraventa, 'Representante del banco')
 
     def validar_banco(self):
         if self.banco.nombre not in [banco['nombre'] for banco in bancos]:
             atributos_banco = self.banco.__dict__
             Validator.validate_dict(
-                atributos_banco, dictionary_validator_banco, 'Banco')
+                atributos_banco, dictionary_validator_banco_promesa_compraventa, 'Banco')
 
     def validar_compraventa(self):
         atributos_compraventa = self.compraventa.__dict__
@@ -270,7 +270,7 @@ class DocumentoPromesaCompraventa(Document):
             resultado += f'de {self.apoderado.apoderado} {self.apoderado.tipo_apoderado}, '
             if self.apoderado.tipo_apoderado == 'Especial':
                 resultado += f'según acredita con el Poder {self.apoderado.tipo_apoderado} a '
-                resultado += f'{self.apoderado.el} otorgado '
+                resultado += f'{self.apoderado.ellos} otorgado '
                 resultado += f'y debidamente autenticado el día <b><u>{dia} de {mes} del {anio} '
                 resultado += f'</u></b>ante {self.apoderado.dependencia} '
                 resultado += f'<b><u>{self.apoderado.nombre_dependencia.upper()} de '

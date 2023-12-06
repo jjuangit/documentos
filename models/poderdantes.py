@@ -87,6 +87,31 @@ class Poderdante:
             return 'C.E'
         elif self.tipo_identificacion == 'Pasaporte':
             return 'Pasaporte'
+        
+class PoderdantePromesaCompraventa(Poderdante):
+    domicilio_pais: Optional[Text]
+    domicilio_municipio: Optional[Text]
+    domicilio_departamento: Optional[Text]
+
+    def __init__(
+        self,
+        nombre: str,
+        tipo_identificacion: str,
+        numero_identificacion: str,
+        ciudad_expedicion_identificacion: str,
+        domicilio: str,
+        estado_civil: str,
+        genero: str,
+    ):
+        super().__init__(
+            nombre,
+            tipo_identificacion,
+            numero_identificacion,
+            ciudad_expedicion_identificacion,
+            domicilio,
+            estado_civil,
+            genero,
+        )
 
 class PoderdantePoder(Poderdante):
     domicilio_pais: Optional[Text]

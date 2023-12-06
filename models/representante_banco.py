@@ -49,3 +49,24 @@ class RepresentanteBanco:
             return 'el doctor'
         elif self.genero == 'Femenino':
             return 'la doctora'
+
+class RepresentanteBancoPromesaCompraventa(RepresentanteBanco):
+    def __init__(
+        self,
+        nombre: str,
+        tipo_identificacion: str,
+        numero_identificacion: str,
+        ciudad_expedicion_identificacion: str,
+        ciudad_residencia: str,
+        genero: str,
+        tipo_representante: str,
+    ):
+        super().__init__(
+            nombre,
+            tipo_identificacion,
+            numero_identificacion,
+            ciudad_expedicion_identificacion,
+            ciudad_residencia,
+            genero,
+            tipo_representante
+        )

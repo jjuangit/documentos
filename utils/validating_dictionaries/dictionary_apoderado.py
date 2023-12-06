@@ -99,7 +99,7 @@ dictionary_validator_apoderado_promesa_compraventa = {
     ],
     'fecha_autenticacion_poder': [
         Validator.validate_string,
-        Validator.validate_date_format,        
+        Validator.validate_date_format,
     ],
     'tipo_dependencia_autenticacion': [
         Validator.validate_string,

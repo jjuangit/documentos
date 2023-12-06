@@ -2,14 +2,14 @@ from unittest import TestCase
 
 from models.promesa_compraventa import DocumentoPromesaCompraventa
 from models.apoderado import ApoderadoPromesaCompraventa
-from models.poderdantes import Poderdante
+from models.poderdantes import PoderdantePromesaCompraventa
 from models.inmueble import InmueblePromesaCompraventa
 from models.depositos import DepositoPromesaCompraventa
 from models.parqueaderos import ParqueaderoPromesaCompraventa
-from models.apoderado_banco import ApoderadoBanco
-from models.representante_banco import RepresentanteBanco
-from models.representante_aceptante import RepresentanteAceptante
-from models.banco import Banco
+from models.apoderado_banco import ApoderadoBancoPromesaCompraventa
+from models.representante_banco import RepresentanteBancoPromesaCompraventa
+from models.representante_aceptante import RepresentanteAceptantePromesaCompraventa
+from models.banco import BancoPromesaCompraventa
 from models.aceptante import Aceptante
 from models.compraventa import Compraventa
 from models.organo_autorizador import OrganoAutorizador
@@ -66,7 +66,8 @@ class TestPromesaCompraventa(TestCase):
             'tipo_ficha_catastral': tipo_ficha_catastral['MAYOR_EXTENSION'],
             'numero_ficha_catastral': [
                 {'ficha': '0002000000070001000000000'},
-            ]
+            ],
+            'numero_chip': ''
         }
 
         diccionario_parqueaderos = [
@@ -149,7 +150,7 @@ class TestPromesaCompraventa(TestCase):
         diccionario_compraventa = strip_dict_or_list(diccionario_compraventa)
 
         apoderado = ApoderadoPromesaCompraventa(**diccionario_apoderado)
-        poderdantes = [Poderdante(**poderdante)
+        poderdantes = [PoderdantePromesaCompraventa(**poderdante)
                        for poderdante in diccionario_poderdantes]
         inmueble = InmueblePromesaCompraventa(**diccionario_inmueble)
         depositos = [DepositoPromesaCompraventa(**deposito)
@@ -158,27 +159,27 @@ class TestPromesaCompraventa(TestCase):
                         for parqueadero in diccionario_parqueaderos]
         for banck_apoderado in apoderados_banco:
             if banck_apoderado['nombre'] == diccionario_apoderado_banco['nombre']:
-                apoderado_banco = ApoderadoBanco(**banck_apoderado)
+                apoderado_banco = ApoderadoBancoPromesaCompraventa(**banck_apoderado)
                 break
         else:
-            apoderado_banco = ApoderadoBanco(
+            apoderado_banco = ApoderadoBancoPromesaCompraventa(
                 **diccionario_apoderado_banco)
         for representante in representantes_banco:
             if representante['nombre'] == diccionario_representante_banco['nombre']:
-                representante_banco = RepresentanteBanco(**representante)
+                representante_banco = RepresentanteBancoPromesaCompraventa(**representante)
                 break
         else:
-            representante_banco = RepresentanteBanco(
+            representante_banco = RepresentanteBancoPromesaCompraventa(
                 **diccionario_representante_banco)
-        representante_aceptante = RepresentanteAceptante(
+        representante_aceptante = RepresentanteAceptantePromesaCompraventa(
             **diccionario_representante_aceptante)
 
         for bank in bancos:
             if bank['nombre'] == diccionario_banco['nombre']:
-                banco = Banco(**bank)
+                banco = BancoPromesaCompraventa(**bank)
                 break
         else:
-            banco = Banco(**diccionario_banco)
+            banco = BancoPromesaCompraventa(**diccionario_banco)
         for builder in aceptantes:
             if builder['nombre'] == diccionario_aceptante['nombre']:
                 aceptante = Aceptante(**builder)

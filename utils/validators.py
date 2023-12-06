@@ -163,11 +163,14 @@ class Validator:
     @staticmethod
     def validate_numbers_letters_spaces(value, key=None):
         '''Solo se permiten numeros, letras, tildes y espacios'''
-        pattern = r'^[a-zA-Z0-9\sáéíóúÁÉÍÓÚüÜ]+$'
-        if not re.match(pattern, value):
-            raise ValidationError(
-                f"{key} contiene caracteres no permitidos.")
-        return True
+        if value:
+            pattern = r'^[a-zA-Z0-9\sáéíóúÁÉÍÓÚüÜ]+$'
+            if not re.match(pattern, value):
+                raise ValidationError(
+                    f"{key} contiene caracteres no permitidos.")
+            return True
+        else:
+            return True
 
     @staticmethod
     def validate_numbers_dashes_spaces(value, key=None):

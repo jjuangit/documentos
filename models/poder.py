@@ -1,6 +1,4 @@
 from typing import List
-# 861 Lineas de código antes de refactorizar
-import re
 from datetime import datetime
 from utils.document import Document
 from utils.exceptions import ValidationError
@@ -46,8 +44,6 @@ class DocumentoPoder(Document):
         'generar_html_lugar_y_fecha',
         'generar_html_firmas'
     ]
-
-    limite_inmuebles = 2
 
     def __init__(
         self,

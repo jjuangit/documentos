@@ -260,10 +260,9 @@ class DocumentoHipoteca(Document):
         return resultado
 
     def generar_direccion_inmueble(self):
-        resultado = f'<p><b><u>{self.inmueble.nombre.upper()} {self.inmueble.numero.upper()} '
-
-        resultado += f'{self.inmueble.direccion.upper()} '
-        resultado += f'{self.inmueble.ciudad_y_o_departamento.upper()}</u></b></p>'
+        resultado = f'<p><b><u>{self.inmueble.nombre.upper()} {self.inmueble.numero.upper()}, '
+        resultado += f'{self.inmueble.direccion.upper()}, '
+        resultado += f'{self.inmueble.ciudad_y_o_departamento.upper()}.</u></b></p>'
         if self.inmueble.linderos_especiales:
             resultado += f'<p>{self.inmueble.linderos_especiales}</p>'
         return resultado
@@ -272,8 +271,8 @@ class DocumentoHipoteca(Document):
         resultado = ''
         if self.parqueaderos:
             for parqueadero in self.parqueaderos:
-                resultado = f'<b><u>{parqueadero.nombre.upper()} {parqueadero.numero} '
-                resultado += f'{parqueadero.direccion.upper()}</u></b>'
+                resultado = f'<b><u>{parqueadero.nombre.upper()} {parqueadero.numero}, '
+                resultado += f'{parqueadero.direccion.upper()}.</u></b>'
                 if parqueadero.linderos_especiales:
                     resultado += f'<p>{parqueadero.linderos_especiales}</p>'
                 else:
@@ -284,8 +283,8 @@ class DocumentoHipoteca(Document):
         resultado = ''
         if self.depositos:
             for deposito in self.depositos:
-                resultado += f'<b><u>{deposito.nombre.upper()} {deposito.numero} '
-                resultado += f'{deposito.direccion.upper()}</u></b>'
+                resultado += f'<b><u>{deposito.nombre.upper()} {deposito.numero}, '
+                resultado += f'{deposito.direccion.upper()}.</u></b>'
                 if deposito.linderos_especiales:
                     resultado += f'<p>{deposito.linderos_especiales}</p>'
                 else:

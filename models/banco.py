@@ -12,6 +12,17 @@ class Banco:
         self.nombre = nombre
         self.nit = nit
 
+class BancoPromesaCompraventa(Banco):
+    def __init__(
+        self,
+        nombre: str,
+        nit: str
+    ):
+        super().__init__(
+            nombre,
+            nit
+        )
+
 class BancoPoder(Banco):
     def __init__(
         self,
@@ -20,4 +31,15 @@ class BancoPoder(Banco):
         super().__init__(
             nombre,
             nit=None
+        )
+
+class BancoLeasing:
+    def __init__(
+        self,
+        nombre: str,
+        nit: str
+    ):
+        super().__init__(
+            nombre,
+            nit
         )
