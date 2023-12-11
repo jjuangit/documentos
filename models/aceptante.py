@@ -26,4 +26,3 @@ class Aceptante:
         self.nombre_notaria = nombre_notaria
         self.ciudad_ubicacion_notaria = ciudad_ubicacion_notaria
         self.ciudad_ubicacion_camara_comercio = ciudad_ubicacion_camara_comercio
-        

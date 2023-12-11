@@ -66,28 +66,12 @@ class TestHipoteca(TestCase):
                     'genero': 'Masculino',
                     'tipo_representante': 'Suplente del Presidente',
                 },
-                "representante_aceptante": {
-                    'nombre': 'MILANI ESTHER ESCORCIA SANTIAGO',
-                    'tipo_identificacion': 'Cédula de Ciudadanía',
-                    'numero_identificacion': '32.706.233',
-                    'ciudad_expedicion_identificacion': 'Barranquilla',
-                    'ciudad_residencia': 'Barranquilla',
-                    'genero': 'Femenino',
-                    'tipo_representante': 'Representante Legal'
-                },
+                "representante_aceptante": None,
                 "banco": {
                     'nombre': 'Banco unión s.a',
                     'nit': '860006797-9'
                 },
-                'aceptante': {
-                    'nombre': 'CONSTRUCTORA JIMENEZ S.A',
-                    'nit': '891.702.877-8',
-                    'ciudad_ubicacion': 'Santa Marta',
-                    'escritura': 'Escritura Pública Numero 300 de fecha 25 de febrero de 1986',
-                    'nombre_notaria': 'Notaria Primera',
-                    'ciudad_ubicacion_notaria': 'Santa Marta',
-                    'ciudad_ubicacion_camara_comercio': 'Santa Marta'
-                },
+                'aceptante': None,
                 'compraventa': {
                     'cantidad_compraventa': 190236667,
                     'cantidad_restante': 131444452,

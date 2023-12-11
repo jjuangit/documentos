@@ -54,7 +54,8 @@ class TestPoder(TestCase):
             "nombre": "Apartamento",
             "numero": "1021 Torre 3",
             "direccion": "CONJUNTO RESIDENCIAL ZAJARI - ZENTRAL, CALLE 16C 78-83",
-            "ciudad_y_o_departamento": "Antioquia - Medellin",
+            "departamento": "Antioquia",
+            "ciudad": "Medellin",
             "matricula": "50C-2149874",
             "tipo_ficha_catastral": "Individual",
             "numero_ficha_catastral": "006527452600000000"
@@ -68,14 +69,6 @@ class TestPoder(TestCase):
                 "matricula": "50C-2149874",
                 "tipo_ficha_catastral": "Individual",
                 "numero_ficha_catastral": "987654321"
-            },
-            {
-                "nombre": "PARQUEADERO ASIGNADO",
-                "numero": "600",
-                "direccion": "CALLE 16C",
-                "matricula": "50C-2149888",
-                "tipo_ficha_catastral": "Individual",
-                "numero_ficha_catastral": "987654321"
             }
         ]
 
@@ -87,14 +80,7 @@ class TestPoder(TestCase):
                 "matricula": "50C-2149874",
                 "tipo_ficha_catastral": "Individual",
                 "numero_ficha_catastral": "987654321"
-            }, {
-                "nombre": "DEPOSITO",
-                "numero": "999",
-                "direccion": "CALLE 16C",
-                "matricula": "50C-2149888",
-                "tipo_ficha_catastral": "Individual",
-                "numero_ficha_catastral": "987654321"
-            },
+            }
         ]
 
         diccionario_banco = {
@@ -107,7 +93,7 @@ class TestPoder(TestCase):
             "municipio_firma": "Envigado",
             "departamento_firma": "Antioquia",
             "pais_firma": "Colombia",
-            "fecha_firma": "04/12/2023"
+            "fecha_firma": "08/12/2023"
         }
 
         poderdantes = [PoderdantePoder(**poderdante)

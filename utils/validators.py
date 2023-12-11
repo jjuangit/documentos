@@ -228,7 +228,7 @@ class Validator:
             
         else:
             return True
-
+        
     @staticmethod
     def validate_dict(dictionary, dictionary_validator, dictionary_name):
         '''Validación de diccionarios'''

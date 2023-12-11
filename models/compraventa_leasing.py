@@ -6,45 +6,41 @@ from utils.document import Document
 from utils.exceptions import ValidationError
 from utils.validators import Validator
 
-from utils.validating_dictionaries.dictionary_poderdantes import dictionary_validator_poderdantes
-from utils.validating_dictionaries.dictionary_apoderado import dictionary_validator_apoderado
-from utils.validating_dictionaries.dictionary_representante_banco import dictionary_validator_representante_banco
-from utils.validating_dictionaries.dictionary_inmueble import dictionary_validator_inmueble
-from utils.validating_dictionaries.dictionary_parqueaderos import dictionary_validator_parqueaderos
-from utils.validating_dictionaries.dictionary_depositos import dictionary_validator_depositos
-from utils.validating_dictionaries.dictionary_apoderado_banco import dictionary_validator_apoderado_banco
-from utils.validating_dictionaries.dictionary_banco import dictionary_validator_banco
-from utils.validating_dictionaries.dictionary_aceptante import dictionary_validator_aceptante
-from utils.validating_dictionaries.dictionary_compraventa import dictionary_validator_compraventa
+from utils.validating_dictionaries.dictionary_apoderado import dictionary_validator_apoderado_compraventa_leasing
+from utils.validating_dictionaries.dictionary_poderdantes import dictionary_validator_poderdantes_compraventa_leasing
+from utils.validating_dictionaries.dictionary_inmueble import dictionary_validator_inmueble_compraventa_leasing
+from utils.validating_dictionaries.dictionary_parqueaderos import dictionary_validator_parqueaderos_compraventa_leasing
+from utils.validating_dictionaries.dictionary_depositos import dictionary_validator_depositos_compraventa_leasing
+from utils.validating_dictionaries.dictionary_apoderado_banco import dictionary_validator_apoderado_banco_compraventa_leasing
+from utils.validating_dictionaries.dictionary_representante_banco import dictionary_validator_representante_banco_compraventa_leasing
+from utils.validating_dictionaries.dictionary_banco import dictionary_validator_banco_compraventa_leasing
+from utils.validating_dictionaries.dictionary_compraventa import dictionary_validator_compraventa_leasing
 
 from catalogs.catalogos import apoderados_banco
 from catalogs.catalogos import representantes_banco
 from catalogs.catalogos import bancos
-from catalogs.catalogos import aceptantes
 from catalogs.fechas import MESES_INGLES_ESPANOL
 
-from .apoderado import Apoderado
-from .apoderado_banco import ApoderadoBanco
-from .depositos import Deposito
-from .inmueble import Inmueble
-from .parqueaderos import Parqueadero
-from .poderdantes import Poderdante
-from .representante_banco import RepresentanteBanco
-from .banco import BancoLeasing
-from .aceptante import Aceptante
+from .apoderado import ApoderadoCompraventaLeasing
+from .apoderado_banco import ApoderadoBancoCompraventaLeasing
+from .depositos import DepositoCompraventaLeasing
+from .inmueble import InmuebleCompraventaLeasing
+from .parqueaderos import ParqueaderoCompraventaLeasing
+from .poderdantes import PoderdanteCompraventaLeasing
+from .representante_banco import RepresentanteBancoPromesaCompraventa
+from .banco import BancoCompraventaLeasing
 from .compraventa import CompraventaLeasing
 
 
 class DocumentoCompraventaLeasing(Document):
-    apoderado: Apoderado
-    poderdantes: List[Poderdante]
-    inmueble: Inmueble
-    depositos: List[Deposito]
-    parqueaderos: List[Parqueadero]
-    apoderado_banco: ApoderadoBanco
-    representante_banco: RepresentanteBanco
-    banco: BancoLeasing
-    # aceptante: Constructora
+    apoderado: ApoderadoCompraventaLeasing
+    poderdantes: List[PoderdanteCompraventaLeasing]
+    inmueble: InmuebleCompraventaLeasing
+    depositos: List[DepositoCompraventaLeasing]
+    parqueaderos: List[ParqueaderoCompraventaLeasing]
+    apoderado_banco: ApoderadoBancoCompraventaLeasing
+    representante_banco: RepresentanteBancoPromesaCompraventa
+    banco: BancoCompraventaLeasing
     compraventa: CompraventaLeasing
 
     generate_html_functions = [
@@ -63,20 +59,32 @@ class DocumentoCompraventaLeasing(Document):
         'generar_paragrafo_primero',
         'generar_paragrafo_tradicion_inmueble',
         'generar_paragrafo_precio',
-        'generar_limitaciones_gravamenes'
+        'generar_clausula_limitaciones_gravamenes',
+        'generar_clausula_obligacion_sanear',
+        'generar_clausula_entrega',
+        'generar_clausula_gastos_notariales',
+        'generar_datos_apoderado_banco',
+        'generar_datos_representante_banco',
+        'generar_constitucion_banco_union',
+        'generar_clausula_banco_aceptacion',
+        'generar_clausula_banco_compra',
+        'generar_firma_vendedor',
+        'generar_firma_locatario',
+        'generar_firma_poderdante',
+        'generar_firma_comprador',
+        'generar_estilos'
     ]
 
     def __init__(
         self,
-        apoderado: Apoderado,
-        poderdantes: List[Poderdante],
-        inmueble: Inmueble,
-        parqueaderos: List[Parqueadero],
-        depositos: List[Deposito],
-        apoderado_banco: ApoderadoBanco,
-        representante_banco: RepresentanteBanco,
-        banco: BancoLeasing,
-        # aceptante: Constructora,
+        apoderado: ApoderadoCompraventaLeasing,
+        poderdantes: List[PoderdanteCompraventaLeasing],
+        inmueble: InmuebleCompraventaLeasing,
+        parqueaderos: List[ParqueaderoCompraventaLeasing],
+        depositos: List[DepositoCompraventaLeasing],
+        apoderado_banco: ApoderadoBancoCompraventaLeasing,
+        representante_banco: RepresentanteBancoPromesaCompraventa,
+        banco: BancoCompraventaLeasing,
         compraventa: CompraventaLeasing
     ):
         self.apoderado = apoderado
@@ -87,8 +95,92 @@ class DocumentoCompraventaLeasing(Document):
         self.apoderado_banco = apoderado_banco
         self.representante_banco = representante_banco
         self.banco = banco
-        # self.aceptante = aceptante
         self.compraventa = compraventa
+        self.validate_data()
+
+    def validate_data(self):
+        self.validar_apoderado()
+        self.validar_poderdantes()
+        self.validar_inmueble()
+        self.validar_parqueaderos()
+        self.validar_depositos()
+        self.validar_apoderado_banco()
+        self.validar_representante_banco()
+        self.validar_banco()
+        self.validar_compraventa()
+
+    def validar_apoderado(self):
+        if self.apoderado:
+            atributos_apoderado = self.apoderado.__dict__
+            Validator.validate_dict(atributos_apoderado,
+                                    dictionary_validator_apoderado_compraventa_leasing,
+                                    'Apoderado')
+
+    def validar_poderdantes(self):
+        if self.cantidad_poderdantes == 0 and self.cantidad_poderdantes > 2:
+            raise ValidationError(
+                'Debe haber al menos un poderdante y no más de dos poderdantes.')
+
+    def validar_inmueble(self):
+        atributos_inmueble = self.inmueble.__dict__
+        Validator.validate_dict(atributos_inmueble,
+                                dictionary_validator_inmueble_compraventa_leasing,
+                                'Inmueble')
+
+    def validar_parqueaderos(self):
+        if len(self.parqueaderos) > 2:
+            raise ValidationError('No puede haber más de dos "parqueaderos".')
+
+        if self.parqueaderos:
+            for parqueadero in self.parqueaderos:
+                atributos_parqueaderos = parqueadero.__dict__
+            Validator.validate_dict(atributos_parqueaderos,
+                                    dictionary_validator_parqueaderos_compraventa_leasing,
+                                    'Parqueaderos')
+
+    def validar_depositos(self):
+        if len(self.depositos) > 2:
+            raise ValidationError('No puede haber más de dos "depósitos".')
+
+        if self.depositos:
+            for deposito in self.depositos:
+                atributos_depositos = deposito.__dict__
+            Validator.validate_dict(atributos_depositos,
+                                    dictionary_validator_depositos_compraventa_leasing,
+                                    'Depósitos')
+
+    def validar_apoderado_banco(self):
+        if self.apoderado_banco.nombre not in [apoderado['nombre'] for apoderado in apoderados_banco]:
+            atributos_apoderado_banco = self.apoderado_banco.__dict__
+            Validator.validate_dict(atributos_apoderado_banco,
+                                    dictionary_validator_apoderado_banco_compraventa_leasing,
+                                    'Apoderado del banco')
+
+        for poderdante in self.poderdantes:
+            atributos_poderdante = poderdante.__dict__
+            Validator.validate_dict(atributos_poderdante,
+                                    dictionary_validator_poderdantes_compraventa_leasing,
+                                    'Poderdantes')
+
+    def validar_representante_banco(self):
+        if self.representante_banco.nombre not in [representante['nombre'] for representante in representantes_banco]:
+            atributos_representante_banco = self.representante_banco.__dict__
+            Validator.validate_dict(atributos_representante_banco,
+                                    dictionary_validator_representante_banco_compraventa_leasing,
+                                    'Representante del banco')
+
+    def validar_banco(self):
+        if self.banco.nombre not in [banco['nombre'] for banco in bancos]:
+            atributos_banco = self.banco.__dict__
+            Validator.validate_dict(atributos_banco,
+                                    dictionary_validator_banco_compraventa_leasing,
+                                    'Banco')
+
+    def validar_compraventa(self):
+        atributos_compraventa = self.compraventa.__dict__
+        Validator.validate_dict(atributos_compraventa,
+                                dictionary_validator_compraventa_leasing,
+                                'Compraventa')
 
     def estado_civil_es_union(self, estado_civil):
         estados_civiles_union = [
@@ -118,26 +210,31 @@ class DocumentoCompraventaLeasing(Document):
         resultado += '<title>Compraventa Leasing</title>'
         resultado += '<div class="titulo"><p>'
         resultado += '<b>ESCRITURA NÚMERO<br><br>FECHA: ______ DE _______ DEL DOS MIL '
-        resultado += 'VEINTITRÉS_______ (2023)<br>***************************<br> OTORGADA '
-        resultado += 'ANTE LA NOTARÍA_______ DEL CIRCULO DE ***********************<br>'
+        resultado += 'VEINTITRÉS _______ (2023)<br>***************************<br> OTORGADA '
+        resultado += 'ANTE LA NOTARÍA _______ DEL CIRCULO DE ***********************<br>'
         resultado += 'SUPERINTENDENCIA DE NOTARIADO Y REGISTRO<br>FORMATO DE CALIFICACION<br>'
         resultado += 'ACTO O CONTRATO: COMPRAVENTA *****************************<br>'
         resultado += 'PERSONAS QUE INTERVIENEN EN EL ACTO:<br>'
         resultado += 'VENDEDOR: ________________________________________.<br>'
-        resultado += 'COMPRADOR:	BANCO UNIÓN********************'
+        resultado += 'COMPRADOR:	BANCO UNIÓN********************<br>'
         resultado += ''
         return resultado
 
     def generar_datos_inmuebles(self):
+        if self.multiples_inmuebles():
+            inmuebles = 'INMUEBLES'
+        else:
+            inmuebles = 'INMUEBLE'
         resultado = ''
-        resultado += f'INMUEBLE: {self.inmueble.nombre.upper()} {self.inmueble.numero}, '
+        resultado += f'{inmuebles}: {self.inmueble.nombre.upper()} {self.inmueble.numero}, '
         if self.parqueaderos:
             for parqueadero in self.parqueaderos:
                 resultado += f'{parqueadero.nombre} {parqueadero.numero}, '
         if self.depositos:
             for deposito in self.depositos:
                 resultado += f'{deposito.nombre} {deposito.numero}, '
-        resultado += f'{self.inmueble.direccion}</b></p></div>'
+        resultado += f'{self.inmueble.direccion}, {self.inmueble.ciudad_y_o_departamento}'
+        resultado += '</b></p></div>'
         return resultado
 
     def generar_matriculas_inmobiliarias_seccion_inicial(self):
@@ -155,19 +252,24 @@ class DocumentoCompraventaLeasing(Document):
                     break
 
         if matriculas_presentes:
-            matriculas_inmobiliarias = 'MATRÍCULAS INMOBILIARIAS'
+            inmuebles = 'MATRÍCULAS INMOBILIARIAS'
         else:
-            matriculas_inmobiliarias = 'MATRÍCULA INMOBILIARIA'
+            inmuebles = 'MATRÍCULA INMOBILIARIA'
 
-        matriculas = [self.inmueble.matricula]
-        for parqueadero in self.parqueaderos:
-            if self.parqueaderos and parqueadero.matricula:
-                matriculas += [parqueadero.matricula]
-        for deposito in self.depositos:
-            if self.depositos and deposito.matricula:
-                matriculas += [deposito.matricula]
-        resultado = ''
-        resultado += f'<b>{matriculas_inmobiliarias}: <b><u>{", ".join(matriculas)}'
+        matriculas_parqueaderos = [
+            parqueadero.matricula for parqueadero in self.parqueaderos if parqueadero.matricula]
+        matriculas_depositos = [
+            deposito.matricula for deposito in self.depositos if deposito.matricula]
+
+        matriculas = ', '.join(matriculas_parqueaderos + matriculas_depositos)
+        if matriculas:
+            matriculas = f'{self.inmueble.matricula}, {matriculas}'
+        else:
+            matriculas = self.inmueble.matricula
+        if ', ' in matriculas:
+            matriculas = matriculas.rsplit(', ', 1)
+            matriculas = ' y '.join(matriculas)
+        resultado = f'<div class="parrafos"><p><b>{inmuebles}: <u>{matriculas}</u></b> '
         if matriculas_presentes:
             resultado += '</u></b> respectivamente '
 
@@ -181,12 +283,13 @@ class DocumentoCompraventaLeasing(Document):
             fichas = getattr(self.inmueble, 'numero_ficha_catastral')
             if isinstance(fichas, list) and all(isinstance(ficha, dict) for ficha in fichas):
                 resultado += ' y ficha catastral No. <b><u>'
-                resultado += ', '.join([', '.join(ficha_values.values()) for ficha_values in fichas[:-1]])
+                resultado += ', '.join([', '.join(ficha_values.values())
+                                       for ficha_values in fichas[:-1]])
                 if len(fichas) > 1:
                     resultado += ' y ' + ', '.join(fichas[-1].values())
                 elif len(fichas) == 1:
                     resultado += ', '.join(fichas[-1].values())
-                resultado += ' En Mayor Extensión.</u></b> '
+                resultado += ' Folio en Mayor Extensión.</u></b> '
         elif self.inmueble.tipo_ficha_catastral == "Individual":
             fichas_presentes = False
             for parqueadero in self.parqueaderos:
@@ -232,16 +335,16 @@ class DocumentoCompraventaLeasing(Document):
                         resultado += '</p>'
 
         return resultado
-    
+
     def generar_cuantia(self):
         number_to_word_leasing = num2words(
             self.compraventa.cantidad_compraventa, lang='es')
         number_format_leasing = f'{self.compraventa.cantidad_compraventa:,}'
         resultado = ''
-        resultado += f'<p><b>CUANTÍA: {number_to_word_leasing} PESOS MCTE '
+        resultado += f'<p><b>CUANTÍA: {number_to_word_leasing.upper()} PESOS MCTE '
         resultado += f'(${number_format_leasing}).</b></p>'
         return resultado
-    
+
     def generar_notaria(self):
         resultado = ''
         resultado += '<p>En la ciudad de _______, capital del Departamento de ___________, '
@@ -253,7 +356,7 @@ class DocumentoCompraventaLeasing(Document):
         resultado += 'de estado civil _____________, hábiles para contratar y obligarse, '
         resultado += 'actuando en sus propios nombres, manifestaron:</p'
         return resultado
-    
+
     def generar_clausula_objeto(self):
         if self.multiples_inmuebles():
             inmuebles = 'los siguientes inmuebles'
@@ -268,7 +371,7 @@ class DocumentoCompraventaLeasing(Document):
         resultado += f', el dominio y la posesión que tienen y ejerce sobre {inmuebles}:'
         resultado += '<br><br><br>'
         return resultado
-    
+
     def generar_direccion_inmueble(self):
         resultado = f'<p><b><u>{self.inmueble.nombre.upper()} {self.inmueble.numero.upper()}, '
         resultado += f'{self.inmueble.direccion.upper()}, '
@@ -302,7 +405,7 @@ class DocumentoCompraventaLeasing(Document):
                 else:
                     resultado += '<br><br>'
         return resultado
-    
+
     def generar_matriculas_inmobiliarias(self):
         matriculas_presentes = False
 
@@ -322,14 +425,20 @@ class DocumentoCompraventaLeasing(Document):
         else:
             inmuebles = 'Inmueble identificado con el folio de matrícula inmobiliaria'
 
-        matriculas = [self.inmueble.matricula]
-        for parqueadero in self.parqueaderos:
-            if self.parqueaderos and parqueadero.matricula:
-                matriculas += [parqueadero.matricula]
-        for deposito in self.depositos:
-            if self.depositos and deposito.matricula:
-                matriculas += [deposito.matricula]
-        resultado = f'{inmuebles} No. <b><u>{", ".join(matriculas)}'
+        matriculas_parqueaderos = [
+            parqueadero.matricula for parqueadero in self.parqueaderos if parqueadero.matricula]
+        matriculas_depositos = [
+            deposito.matricula for deposito in self.depositos if deposito.matricula]
+
+        matriculas = ', '.join(matriculas_parqueaderos + matriculas_depositos)
+        if matriculas:
+            matriculas = f'{self.inmueble.matricula}, {matriculas}'
+        else:
+            matriculas = self.inmueble.matricula
+        if ', ' in matriculas:
+            matriculas = matriculas.rsplit(', ', 1)
+            matriculas = ' y '.join(matriculas)
+        resultado = f'{inmuebles} No. <b><u>{matriculas}</u></b> '
         if matriculas_presentes:
             resultado += '</u></b> respectivamente '
 
@@ -397,7 +506,7 @@ class DocumentoCompraventaLeasing(Document):
                         resultado += '</p>'
 
         return resultado
-    
+
     def generar_paragrafo_primero(self):
         resultado = ''
         resultado += '<p><b>PARÁGRAFO PRIMERO. -</b> No obstante, la mención del área del '
@@ -407,18 +516,24 @@ class DocumentoCompraventaLeasing(Document):
         resultado += 'reales y las cabidas aquí declaradas, no dará lugar a reclamo por '
         resultado += 'ninguna de las partes.</p>'
         return resultado
-    
+
     def generar_paragrafo_tradicion_inmueble(self):
+        if self.multiples_inmuebles():
+            inmuebles = 'Los inmuebles'
+            fueron = 'fueron adquiridos'
+        else:
+            inmuebles = 'El inmueble'
+            fueron = 'fue adquirido'
         resultado = ''
-        resultado += '<p><b>SEGUNDO: Tradición del Inmueble:</b> El inmueble objeto del '
-        resultado += 'presente estudio fue adquirido por <b>LOS VENDEDORES,</b> a '
+        resultado += f'<p><b>SEGUNDO: Tradición del Inmueble:</b> {inmuebles} objeto del '
+        resultado += f'presente estudio {fueron} por <b>LOS VENDEDORES,</b> a '
         resultado += 'título de Restitución En Fiducia Mercantil de parte de FIDUCIARIA '
         resultado += 'DAVIVIENDA S.A. COMO VOCERA Y ADMINISTRADORA DEL FIDEICOMISO '
         resultado += 'LOTES GALICIA - NIT 830053700-6, mediante la Escritura Pública '
         resultado += 'No. 4127 del 29 de octubre de 2020, registrada en la matrícula '
         resultado += 'inmobiliaria No. 370-1024296.</p>'
         return resultado
-    
+
     def generar_paragrafo_precio(self):
         fecha = datetime.strptime(
             self.compraventa.fecha_compraventa, "%d/%m/%Y").date()
@@ -431,11 +546,11 @@ class DocumentoCompraventaLeasing(Document):
         cantidad_compraventa_numero = f'{self.compraventa.cantidad_compraventa:,}'
 
         cuota_inicial_letra = num2words(
-            self.compraventa.cuota_inicial, lang='es')        
+            self.compraventa.cuota_inicial, lang='es')
         cuota_inicial_numero = f'{self.compraventa.cuota_inicial:,}'
 
         cantidad_restante_letra = num2words(
-            self.compraventa.cantidad_restante, lang='es')        
+            self.compraventa.cantidad_restante, lang='es')
         cantidad_restante_numero = f'{self.compraventa.cantidad_restante:,}'
 
         resultado = ''
@@ -449,9 +564,9 @@ class DocumentoCompraventaLeasing(Document):
             resultado += f'<b>{poderdante.nombre.upper()},</b> mayor de edad, '
             resultado += f'{poderdante.identificado} con {poderdante.tipo_identificacion} '
             resultado += f'<b>No. {poderdante.numero_identificacion} de '
-            resultado += f'{poderdante.ciudad_expedicion_identificacion},</b>'
+            resultado += f'{poderdante.ciudad_expedicion_identificacion},</b> '
         resultado += 'quien ostentaba la calidad de promitente comprador, en virtud del '
-        resultado += f'del contrato de promesa de compraventa suscrito <b>el {dia} de {mes} '
+        resultado += f'contrato de promesa de compraventa suscrito <b>el {dia} de {mes} '
         resultado += f'de {anio},</b> calidad que cedió a <b>{self.banco.nombre.upper()}</b> '
         resultado += 'en razón del ________________ que se suscribe para obtener el crédito '
         resultado += 'necesario para pagar el saldo de la obligación con la sociedad '
@@ -464,25 +579,31 @@ class DocumentoCompraventaLeasing(Document):
         resultado += 'expresamente al ejercicio de la acción resolutoria que de ella pueda '
         resultado += 'derivarse y en consecuencia otorga el presente título firme e irresoluble. '
         return resultado
-    
+
     def generar_clausula_limitaciones_gravamenes(self):
+        if self.multiples_inmuebles():
+            inmuebles = 'los inmuebles sobre los cuales recaen'
+            inmuebles_libres = 'dichos inmuebles se hallan libres'
+        else:
+            inmuebles = 'el inmueble sobre el cual recae'
+            inmuebles_libres = 'dicho inmueble se halla libre'
         resultado = ''
         resultado += '<b>CUARTO. - Limitaciones y Gravámenes:</b> Que los derechos de dominio '
         resultado += 'que se transfieren mediante la presente escritura, son de plena y '
         resultado += 'exclusiva propiedad del <b>VENDEDOR,</b> y que no han sido enajenados '
-        resultado += 'por acto anterior al presente, que los inmuebles sobre los cuales recaen '
-        resultado += 'actualmente los posee de manera regular, pacífica y pública y que dichos '
-        resultado += 'inmuebles se hallan libres de censos, anticresis, servidumbres, '
+        resultado += f'por acto anterior al presente, que {inmuebles} '
+        resultado += 'actualmente los posee de manera regular, pacífica y pública y que  '
+        resultado += f'{inmuebles_libres} de censos, anticresis, servidumbres, '
         resultado += 'desmembraciones y patrimonio de familia inembargable. '
         return resultado
-    
+
     def generar_clausula_obligacion_sanear(self):
         resultado = ''
         resultado += '<b>QUINTO. - OBLIGACIÓN DE SANEAR:</b> Que, en todo caso, se obliga a '
         resultado += 'salir al saneamiento de los derechos que transfiere por cualquier vicio '
         resultado += 'que se llegare a presentar en los casos previstos por la Ley. '
         return resultado
-    
+
     def generar_clausula_entrega(self):
         if self.multiples_inmuebles():
             inmuebles = 'de los inmuebles'
@@ -491,9 +612,9 @@ class DocumentoCompraventaLeasing(Document):
         resultado = ''
         resultado += f'<b>SEXTO: ENTREGA:</b> Que el <b>VENDEDOR</b> hará entrega {inmuebles} '
         resultado += 'objeto del presente contrato al <b>COMPRADOR</b> o a quien este '
-        resultado += 'determine el _________________________.'
+        resultado += 'determine el día _________________________.'
         return resultado
-    
+
     def generar_clausula_gastos_notariales(self):
         resultado = ''
         resultado += '<b>SÉPTIMO: Gastos Notariales de Impuesto y Registro:</b> Que los '
@@ -507,13 +628,12 @@ class DocumentoCompraventaLeasing(Document):
         resultado += '<b>2.</b> Certificados de existencia y representación de las sociedades '
         resultado += f'<b>{self.banco.nombre.upper()}</b> '
         return resultado
-    
+
     def generar_datos_apoderado_banco(self):
         resultado = ''
-        resultado += f'Presente {self.apoderado_banco.doctor}, '
+        resultado += f'<b>ACEPTACIÓN</b> Presente {self.apoderado_banco.doctor}, '
         resultado += f'<u><b>{self.apoderado_banco.nombre.upper()},</b></u> '
-        resultado += f'{self.apoderado_banco.naturaleza}, mayor de edad, '
-        resultado += f'{self.apoderado_banco.vecino} de <u><b>'
+        resultado += f'mayor de edad, {self.apoderado_banco.vecino} de <u><b>'
         resultado += f'{self.apoderado_banco.ciudad_residencia}</b></u> '
         resultado += f'{self.apoderado_banco.identificado} con '
         resultado += f'<u><b>{self.apoderado_banco.tipo_identificacion}</b></u> No. '
@@ -521,13 +641,109 @@ class DocumentoCompraventaLeasing(Document):
         resultado += f'<u><b>{self.apoderado_banco.ciudad_expedicion_identificacion}</b>'
         resultado += '</u> quien comparece en este acto en su calidad de '
         resultado += f'<u><b>{self.apoderado_banco.apoderado} {self.apoderado_banco.tipo_apoderado}'
-        resultado += f'</b></u> acorde con el Poder {self.apoderado_banco.tipo_apoderado} '
+        resultado += f'</b></u><b>{self.banco.nombre.upper()},</b> acorde con el Poder '
+        resultado += f'{self.apoderado_banco.tipo_apoderado} '
         if self.apoderado_banco.tipo_poder == 'Autenticado':
             resultado += f'a {self.apoderado_banco.el} conferido por '
         elif self.apoderado_banco.tipo_poder == 'Escriturado':
-            resultado += 'constituido por '
-            resultado += f'<u><b>{self.apoderado_banco.escritura}</b></u> debidamente '
-            resultado += 'inscrito en la Cámara de Comercio de Cali según certificado '
-            resultado += 'de la Existencia Representación legal que se protocoliza '
-            resultado += 'con este instrumento, conferido por '
+            resultado += f'constituido por <u><b>{self.apoderado_banco.escritura},</b></u> '
+            resultado += f'a {self.apoderado_banco.el} conferido por '
+        return resultado
+
+    def generar_datos_representante_banco(self):
+        resultado = f'{self.representante_banco.doctor} '
+        resultado += f'<u><b>{self.representante_banco.nombre.upper()},</b></u> mayor de edad, '
+        resultado += f'{self.representante_banco.vecino} de '
+        resultado += f'<u><b>{self.representante_banco.ciudad_residencia},</b></u> '
+        resultado += f'{self.representante_banco.identificado} con '
+        resultado += f'<u><b>{self.representante_banco.tipo_identificacion}</b></u> No. '
+        resultado += f'<u><b>{self.representante_banco.numero_identificacion}</b></u> de '
+        resultado += f'<u><b>{self.representante_banco.ciudad_expedicion_identificacion},</b></u> '
+        resultado += 'quien compareció en ese acto en nombre y por cuenta en su calidad de '
+        resultado += f'<u><b>{self.representante_banco.tipo_representante}</b></u> '
+        return resultado
+
+    def generar_constitucion_banco_union(self):
+        resultado = f'de <b>{self.banco.nombre.upper()}</b> antes <b>GIROS & FINANZAS COMPAÑÍA DE '
+        resultado += 'FINANCIAMIENTO S.A.</b>, sociedad constituida legalmente mediante '
+        resultado += 'Escritura Pública No. 5938 del 05 de diciembre de 1963, otorgada en la '
+        resultado += 'Notaria Cuarta (04) del Círculo de Bogotá, inscrita en la Cámara de '
+        resultado += 'Comercio de Cali, el 7 de noviembre de 2000, bajo el número 7516 del Libro '
+        resultado += 'IX, sociedad convertida a establecimiento Bancario y modificada su razón '
+        resultado += 'social mediante Escritura Pública No. 3140 del 16 de Junio de 2022, otorgada '
+        resultado += 'en la Notaría Cuarta del Círculo de Cali, inscrita en la Cámara de Comercio '
+        resultado += 'de Cali el 28 de Junio de 2022, bajo el No. 12001 del Libro IX, con permiso '
+        resultado += 'de funcionamiento otorgado mediante Resolución número 0549 del 31 de Mayo de '
+        resultado += '2022, todo lo cual se acredita  con el Certificado de Existencia y '
+        resultado += 'Representación Legal expedido por la Cámara de Comercio de Cali y por la'
+        resultado += 'Superintendencia Financiera y Manifestó: '
+        return resultado
+
+    def generar_clausula_banco_aceptacion(self):
+        resultado = ''
+        resultado += '<b>PRIMERO: Aceptación:</b> Que acepta la presente escritura con todas y '
+        resultado += 'cada una de las cláusulas en ella contenidas, por estar conforme a la '
+        resultado += 'verdad y a lo pactado. '
+        return resultado
+
+    def generar_clausula_banco_compra(self):
+        resultado = ''
+        resultado += '<b>SEGUNDO: Compra:</b> Que, en consecuencia, acepta la venta de derechos '
+        resultado += 'de dominio sobre el inmueble descrito en el ordinal primero de las '
+        resultado += 'manifestaciones de <b>EL VENDEDOR.</b> Leída esta escritura pública por los '
+        resultado += 'comparecientes y habiéndoles hecho las advertencias sobre las formalidades '
+        resultado += 'legales y trámites de rigor, le imparten su aprobación y en constancia la '
+        resultado += 'firman ante mí, la notaría que la autoriza. Hasta aquí la minuta.</p>'
+        return resultado
+
+    def generar_firma_vendedor(self):
+        resultado = ''
+        resultado += '<br><b>EL VENDEDOR</b><br><br><br>'
+        resultado += '____________________________________'
+        resultado += '<br><br>C.C. No. __________ de ______<br>'
+        resultado += ''
+        resultado += '<br><b>NIT: ____________</b>'
+        return resultado
+
+    def generar_firma_locatario(self):
+        resultado = ''
+        resultado += '<br><br><br><b>EL LOCATARIO</b><br><br><br>'
+        resultado += '_________________________________<br>'
+        resultado += f'<b>{self.apoderado.nombre.upper()},<br>'
+        resultado += f'{self.apoderado.abreviacion_identificacion} '
+        resultado += f'{self.apoderado.numero_identificacion} de '
+        resultado += f'{self.apoderado.ciudad_expedicion_identificacion}</b><br>'
+        resultado += 'En nombre y representación de<br>'
+        return resultado
+
+    def generar_firma_poderdante(self):
+        resultado = ''
+        for index, poderdante in enumerate(self.poderdantes):
+            resultado += f'<b>{poderdante.nombre.upper()}</b><br>'
+            resultado += f'<b>{poderdante.abreviacion_identificacion} '
+            resultado += f'{poderdante.numero_identificacion} de '
+            resultado += f'{poderdante.ciudad_expedicion_identificacion}</b><br><br>'
+            if index < self.cantidad_poderdantes - 1:
+                resultado += 'y <br><br>'
+        return resultado
+
+    def generar_firma_comprador(self):
+        resultado = 'EL COMPRADOR<br><br><br><br>'
+        resultado += '____________________________<br>'
+        resultado += f'<b>{self.apoderado_banco.nombre.upper()}<br>'
+        resultado += f'{self.apoderado_banco.abreviacion_identificacion} '
+        resultado += f'{self.apoderado_banco.numero_identificacion} expedida en '
+        resultado += f'{self.apoderado_banco.ciudad_expedicion_identificacion}</b><br>'
+        resultado += f'{self.apoderado_banco.apoderado} {self.apoderado_banco.tipo_apoderado} '
+        resultado += f'de <br><b>{self.banco.nombre.upper()}<br>'
+        resultado += f'NIT. {self.banco.nit}</b><br><br><br><br>'
+        resultado += 'LA NOTARÍA.<br><br><br><br>____________________</div>'
+        return resultado
+
+    def generar_estilos(self):
+        resultado = '<style>'
+        resultado += 'div.titulo {text-align: left; font-weight: bold; font-size: 17px; '
+        resultado += 'font-family: Arial, Helvetica, sans-serif;}'
+        resultado += 'div.parrafos {text-align: justify; font-size: 16px; list-style: '
+        resultado += 'lower-alpha; font-family: Arial, Helvetica, sans-serif;}</style>'
         return resultado

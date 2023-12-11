@@ -33,7 +33,7 @@ class BancoPoder(Banco):
             nit=None
         )
 
-class BancoLeasing:
+class BancoCompraventaLeasing(Banco):
     def __init__(
         self,
         nombre: str,

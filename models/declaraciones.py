@@ -3,12 +3,12 @@ from typing import Optional, Text
 
 class Declaraciones:
 
-    afectar_vivienda_familiar = Optional[Text]
-    pareja_hace_parte_compraventa = Optional[Text]
-    pais_firma = Optional[Text]
-    municipio_firma = Optional[Text]
-    departamento_firma = Optional[Text]
-    fecha_firma = Optional[Text]
+    afectar_vivienda_familiar: Optional[Text]
+    pareja_hace_parte_compraventa: Optional[Text]
+    pais_firma: Optional[Text]
+    municipio_firma: Optional[Text]
+    departamento_firma: Optional[Text]
+    fecha_firma: Optional[Text]
 
     def __init__(self,
                  afectar_vivienda_familiar: str,

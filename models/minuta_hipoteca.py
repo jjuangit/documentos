@@ -217,18 +217,19 @@ class DocumentoHipoteca(Document):
             resultado += f'{self.apoderado.tipo_identificacion}</u></b> No. <b><u>'
             resultado += f'{self.apoderado.numero_identificacion}</u></b> de <b><u>'
             resultado += f'{self.apoderado.ciudad_expedicion_identificacion}</u></b>, quien '
-            resultado += 'conforme al Poder General a él otorgado por medio de la ________________ '
-            resultado += 'el cual se protocoliza con la presente escritura para los fines legales, '
-            resultado += 'cuya vigencia, autenticidad y alcance se hace responsable; actúa en '
-            resultado += 'nombre y representación de '
+            resultado += f'conforme al Poder General a {self.apoderado.el} otorgado por'
+            resultado += ' medio de la ________________ el cual se protocoliza con la '
+            resultado += 'presente escritura para los fines legales, cuya vigencia, '
+            resultado += 'autenticidad y alcance se hace responsable; actúa en nombre '
+            resultado += 'y representación de '
         return resultado
 
     def generar_parrafo_poderdantes(self):
         resultado = ''
         for index, poderdante in enumerate(self.poderdantes):
 
-            if index == len(self.poderdantes) - \
-                    1 and len(self.poderdantes) > 1:
+            if index == self.cantidad_poderdantes - \
+                    1 and self.cantidad_poderdantes > 1:
                 resultado += ' y '
             resultado += f'<b><u>{poderdante.nombre}</u>,</b> mayor de edad, '
             resultado += f'{poderdante.identificado} con '
@@ -238,9 +239,9 @@ class DocumentoHipoteca(Document):
             resultado += f'estado civil <b><u>{poderdante.estado_civil_genero.upper()}</u>,</b> '
             resultado += f'{poderdante.domiciliado} y {poderdante.residenciado} en '
             resultado += f'<b><u>{poderdante.domicilio}</u></b>'
-        if len(self.poderdantes) == 1:
+        if self.cantidad_poderdantes == 1:
             resultado += '. Quien en el presente contrato se denominará '
-        elif len(self.poderdantes) > 1:
+        elif self.cantidad_poderdantes > 1:
             resultado += '. Quienes en el presente contrato se denominarán '
         resultado += '<b>LA PARTE HIPOTECANTE</b> y manifestó: '
         return resultado
@@ -272,7 +273,8 @@ class DocumentoHipoteca(Document):
         if self.parqueaderos:
             for parqueadero in self.parqueaderos:
                 resultado = f'<b><u>{parqueadero.nombre.upper()} {parqueadero.numero}, '
-                resultado += f'{parqueadero.direccion.upper()}.</u></b>'
+                resultado += f'{parqueadero.direccion.upper()} '
+                resultado += f'{parqueadero.ciudad_y_o_departamento.upper()}.</u></b>'
                 if parqueadero.linderos_especiales:
                     resultado += f'<p>{parqueadero.linderos_especiales}</p>'
                 else:
@@ -284,7 +286,8 @@ class DocumentoHipoteca(Document):
         if self.depositos:
             for deposito in self.depositos:
                 resultado += f'<b><u>{deposito.nombre.upper()} {deposito.numero}, '
-                resultado += f'{deposito.direccion.upper()}.</u></b>'
+                resultado += f'{deposito.direccion.upper()} '
+                resultado += f'{deposito.ciudad_y_o_departamento.upper()}.</u></b>'
                 if deposito.linderos_especiales:
                     resultado += f'<p>{deposito.linderos_especiales}</p>'
                 else:
@@ -310,16 +313,22 @@ class DocumentoHipoteca(Document):
         else:
             inmuebles = 'Inmueble identificado con el folio de matrícula inmobiliaria'
 
-        matriculas = [self.inmueble.matricula]
-        for parqueadero in self.parqueaderos:
-            if self.parqueaderos and parqueadero.matricula:
-                matriculas += [parqueadero.matricula]
-        for deposito in self.depositos:
-            if self.depositos and deposito.matricula:
-                matriculas += [deposito.matricula]
-        resultado = f'{inmuebles} No. <b><u>{", ".join(matriculas)}'
+        matriculas_parqueaderos = [
+            parqueadero.matricula for parqueadero in self.parqueaderos if parqueadero.matricula]
+        matriculas_depositos = [
+            deposito.matricula for deposito in self.depositos if deposito.matricula]
+
+        matriculas = ', '.join(matriculas_parqueaderos + matriculas_depositos)
+        if matriculas:
+            matriculas = f'{self.inmueble.matricula}, {matriculas}'
+        else:
+            matriculas = self.inmueble.matricula
+        if ', ' in matriculas:
+            matriculas = matriculas.rsplit(', ', 1)
+            matriculas = ' y '.join(matriculas)
+        resultado = f'{inmuebles} No. <b><u>{matriculas}</u></b> '
         if matriculas_presentes:
-            resultado += '</u></b> respectivamente '
+            resultado += 'respectivamente '
 
         resultado += '</u></b> de la Oficina de Registro de Instrumentos Públicos de '
         resultado += f'<b><u>{self.inmueble.municipio_de_registro_orip.upper()}</u></b>'
@@ -416,14 +425,23 @@ class DocumentoHipoteca(Document):
         resultado += 'legal de propiedad horizontal, de conformidad con la Ley 675 de '
         resultado += 'agosto 3 de 2001 por medio de _______________________________ , '
         resultado += 'debidamente registrada '
-        matriculas = [self.inmueble.matricula]
-        for parqueadero in self.parqueaderos:
-            if self.parqueaderos and parqueadero.matricula:
-                matriculas += [parqueadero.matricula]
-        for deposito in self.depositos:
-            if self.depositos and deposito.matricula:
-                matriculas += [deposito.matricula]
-        resultado += f'{inmuebles} No. <b><u>{", ".join(matriculas)}</u></b> '
+        matriculas_parqueaderos = [
+            parqueadero.matricula for parqueadero in self.parqueaderos if parqueadero.matricula]
+        matriculas_depositos = [
+            deposito.matricula for deposito in self.depositos if deposito.matricula]
+        matriculas = ', '.join(matriculas_parqueaderos + matriculas_depositos)
+        if matriculas:
+            matriculas = f'{self.inmueble.matricula}, {matriculas}'
+        else:
+            matriculas = self.inmueble.matricula
+
+        if ', ' in matriculas:
+            matriculas = matriculas.rsplit(', ', 1)
+            matriculas = ' y '.join(matriculas)
+
+        resultado += f'{inmuebles} No. <b><u>{matriculas}</u></b> '
+        if matriculas_presentes:
+            resultado += 'respectivamente '
         resultado += 'de la Oficina de Registro de Instrumentos Públicos de <b><u>'
         resultado += f'{self.inmueble.municipio_de_registro_orip.upper()}.</u></b></p>'
         return resultado
@@ -819,7 +837,7 @@ class DocumentoHipoteca(Document):
 
     def generar_constitucion_banco_union(self):
         resultado = f'de <b>{self.banco.nombre.upper()}</b> antes <b>GIROS & FINANZAS COMPAÑÍA DE '
-        resultado += 'FINANCIAMIENTO S.A.</b>, sociedad constituida legalmente mediante Escritura '
+        resultado += 'FINANCIAMIENTO S.A.</b>, sociedad constituida legalmente mediante '
         resultado += 'Escritura Pública No. 5938 del 05 de diciembre de 1963, otorgada en la '
         resultado += 'Notaria Cuarta (04) del Círculo de Bogotá, inscrita en la Cámara de '
         resultado += 'Comercio de Cali, el 7 de noviembre de 2000, bajo el número 7516 del Libro '
@@ -923,8 +941,8 @@ class DocumentoHipoteca(Document):
             resultado += f'<b>{poderdante.abreviacion_identificacion} '
             resultado += f'{poderdante.numero_identificacion} de '
             resultado += f'{poderdante.ciudad_expedicion_identificacion}</b><br><br>'
-            if index < len(self.poderdantes) - 1:
-                resultado += 'y<br><br>'
+            if index < self.cantidad_poderdantes - 1:
+                resultado += 'y EL COMPRADOR E HIPOTECANTE<br><br>'
         return resultado
 
     def generar_firma_apoderado_banco(self):

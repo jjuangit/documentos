@@ -52,7 +52,7 @@ class RepresentanteAceptante:
         if self.genero == 'Masculino':
             return 'el Dr'
         elif self.genero == 'Femenino':
-            return 'la Dr'
+            return 'la Dra'
         else:
             return 'el Dr(a)'
 

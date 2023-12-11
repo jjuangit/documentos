@@ -74,31 +74,20 @@ class Apoderado:
         elif self.genero == 'Femenino':
             return 'facultada'
 
-
-class ApoderadoPoder(Apoderado):
-    def __init__(
-        self,
-        nombre: str,
-        tipo_identificacion: str,
-        numero_identificacion: str,
-        ciudad_expedicion_identificacion: str,
-        genero: str,
-    ):
-        super().__init__(
-            nombre,
-            tipo_identificacion,
-            numero_identificacion,
-            ciudad_expedicion_identificacion,
-            genero)
-
+    @property
+    def la(self):
+        if self.genero == 'Masculino':
+            return 'el'
+        elif self.genero == 'Femenino':
+            return 'la'
 
 class ApoderadoPromesaCompraventa(Apoderado):
     tipo_apoderado: Optional[Text]
-    escritura: Optional[Text]
     fecha_autenticacion_poder: Optional[Text]
     tipo_dependencia_autenticacion: Optional[Text]
     nombre_dependencia: Optional[Text]
     ciudad_dependencia: Optional[Text]
+    escritura: Optional[Text]
 
     def __init__(
         self,
@@ -106,13 +95,13 @@ class ApoderadoPromesaCompraventa(Apoderado):
         tipo_identificacion: str,
         numero_identificacion: str,
         ciudad_expedicion_identificacion: str,
-        genero: str,
         tipo_apoderado: str,
-        escritura: str,
         fecha_autenticacion_poder: str,
         tipo_dependencia_autenticacion: str,
         nombre_dependencia: str,
-        ciudad_dependencia: str
+        ciudad_dependencia: str,
+        escritura: str,
+        genero: str,
     ):
         super().__init__(
             nombre,
@@ -121,11 +110,11 @@ class ApoderadoPromesaCompraventa(Apoderado):
             ciudad_expedicion_identificacion,
             genero)
         self.tipo_apoderado = tipo_apoderado
-        self.escritura = escritura
         self.fecha_autenticacion_poder = fecha_autenticacion_poder
         self.tipo_dependencia_autenticacion = tipo_dependencia_autenticacion
         self.nombre_dependencia = nombre_dependencia
         self.ciudad_dependencia = ciudad_dependencia
+        self.escritura = escritura
 
     @property
     def dependencia(self):
@@ -177,3 +166,35 @@ class ApoderadoPromesaCompraventa(Apoderado):
             return 'facultado'
         elif self.genero == 'Femenino':
             return 'facultada'
+
+class ApoderadoCompraventaLeasing(Apoderado):
+    def __init__(
+        self,
+        nombre: str,
+        tipo_identificacion: str,
+        numero_identificacion: str,
+        ciudad_expedicion_identificacion: str,
+        genero: str,
+    ):
+        super().__init__(
+            nombre,
+            tipo_identificacion,
+            numero_identificacion,
+            ciudad_expedicion_identificacion,
+            genero)
+        
+class ApoderadoPoder(Apoderado):
+    def __init__(
+        self,
+        nombre: str,
+        tipo_identificacion: str,
+        numero_identificacion: str,
+        ciudad_expedicion_identificacion: str,
+        genero: str,
+    ):
+        super().__init__(
+            nombre,
+            tipo_identificacion,
+            numero_identificacion,
+            ciudad_expedicion_identificacion,
+            genero)

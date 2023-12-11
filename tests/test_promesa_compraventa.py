@@ -36,13 +36,13 @@ class TestPromesaCompraventa(TestCase):
             'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
             'numero_identificacion': '1.083.040.935',
             'ciudad_expedicion_identificacion': 'Santa Marta',
-            'genero': genero['FEMENINO'],
             'tipo_apoderado': 'Especial',
-            'escritura': '',
             'fecha_autenticacion_poder': '01/11/2023',
             'tipo_dependencia_autenticacion': 'Consulado',
             'nombre_dependencia': 'Consulado General Central de Colombia',
             'ciudad_dependencia': 'New York - Estados Unidos',
+            'escritura': '',
+            'genero': genero['FEMENINO']
         }
 
         diccionario_poderdantes = [{
@@ -98,29 +98,13 @@ class TestPromesaCompraventa(TestCase):
             'tipo_representante': tipo_representante_banco['SUPLENTE'],
         }
 
-        diccionario_representante_aceptante = {
-            'nombre': 'MILANI ESTHER ESCORCIA SANTIAGO',
-            'tipo_identificacion': tipos_identificacion_ciudadano['CEDULA_CIUDADANIA']['nombre'],
-            'numero_identificacion': '32.706.233',
-            'ciudad_expedicion_identificacion': 'Barranquilla',
-            'ciudad_residencia': 'Barranquilla',
-            'genero': genero['FEMENINO'],
-            'tipo_representante': 'Representante Legal'
-        }
+        diccionario_representante_aceptante = None
         diccionario_banco = {
             'nombre': 'Banco unión s.a',
             'nit': '',
         }
 
-        diccionario_aceptante = {
-            'nombre': 'CONSTRUCTORA JIMENEZ S.A',
-            'nit': '891.702.877-8',
-            'ciudad_ubicacion': 'Santa Marta',
-            'escritura': 'Escritura Pública Numero 300 de fecha 25 de febrero de 1986',
-            'nombre_notaria': 'Notaria Primera',
-            'ciudad_ubicacion_notaria': 'Santa Marta',
-            'ciudad_ubicacion_camara_comercio': 'Santa Marta'
-        }
+        diccionario_aceptante = None
 
         diccionario_compraventa = {
             'cantidad_compraventa': 190236667,
@@ -157,9 +141,9 @@ class TestPromesaCompraventa(TestCase):
                      for deposito in diccionario_depositos]
         parqueaderos = [ParqueaderoPromesaCompraventa(**parqueadero)
                         for parqueadero in diccionario_parqueaderos]
-        for banck_apoderado in apoderados_banco:
-            if banck_apoderado['nombre'] == diccionario_apoderado_banco['nombre']:
-                apoderado_banco = ApoderadoBancoPromesaCompraventa(**banck_apoderado)
+        for bank_apoderado in apoderados_banco:
+            if bank_apoderado['nombre'] == diccionario_apoderado_banco['nombre']:
+                apoderado_banco = ApoderadoBancoPromesaCompraventa(**bank_apoderado)
                 break
         else:
             apoderado_banco = ApoderadoBancoPromesaCompraventa(
@@ -171,8 +155,11 @@ class TestPromesaCompraventa(TestCase):
         else:
             representante_banco = RepresentanteBancoPromesaCompraventa(
                 **diccionario_representante_banco)
-        representante_aceptante = RepresentanteAceptantePromesaCompraventa(
-            **diccionario_representante_aceptante)
+        if diccionario_representante_aceptante is None:
+            representante_aceptante = None
+        else:
+            representante_aceptante = RepresentanteAceptantePromesaCompraventa(
+                **diccionario_representante_aceptante)
 
         for bank in bancos:
             if bank['nombre'] == diccionario_banco['nombre']:
@@ -180,12 +167,15 @@ class TestPromesaCompraventa(TestCase):
                 break
         else:
             banco = BancoPromesaCompraventa(**diccionario_banco)
-        for builder in aceptantes:
-            if builder['nombre'] == diccionario_aceptante['nombre']:
-                aceptante = Aceptante(**builder)
-                break
+        if diccionario_aceptante is None:
+            aceptante = None
         else:
-            aceptante = Aceptante(**diccionario_aceptante)
+            for aceptador in aceptantes:
+                if aceptador['nombre'] == diccionario_aceptante['nombre']:
+                    aceptante = Aceptante(**aceptador)
+                    break
+            else:
+                aceptante = Aceptante(**diccionario_aceptante)
         compraventa = Compraventa(**diccionario_compraventa)
         organo_autorizador = OrganoAutorizador(
             **diccionario_organo_autorizador)

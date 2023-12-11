@@ -188,15 +188,17 @@ class DocumentoPromesaCompraventa(Document):
             atributos_compraventa, dictionary_validator_compraventa, 'Compraventa')
 
     def validar_aceptante(self):
-        if self.aceptante.nombre not in [aceptante['nombre'] for aceptante in aceptantes]:
-            atributos_aceptante = self.aceptante.__dict__
-            Validator.validate_dict(
-                atributos_aceptante, dictionary_validator_aceptante, 'Aceptante')
+        if self.aceptante:
+            if self.aceptante.nombre not in [aceptante['nombre'] for aceptante in aceptantes]:
+                atributos_aceptante = self.aceptante.__dict__
+                Validator.validate_dict(
+                    atributos_aceptante, dictionary_validator_aceptante, 'Aceptante')
 
     def validar_representante_aceptante(self):
-        atributos_representante_aceptante = self.representante_aceptante.__dict__
-        Validator.validate_dict(
-            atributos_representante_aceptante, dictionary_validator_representante_aceptante, 'Representante del aceptante')
+        if self.representante_aceptante:
+            atributos_representante_aceptante = self.representante_aceptante.__dict__
+            Validator.validate_dict(
+                atributos_representante_aceptante, dictionary_validator_representante_aceptante, 'Representante del aceptante')
 
     def validar_organo_autorizador(self):
         atributos_organo_autorizador = self.organo_autorizador.__dict__
@@ -248,17 +250,17 @@ class DocumentoPromesaCompraventa(Document):
         dia = fecha.day
         mes = MESES_INGLES_ESPANOL[fecha.strftime('%B')]
         anio = fecha.year
-        if len(self.poderdantes) > 1:
+        if self.cantidad_poderdantes > 1:
             cedentes = 'denominarán <b>LOS CEDENTES</b>'
             quienes = 'quienes'
-        elif len(self.poderdantes) == 1:
+        elif self.cantidad_poderdantes == 1:
             quienes = 'quien'
             cedentes = 'denominará <b>El CEDENTE</b>'
         resultado = ''
         for index, poderdante in enumerate(self.poderdantes):
 
-            if index == len(self.poderdantes) - \
-                    1 and len(self.poderdantes) > 1:
+            if index == self.cantidad_poderdantes - \
+                    1 and self.cantidad_poderdantes > 1:
                 resultado += ' y '
             resultado += f'<b><u>{poderdante.nombre.upper()},</u></b> mayor de edad, '
             resultado += f'{poderdante.identificado} con <b><u>{poderdante.tipo_identificacion} '
@@ -346,14 +348,22 @@ class DocumentoPromesaCompraventa(Document):
         mes = MESES_INGLES_ESPANOL[fecha.strftime('%B')]
         anio = fecha.year
 
-        if len(self.poderdantes) > 1:
+        if self.cantidad_poderdantes > 1:
             cedentes = '<b>LOS CEDENTES</b> suscribieron'
-        elif len(self.poderdantes) == 1:
+        elif self.cantidad_poderdantes == 1:
             cedentes = '<b>EL CEDENTE</b> suscribió'
         resultado = f'<div class="parrafos"><ol><li>{cedentes} '
-        resultado += f'con la sociedad <b><u>{self.aceptante.nombre.upper()},</u></b>'
-        resultado += f' identificada tributariamente con NIT <b><u>{self.aceptante.nit},'
-        resultado += '</b></u> contrato de promesa de compraventa '
+        resultado += 'con la sociedad '
+
+        if self.aceptante:
+            nombre = self.aceptante.nombre
+            nit = self.aceptante.nit
+        else:
+            nombre = '____________________'
+            nit = '_________________'
+
+        resultado += f'<b><u>{nombre.upper()},</u></b> identificada tributariamente '
+        resultado += f'con NIT <b><u>{nit},</b></u> contrato de promesa de compraventa '
         resultado += f'suscrita el <b><u>{dia} de {mes} de {anio},</u></b> '
         return resultado
 
@@ -393,17 +403,22 @@ class DocumentoPromesaCompraventa(Document):
         else:
             inmuebles = 'inmueble identificado con el folio de matrícula inmobiliaria'
 
-        matriculas = [self.inmueble.matricula]
-        for parqueadero in self.parqueaderos:
-            if self.parqueaderos and parqueadero.matricula:
-                matriculas += [parqueadero.matricula]
-        for deposito in self.depositos:
-            if self.depositos and deposito.matricula:
-                matriculas += [deposito.matricula]
-        resultado = ''
-        resultado += f'{inmuebles} No. <b><u>{", ".join(matriculas)}'
+        matriculas_parqueaderos = [
+            parqueadero.matricula for parqueadero in self.parqueaderos if parqueadero.matricula]
+        matriculas_depositos = [
+            deposito.matricula for deposito in self.depositos if deposito.matricula]
+
+        matriculas = ', '.join(matriculas_parqueaderos + matriculas_depositos)
+        if matriculas:
+            matriculas = f'{self.inmueble.matricula}, {matriculas}'
+        else:
+            matriculas = self.inmueble.matricula
+        if ', ' in matriculas:
+            matriculas = matriculas.rsplit(', ', 1)
+            matriculas = ' y '.join(matriculas)
+        resultado = f'{inmuebles} No. <b><u>{matriculas}</u></b> '
         if matriculas_presentes:
-            resultado += '</u></b> respectivamente '
+            resultado += 'respectivamente '
 
         resultado += '</u></b> de la Oficina de Registro de Instrumentos Públicos de '
         resultado += f'<b><u>{self.inmueble.municipio_de_registro_orip}</u></b>'
@@ -469,9 +484,9 @@ class DocumentoPromesaCompraventa(Document):
         return resultado
 
     def generar_solicitud_credito_a_banco(self):
-        if len(self.poderdantes) > 1:
+        if self.cantidad_poderdantes > 1:
             cedentes = '<b>LOS CEDENTES</b> solicitaron'
-        elif len(self.poderdantes) == 1:
+        elif self.cantidad_poderdantes == 1:
             cedentes = '<b>EL CEDENTE</b> solicitó'
         resultado = f'<li>{cedentes} a <b>{self.banco.nombre.upper()}</b> crédito de vivienda, '
         resultado += 'para cubrir el pago del precio de la promesa de compraventa '
@@ -480,6 +495,16 @@ class DocumentoPromesaCompraventa(Document):
         return resultado
 
     def generar_clausula_objeto(self):
+        if not self.aceptante:
+            self.aceptante = Aceptante(
+                nombre= '_________',
+                nit= '',
+                ciudad_ubicacion= '',
+                escritura= '',
+                nombre_notaria= '',
+                ciudad_ubicacion_notaria= '',
+                ciudad_ubicacion_camara_comercio= ''
+            )
         number_to_word_cuota_inicial = num2words(
             self.compraventa.cuota_inicial, lang='es')
         number_format_cuota_inicial = f'{self.compraventa.cuota_inicial:,}'
@@ -490,22 +515,29 @@ class DocumentoPromesaCompraventa(Document):
         mes = MESES_INGLES_ESPANOL[fecha.strftime('%B')]
         anio = fecha.year
 
-        if len(self.poderdantes) > 1:
+        if self.cantidad_poderdantes > 1:
             cedentes = 'CEDENTES'
             los = f'<b>LOS {cedentes}</b>'
             de = f'de los <b>{cedentes}</b>'
             realizan = 'realizan'
-        elif len(self.poderdantes) == 1:
+        elif self.cantidad_poderdantes == 1:
             cedentes = 'CEDENTE'
             los = f'<b>EL {cedentes}</b>'
             de = f'del <b>{cedentes}</b>'
             realizan = 'realiza'
 
+        if self.aceptante:
+            nombre = self.aceptante.nombre
+            nit = self.aceptante.nit
+        else:
+            nombre = '____________________'
+            nit = '_________________'
+
         resultado = '<p><b>SEGUNDO OBJETO:</b> El objeto del presente contrato es la '
         resultado += f'cesión que {los} {realizan} a favor de la <b>'
         resultado += 'CESIONARIA,</b> de su posición contractual en la promesa de compraventa '
-        resultado += f'suscrita con la sociedad <b><u>{self.aceptante.nombre.upper()},</u> '
-        resultado += f'identificada tributariamente con NIT <u>{self.aceptante.nit},</u></b> '
+        resultado += f'suscrita con la sociedad <b><u>{nombre.upper()},</u> '
+        resultado += f'identificada tributariamente con NIT <u>{nit},</u></b> '
         resultado += f'cesión que recae también sobre los recursos entregados por parte {de} '
         resultado += 'a la sociedad vendedora como cuota inicial, dineros pagados en '
         resultado += 'cumplimiento de la promesa de compraventa objeto de la presente '
@@ -550,6 +582,17 @@ class DocumentoPromesaCompraventa(Document):
         return resultado
 
     def generar_datos_aceptante(self):
+        if not self.aceptante:
+            self.aceptante = Aceptante(
+                nombre='_________________',
+                nit='_______________',
+                ciudad_ubicacion='_____________',
+                escritura='________',
+                nombre_notaria='__________',
+                ciudad_ubicacion_notaria='________',
+                ciudad_ubicacion_camara_comercio='_________',
+            )
+
         if self.organo_autorizador.fecha_acta:
             fecha = datetime.strptime(
                 self.organo_autorizador.fecha_acta, "%d/%m/%Y").date()
@@ -566,9 +609,9 @@ class DocumentoPromesaCompraventa(Document):
         else:
             numero_acta = '_______'
 
-        if len(self.poderdantes) > 1:
+        if self.cantidad_poderdantes > 1:
             cedentes = 'LOS CEDENTES'
-        elif len(self.poderdantes) == 1:
+        elif self.cantidad_poderdantes == 1:
             cedentes = 'EL CEDENTE'
         resultado = ''
         resultado += f'<b><u>{self.aceptante.nombre.upper()},</u></b> identificada tributariamente '
@@ -596,9 +639,9 @@ class DocumentoPromesaCompraventa(Document):
         return resultado
 
     def generar_firma_apoderado(self):
-        if len(self.poderdantes) > 1:
+        if self.cantidad_poderdantes > 1:
             cedentes = 'LOS CEDENTES'
-        elif len(self.poderdantes) == 1:
+        elif self.cantidad_poderdantes == 1:
             cedentes = 'EL CEDENTE'
         resultado = ''
         resultado += f'<b>{cedentes}</b><br>'
@@ -619,7 +662,7 @@ class DocumentoPromesaCompraventa(Document):
             resultado += f'<b>{poderdante.abreviacion_identificacion} '
             resultado += f' {poderdante.numero_identificacion} de '
             resultado += f'{poderdante.ciudad_expedicion_identificacion}</b><br><br>'
-            if index < len(self.poderdantes) - 1:
+            if index < self.cantidad_poderdantes - 1:
                 resultado += 'y<br><br>'
         return resultado
 

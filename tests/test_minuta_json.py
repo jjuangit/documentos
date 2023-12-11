@@ -48,9 +48,9 @@ class TestMinuta(TestCase):
                              for deposito in json_depositos]
                 parqueaderos = [Parqueadero(**parqueadero)
                                 for parqueadero in json_parqueaderos]
-                for banck_apoderado in apoderados_banco:
-                    if banck_apoderado['nombre'] == json_apoderado_banco['nombre']:
-                        apoderado_banco = ApoderadoBanco(**banck_apoderado)
+                for bank_apoderado in apoderados_banco:
+                    if bank_apoderado['nombre'] == json_apoderado_banco['nombre']:
+                        apoderado_banco = ApoderadoBanco(**bank_apoderado)
                         break
                 else:
                     apoderado_banco = ApoderadoBanco(

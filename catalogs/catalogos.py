@@ -86,7 +86,7 @@ apoderados_banco = [
         'nombre': 'Lina Marcela Palau Zea',
         'tipo_identificacion': 'Cédula de Ciudadanía',
         'numero_identificacion': '1113517151',
-        'ciudad_expedicion_identificacion': 'Ginebra',
+        'ciudad_expedicion_identificacion': 'Candelaria',
         'ciudad_residencia': 'Cali',
         'genero': 'Femenino',
         'tipo_apoderado': 'General',

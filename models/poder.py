@@ -42,7 +42,8 @@ class DocumentoPoder(Document):
         'generar_html_datos_apoderado',
         'generar_html_numerales',
         'generar_html_lugar_y_fecha',
-        'generar_html_firmas'
+        'generar_html_firmas',
+        'generar_estilos'
     ]
 
     def __init__(
@@ -97,14 +98,6 @@ class DocumentoPoder(Document):
                 atributos_poderdante, dictionary_validator_poderdantes_poder, "Poderdante")
 
     def validar_pareja_poderdante(self):
-        poderdante = self.poderdantes[0]
-        if self.cantidad_poderdantes == 1 and self.estado_civil_es_union(
-                poderdante.estado_civil):
-            if self.declaraciones.pareja_hace_parte_compraventa == 'Si' or self.declaraciones.pareja_hace_parte_compraventa == 'No':
-                if self.pareja_poderdante is None:
-                    raise ValidationError(
-                        'No hay datos de pareja de poderdante. Favor de agregar datos')
-
         if self.pareja_poderdante:
             atributos_pareja_poderdante = self.pareja_poderdante.__dict__
             Validator.validate_dict(
@@ -177,13 +170,13 @@ class DocumentoPoder(Document):
 
     def generar_html_datos_inmueble(self):
         if self.multiples_inmuebles():
-            t_inmuebles = 'DE LOS INMUEBLES'
+            inmuebles = 'DE LOS INMUEBLES'
         else:
-            t_inmuebles = 'DEL INMUEBLE'
+            inmuebles = 'DEL INMUEBLE'
 
         resultado = ''
         resultado += '<div class="datos_inmuebles"><p><b>DATOS DE IDENTIFICACIÓN '
-        resultado += f'{t_inmuebles}</b></p><p><b>DEPARTAMENTO Y CIUDAD DE '
+        resultado += f'{inmuebles}</b></p><p><b>DEPARTAMENTO Y CIUDAD DE '
         resultado += f'UBICACIÓN:</b> {self.inmueble.departamento.upper()} '
         resultado += f'{self.inmueble.ciudad.upper()}'
         resultado += '</p><p><b>DIRECCIÓN:</b> '
@@ -195,53 +188,57 @@ class DocumentoPoder(Document):
             resultado += ' <b>Cédula Catastral Individual:</b> '
             resultado += f'{self.inmueble.numero_ficha_catastral}</p>'
         return resultado
-    
+
     def generar_html_datos_parqueaderos(self):
         resultado = ''
-        if self.parqueaderos and len(self.parqueaderos) > 1:
-            resultado += '<p><b>PARQUEADEROS:</b></p><ol>'
+        if self.parqueaderos:
+            if len(self.parqueaderos) > 1:
+                parqueaderos = '<p><b>PARQUEADEROS:</b></p><ol>'
+                parqueadero_apertura_html = '<li><p>'
+                parqueadero_cierre_html = '</p></li>'
+                ol = '</ol>'
+            elif len(self.parqueaderos) == 1:
+                parqueaderos = '<p><b>PARQUEADERO:</b></p> '
+                parqueadero_apertura_html = '<p>'
+                parqueadero_cierre_html = '</p>'
+                ol = ''
+            resultado += f'{parqueaderos} '
             for parqueadero in self.parqueaderos:
-                resultado += f'<li><p>{parqueadero.nombre.upper()} No. {parqueadero.numero}, '
+                resultado += f'{parqueadero_apertura_html}{parqueadero.nombre.upper()} No. '
+                resultado += f'{parqueadero.numero}, '
                 if parqueadero.matricula:
                     resultado += f'<b>Matrícula No.</b> {parqueadero.matricula}, '
                 if parqueadero.tipo_ficha_catastral == 'Individual':
                     resultado += '<b>Cédula Catastral Individual:</b>'
-                    resultado += f' {parqueadero.numero_ficha_catastral}</p></li>'
-            resultado += '</ol>'
-        elif self.parqueaderos and len(self.parqueaderos) == 1:
-            resultado += '<p><b>PARQUEADERO:</b> '
-            for parqueadero in self.parqueaderos:
-                resultado += f'{parqueadero.nombre.upper()} No. {parqueadero.numero}, '
-                if parqueadero.matricula:
-                    resultado += f'<b>Matrícula No.</b> {parqueadero.matricula}, '
-                if parqueadero.tipo_ficha_catastral == 'Individual':
-                    resultado += '<b>Cédula Catastral Individual:</b>'
-                    resultado += f' {parqueadero.numero_ficha_catastral}</p>'
+                    resultado += f' {parqueadero.numero_ficha_catastral}'
+                    resultado += parqueadero_cierre_html
+            resultado += ol
         return resultado
-    
+
     def generar_html_datos_depositos(self):
         resultado = ''
         if self.depositos:
             if len(self.depositos) > 1:
-                resultado += '<p><b>DEPÓSITOS:</b></p><ol>'
-                for deposito in self.depositos:
-                    resultado += f'<li><p>{deposito.nombre} No. {deposito.numero}, '
-                    if deposito.matricula:
-                        resultado += f'<b>Matrícula No.</b> {deposito.matricula}, '
-                    if deposito.tipo_ficha_catastral == 'Individual':
-                        resultado += '<b>Cédula Catastral Individual:</b>'
-                        resultado += f' {deposito.numero_ficha_catastral}</p></li>'
-                resultado += '</ol>'
-
+                depositos = '<p><b>DEPÓSITOS:</b></p><ol>'
+                deposito_apertura_html = '<li><p>'
+                deposito_cierre_html = '</p></li>'
+                ol = '</ol>'
             elif len(self.depositos) == 1:
-                resultado += '<p><b>DEPÓSITO:</b> '
-                for deposito in self.depositos:
-                    resultado += f'{deposito.nombre} No. {deposito.numero}, '
-                    if deposito.matricula:
-                        resultado += f'<b>Matrícula No.</b> {deposito.matricula}, '
-                    if deposito.tipo_ficha_catastral == 'Individual':
-                        resultado += '<b>Cédula Catastral Individual:</b>'
-                        resultado += f' {deposito.numero_ficha_catastral}</p>'
+                depositos = '<p><b>DEPÓSITO:</b></p> '
+                deposito_apertura_html = '<p>'
+                deposito_cierre_html = '</p>'
+                ol = ''
+            resultado += f'{depositos} '
+            for deposito in self.depositos:
+                resultado += f'{deposito_apertura_html}{deposito.nombre.upper()} No. '
+                resultado += f'{deposito.numero}, '
+                if deposito.matricula:
+                    resultado += f'<b>Matrícula No.</b> {deposito.matricula}, '
+                if deposito.tipo_ficha_catastral == 'Individual':
+                    resultado += '<b>Cédula Catastral Individual:</b>'
+                    resultado += f' {deposito.numero_ficha_catastral}'
+                    resultado += deposito_cierre_html
+            resultado += ol
 
         if self.inmueble.tipo_ficha_catastral == "Mayor Extensión":
             resultado += '<p><b>CÉDULA CATASTRAL INDIVIDUAL O DE MAYOR EXTENSIÓN:</b> '
@@ -271,32 +268,24 @@ class DocumentoPoder(Document):
         resultado += f'<div class="parrafo_poderdantes"><p>{t_nosotros} '
         for index, poderdante in enumerate(self.poderdantes):
 
-            if index == len(self.poderdantes) - \
-                    1 and len(self.poderdantes) > 1:
+            if index == self.cantidad_poderdantes - \
+                    1 and self.cantidad_poderdantes > 1:
                 resultado += ' y '
 
-            # Nombres
             resultado += f'<b>{poderdante.nombre.upper()}</b>'
 
             if poderdante.genero == 'Masculino':
                 t_identificado = 'identificado'
+                t_domiciliado = 'domiciliado'
             elif poderdante.genero == 'Femenino':
                 t_identificado = 'identificada'
+                t_domiciliado = 'domiciliada'
 
-            # Identificaciones
             resultado += f', mayor de edad, {t_identificado} con '
             resultado += f'<b>{poderdante.tipo_identificacion}</b> No. <b>'
             resultado += f'{poderdante.numero_identificacion}</b> de '
             resultado += f'<b>{poderdante.ciudad_expedicion_identificacion}</b>, de estado civil '
-
-            if poderdante.genero == 'Masculino':
-                t_domiciliado = 'domiciliado'
-            elif poderdante.genero == 'Femenino':
-                t_domiciliado = 'domiciliada'
-
-            # Estado civil
             resultado += f'<b>{poderdante.estado_civil_genero.upper()}</b> y {t_domiciliado} en<b> '
-            # Domiciliados
             resultado += f'{poderdante.domicilio_municipio.upper()}, '
             resultado += f'{poderdante.domicilio_departamento.upper()}, '
             resultado += f'{poderdante.domicilio_pais.upper()}</b>'
@@ -304,12 +293,12 @@ class DocumentoPoder(Document):
                     and self.estado_civil_es_union(poderdante.estado_civil):
                 resultado += self.generar_html_datos_pareja_poderdante()
 
-            if index < len(self.poderdantes) - 2:
+            if index < self.cantidad_poderdantes - 2:
                 resultado += ', '
-            if index == len(self.poderdantes) - \
-                    1 and len(self.poderdantes) > 1:
+            if index == self.cantidad_poderdantes - \
+                    1 and self.cantidad_poderdantes > 1:
                 resultado += '; '
-            if index < len(self.poderdantes) == 1:
+            if index < self.cantidad_poderdantes == 1:
                 resultado += '; '
         return resultado
 
@@ -319,7 +308,8 @@ class DocumentoPoder(Document):
         resultado += f'{self.pareja_poderdante.identificado} con '
         resultado += f'<b>{self.pareja_poderdante.tipo_identificacion}</b> No. '
         resultado += f'<b>{self.pareja_poderdante.numero_identificacion}</b> de '
-        resultado += f'<b>{self.pareja_poderdante.ciudad_expedicion_identificacion.upper()}</b>, de estado civil '
+        resultado += f'<b>{self.pareja_poderdante.ciudad_expedicion_identificacion.upper()}'
+        resultado += '</b>, de estado civil '
         resultado += f'<b>{self.pareja_poderdante.estado_civil_genero_pareja.upper()}</b> '
         resultado += f'y {self.pareja_poderdante.domiciliado} en '
         resultado += f'<b>{self.pareja_poderdante.domicilio_municipio.upper()}, '
@@ -443,15 +433,16 @@ class DocumentoPoder(Document):
 
     def generar_html_inciso_seguros_exigidos(self):
         resultado = ''
-        resultado += f'Tomar los seguros exigidos por {self.banco.nombre.upper()}, o endosar pólizas a su'
-        resultado += ' favor.'
+        resultado += f'Tomar los seguros exigidos por {self.banco.nombre.upper()}, o endosar '
+        resultado += 'pólizas a su favor.'
         return resultado
 
     def generar_html_inciso_firmar_pagare(self):
         resultado = ''
-        resultado += 'Firmar pagaré diligenciado y/o en blanco, carta de instrucciones y demás documentos requeridos'
-        resultado += f' por {self.banco.nombre.upper()}, incluyendo los documentos necesarios para tramitar'
-        resultado += ' subsidios de tasa u otros que ofrezca el Gobierno Nacional.'
+        resultado += 'Firmar pagaré diligenciado y/o en blanco, carta de instrucciones y demás '
+        resultado += f'documentos requeridos por {self.banco.nombre.upper()}, incluyendo los '
+        resultado += 'documentos necesarios para tramitar subsidios de tasa u otros que ofrezca '
+        resultado += 'el Gobierno Nacional.'
         return resultado
 
     def generar_html_inciso_constituir_hipoteca(self):
@@ -486,45 +477,54 @@ class DocumentoPoder(Document):
         if self.cantidad_poderdantes == 1:
             poderdante = self.poderdantes[0]
             if poderdante.estado_civil == 'Soltero sin unión marital de hecho':
-                t_nuestro = 'mi'
+                nuestro = 'mi'
                 t_declaramos = 'declaro'
             elif self.declaraciones.pareja_hace_parte_compraventa == 'No' \
                     and self.estado_civil_es_union(poderdante.estado_civil):
-                t_nuestro = 'mi'
+                nuestro = 'mi'
                 t_declaramos = 'declaro'
             elif self.declaraciones.pareja_hace_parte_compraventa == 'Si' \
                     and self.estado_civil_es_union(poderdante.estado_civil):
                 t_declaramos = 'declaramos'
                 if self.apoderado.genero == 'Masculino':
-                    t_nuestro = 'nuestro'
+                    nuestro = 'nuestro'
                 elif self.apoderado.genero == 'Femenino':
-                    t_nuestro = 'nuestra'
+                    nuestro = 'nuestra'
         elif self.cantidad_poderdantes == 2:
             t_declaramos = 'declaramos'
             if self.apoderado.genero == 'Masculino':
-                t_nuestro = 'nuestro'
+                nuestro = 'nuestro'
             elif self.apoderado.genero == 'Femenino':
-                t_nuestro = 'nuestra'
+                nuestro = 'nuestra'
 
         if self.multiples_inmuebles():
-            t_inmuebles = 'los inmuebles'
+            inmuebles = 'inmuebles'
+            t_inmuebles = f'los {inmuebles}'
+            los_inmuebles = f'de los {inmuebles}'
         else:
-            t_inmuebles = 'el inmueble'
+            inmuebles = 'inmueble'
+            t_inmuebles = f'el {inmuebles}'
+            los_inmuebles = f'del {inmuebles}'
 
         resultado = ''
-        resultado += f'En cumplimiento a lo establecido en la ley, {t_declaramos} bajo la gravedad del juramento que el precio '
-        resultado += f'incluido en la escritura pública que {self.apoderado.el} {self.apoderado.assignee} suscribirá en virtud '
-        resultado += 'del presente poder es real y no ha sido objeto de pactos privados en los que se señale un valor diferente. '
-        resultado += f'En caso de que tales pactos existan, {t_nuestro} {self.apoderado.assignee} obrando en la calidad indicada, '
-        resultado += f'informará al Notario el precio convenido en ellos. {t_nuestro.capitalize()} {self.apoderado.assignee} queda '
-        resultado += f'{self.apoderado.facultado} para transmitir esta declaración juramentada en la escritura pública, e igualmente '
-        resultado += f'queda {self.apoderado.facultado} para que en la escritura que suscriba, declare que no existen sumas que se '
-        resultado += f'hayan convenido o facturado por fuera de la misma o, de lo contrario, {t_nuestro} {self.apoderado.assignee} '
-        resultado += f'manifestará su valor. Así mismo, teniendo en cuenta que {t_inmuebles} adquiridos a través de fondos, fiducias, '
-        resultado += 'esquemas de promoción inmobiliaria o semejantes se encuentran sometidos a lo previsto en la ley, y que en tales '
-        resultado += 'casos los beneficiarios de las unidades inmobiliarias son considerados como adquirentes de los bienes raíces, '
-        resultado += f'{t_nuestro} {self.apoderado.assignee} queda {self.apoderado.facultado} para declarar el valor de mercado de '
-        resultado += f'{t_inmuebles}.<br></br>'
+        resultado += f'En cumplimiento a lo establecido en la ley, {t_declaramos} bajo la gravedad '
+        resultado += 'del juramento que el precio incluido en la escritura pública que '
+        resultado += f'{self.apoderado.la} {self.apoderado.assignee} suscribirá en virtud del '
+        resultado += 'presente poder es real y no ha sido objeto de pactos privados en los que se '
+        resultado += f'señale un valor diferente. En caso de que tales pactos existan, {nuestro} '
+        resultado += f'{self.apoderado.assignee} obrando en la calidad indicada, informará al '
+        resultado += f'Notario el precio convenido en ellos. {nuestro.capitalize()} '
+        resultado += f'{self.apoderado.assignee} queda {self.apoderado.facultado} para transmitir '
+        resultado += 'esta declaración juramentada en la escritura pública, e igualmente queda '
+        resultado += f'{self.apoderado.facultado} para que en la escritura que suscriba, declare '
+        resultado += 'que no existen sumas que se hayan convenido o facturado por fuera de la '
+        resultado += 'misma o, de lo contrario,  manifestará su valor. Así mismo, teniendo en '
+        resultado += f'cuenta que {t_inmuebles} adquiridos a través de fondos, fiducias, esquemas '
+        resultado += 'de promoción inmobiliaria o semejantes se encuentran sometidos a lo previsto '
+        resultado += 'en la ley, y que en tales casos los beneficiarios de las unidades '
+        resultado += 'inmobiliarias son considerados como adquirentes de los bienes raíces, '
+        resultado += f'{nuestro} {self.apoderado.assignee} queda {self.apoderado.facultado} para '
+        resultado += f'declarar el valor de mercado {los_inmuebles}.<br></br>'
         return resultado
 
     def generar_html_seccion_respuesta_a_indagacion(self):
@@ -546,12 +546,15 @@ class DocumentoPoder(Document):
                 t_nuestro = 'nuestro'
             elif self.apoderado.genero == 'Femenino':
                 t_nuestro = 'nuestra'
+        if self.multiples_inmuebles():
+            inmuebles = 'de los inmuebles adquiridos y mencionados'
+        else:
+            inmuebles = 'del inmueble adquirido y mencionado'
 
         resultado = ''
         resultado += f'{t_nuestro.capitalize()} {self.apoderado.assignee} también se '
         resultado += f'encuentra expresamente {self.apoderado.facultado} para '
-        resultado += 'determinar la afectación a vivienda familiar o no del '
-        resultado += 'inmueble adquirido y mencionado en este '
+        resultado += f'determinar la afectación a vivienda familiar o no {inmuebles} en este '
         resultado += 'documento, en los términos de la Ley 258 de 1996 modificada por la Ley 854 '
         resultado += 'de 2003, y/o la norma que la modifique o reglamente y también se '
         resultado += f'encuentra expresamente {self.apoderado.facultado} para determinar '
@@ -571,30 +574,38 @@ class DocumentoPoder(Document):
 
     def generar_html_paragrafo(self):
         if self.multiples_inmuebles():
-            t_inmuebles = 'los inmuebles antes señalados sean afectados'
+            inmuebles = 'inmuebles'
+            mencionados = f'los {inmuebles} mencionados'
+            señalados = f'los {inmuebles} antes señalados sean afectados'
+            anteriores = f'los anteriores bienes {inmuebles}.'
         else:
-            t_inmuebles = 'el inmueble antes señalado sea afectado'
-
-        if self.multiples_inmuebles():
-            inmuebles = 'los anteriores bienes inmuebles.'
-        else:
-            inmuebles = 'el anterior bien inmueble.'
+            inmuebles = 'inmueble'
+            mencionados = f'el {inmuebles} mencionado'
+            señalados = f'el {inmuebles} antes señalado sea afectado'
+            anteriores = f'el anterior bien {inmuebles}.'
 
         resultado = ''
         resultado += '<div class="paragrafo"><p><b><br>Parágrafo:</b> '
-        resultado += f'En los mismos términos, yo, <b>{self.pareja_poderdante.nombre},</b> {self.pareja_poderdante.identificado} '
-        resultado += f'con <b>{self.pareja_poderdante.tipo_identificacion}</b> No. <b>{self.pareja_poderdante.numero_identificacion}'
-        resultado += f'</b> de <b>{self.pareja_poderdante.ciudad_expedicion_identificacion}</b>, de estado civil '
-        resultado += f'<b>{self.pareja_poderdante.estado_civil_genero_pareja}</b>, en mi calidad de cónyuge o '
-        resultado += f'{self.pareja_poderdante.companero} permanente del adquirente otorgo poder especial, amplio y suficiente a '
-        resultado += f'<b>{self.apoderado.nombre},</b> {self.apoderado.identificado} con <b>{self.apoderado.tipo_identificacion}</b> '
-        resultado += f'No. <b>{self.apoderado.numero_identificacion}</b> de <b>{self.apoderado.ciudad_expedicion_identificacion},</b> '
-        resultado += 'para que en mi nombre y representación responda acerca de la indagación de qué trata la Ley 258 de 1996 '
-        resultado += 'modificada por la Ley 854 de 2003, y/o demás normas concordantes, por lo que '
-        resultado += f'<b>{self.declaraciones.afectar_vivienda_familiar}</b> acepto afectar a vivienda familiar el inmueble '
-        resultado += 'mencionado en la parte inicial de este documento.</br>'
-        resultado += f'<br>En caso de que {t_inmuebles} a vivienda familiar, declaro aceptar expresamente la hipoteca que '
-        resultado += f'se constituye a favor del banco o entidad financiera sobre {inmuebles}</br></p></div>'
+        resultado += f'En los mismos términos, yo, <b>{self.pareja_poderdante.nombre.upper()}'
+        resultado += f',</b> {self.pareja_poderdante.identificado} con <b>'
+        resultado += f'{self.pareja_poderdante.tipo_identificacion}</b> No. '
+        resultado += f'<b>{self.pareja_poderdante.numero_identificacion}</b> de '
+        resultado += f'<b>{self.pareja_poderdante.ciudad_expedicion_identificacion.upper()}</b>, '
+        resultado += f'de estado civil <b>{self.pareja_poderdante.estado_civil_genero_pareja}</b>'
+        resultado += f', en mi calidad de cónyuge o {self.pareja_poderdante.companero} '
+        resultado += 'permanente del adquirente otorgo poder especial, amplio y suficiente a '
+        resultado += f'<b>{self.apoderado.nombre.upper()},</b> {self.apoderado.identificado} con '
+        resultado += f'<b>{self.apoderado.tipo_identificacion}</b> No. <b>'
+        resultado += f'{self.apoderado.numero_identificacion}</b> de <b>'
+        resultado += f'{self.apoderado.ciudad_expedicion_identificacion.upper()},</b> para que en mi '
+        resultado += 'nombre y representación responda acerca de la indagación de qué trata la '
+        resultado += 'Ley 258 de 1996 modificada por la Ley 854 de 2003, y/o demás normas '
+        resultado += f'concordantes, por lo que <b>{self.declaraciones.afectar_vivienda_familiar}'
+        resultado += f'</b> acepto afectar a vivienda familiar {mencionados} en la '
+        resultado += f'parte inicial de este documento.</br><br>En caso de que {señalados} a '
+        resultado += 'vivienda familiar, declaro aceptar expresamente la hipoteca que '
+        resultado += 'se constituye a favor del banco o entidad financiera sobre '
+        resultado += f'{anteriores}</br></p></div>'
         return resultado
 
     def generar_html_seccion_tramites_de_credito_hipotecario(self):
@@ -736,7 +747,8 @@ class DocumentoPoder(Document):
                 resultado += '<div class="firma_pareja">'
                 resultado += '_____________________________'
                 resultado += f'<br><b>{self.pareja_poderdante.nombre}</b>'
-                resultado += f'<br>{self.pareja_poderdante.tipo_identificacion} No. {self.pareja_poderdante.numero_identificacion}</div>'
+                resultado += f'<br>{self.pareja_poderdante.tipo_identificacion} No. '
+                resultado += f'{self.pareja_poderdante.numero_identificacion}</div>'
                 resultado += '<br><br>'
 
         resultado += '<div class="acepto"><p>Acepto,</p></div>'
@@ -744,19 +756,35 @@ class DocumentoPoder(Document):
         resultado += '_____________________________'
         resultado += f'<br><b>{self.apoderado.nombre}</b><br>'
         resultado += f'{self.apoderado.tipo_identificacion} No. '
-        resultado += f'{self.apoderado.numero_identificacion}</div><style>'
-        resultado += 'div.titulo {text-align: center; font-weight: bold; font-size: 17px; font-family: Arial, Helvetica, sans-serif;}'
-        resultado += 'div.datos_inmuebles {text-align: left; font-size: 16px; font-family: Arial, Helvetica, sans-serif;}'
-        resultado += 'div.parrafo_poderdantes {text-align: justify; font-size: 16px; font-family: Arial, Helvetica, sans-serif;}'
+        resultado += f'{self.apoderado.numero_identificacion}</div>'
+        return resultado
+    
+    def generar_estilos(self):
+        resultado = ''
+        resultado += '<style>div.titulo {text-align: center; font-weight: bold; font-size: 17px; '
+        resultado += 'font-family: Arial, Helvetica, sans-serif;}'
+        resultado += 'div.datos_inmuebles {text-align: left; font-size: 16px; '
+        resultado += 'font-family: Arial, Helvetica, sans-serif;}'
+        resultado += 'div.parrafo_poderdantes {text-align: justify; font-size: 16px; '
+        resultado += 'font-family: Arial, Helvetica, sans-serif;}'
         resultado += 'ol ::marker {font-weight: bold;}'
         resultado += 'li {text-align: justify;}'
-        resultado += 'ol.seccion_numerales {text-align: justify; font-size: 16px; font-family: Arial, Helvetica, sans-serif;}'
-        resultado += 'ol.incisos_seccion_inmuebles {text-align: justify; font-size: 16px; list-style: lower-alpha; font-family: Arial, Helvetica, sans-serif;}'
-        resultado += 'ol.incisos_celebracion {text-align: justify; font-size: 16px; list-style: lower-alpha; font-family: Arial, Helvetica, sans-serif;}'
-        resultado += 'div.lugar_y_fecha_de_firma {font-size: 16px; font-family: Arial, Helvetica, sans-serif; margin-bottom: 60px;}'
-        resultado += 'div.firmas_poderdantes {font-size: 16px; font-family: Arial, Helvetica, sans-serif; margin-top: 20px; line-height: 0.4cm;}'
-        resultado += 'div.acepto {font-size: 16px; font-family: Arial, Helvetica, sans-serif; margin-top: 10px; margin-bottom: 60px}'
-        resultado += 'div.firma_apoderado {font-size: 16px; font-family: Arial, Helvetica, sans-serif; margin-top: 20px; line-height: 0.4cm;}'
-        resultado += 'div.firma_pareja {font-size: 16px; font-family: Arial, Helvetica, sans-serif; margin-top: 20px; line-height: 0.4cm;}'
-        resultado += 'div.padding {padding-top: 50px; padding-right: 50px; padding-bottom: 30px; padding-left: 50px;}</style>'
+        resultado += 'ol.seccion_numerales {text-align: justify; font-size: 16px; '
+        resultado += 'font-family: Arial, Helvetica, sans-serif;}'
+        resultado += 'ol.incisos_seccion_inmuebles {text-align: justify; font-size: 16px; '
+        resultado += 'list-style: lower-alpha; font-family: Arial, Helvetica, sans-serif;}'
+        resultado += 'ol.incisos_celebracion {text-align: justify; font-size: 16px; '
+        resultado += 'list-style: lower-alpha; font-family: Arial, Helvetica, sans-serif;}'
+        resultado += 'div.lugar_y_fecha_de_firma {font-size: 16px; font-family: Arial, Helvetica, '
+        resultado += 'sans-serif; margin-bottom: 60px;}'
+        resultado += 'div.firmas_poderdantes {font-size: 16px; font-family: Arial, Helvetica, '
+        resultado += 'sans-serif; margin-top: 20px; line-height: 0.4cm;}'
+        resultado += 'div.acepto {font-size: 16px; font-family: Arial, Helvetica, '
+        resultado += 'sans-serif; margin-top: 10px; margin-bottom: 60px}'
+        resultado += 'div.firma_apoderado {font-size: 16px; font-family: Arial, Helvetica, '
+        resultado += 'sans-serif; margin-top: 20px; line-height: 0.4cm;}'
+        resultado += 'div.firma_pareja {font-size: 16px; font-family: Arial, Helvetica, '
+        resultado += 'sans-serif; margin-top: 20px; line-height: 0.4cm;}'
+        resultado += 'div.padding {padding-top: 50px; padding-right: 50px; padding-bottom: '
+        resultado += '30px; padding-left: 50px;}</style>'
         return resultado

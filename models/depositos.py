@@ -4,10 +4,11 @@ from typing import Optional, Text
 class Deposito:
     nombre: Optional[Text]
     numero: Optional[Text]
-    direccion = Optional[Text]
-    matricula = Optional[Text]
-    tipo_ficha_catastral = Optional[Text]
-    numero_ficha_catastral = Optional[Text]
+    direccion: Optional[Text]
+    ciudad_y_o_departamento: Optional[Text]
+    matricula: Optional[Text]
+    tipo_ficha_catastral: Optional[Text]
+    numero_ficha_catastral: Optional[Text]
     linderos_especiales: Optional[Text]
 
     def __init__(
@@ -15,6 +16,7 @@ class Deposito:
         nombre: str,
         numero: str,
         direccion: str,
+        ciudad_y_o_departamento: str,
         matricula: str,
         tipo_ficha_catastral: str,
         numero_ficha_catastral: str,
@@ -23,10 +25,58 @@ class Deposito:
         self.nombre = nombre
         self.numero = numero
         self.direccion = direccion
+        self.ciudad_y_o_departamento = ciudad_y_o_departamento
         self.matricula = matricula
         self.tipo_ficha_catastral = tipo_ficha_catastral
         self.numero_ficha_catastral = numero_ficha_catastral
         self.linderos_especiales = linderos_especiales
+
+class DepositoPromesaCompraventa(Deposito):
+
+    def __init__(
+        self,
+        nombre: str,
+        numero: str,
+        direccion: str,
+        ciudad_y_o_departamento: str,
+        matricula: str,
+        tipo_ficha_catastral: str,
+        numero_ficha_catastral: str,
+    ):
+        super().__init__(
+            nombre,
+            numero,
+            direccion,
+            ciudad_y_o_departamento,
+            matricula,
+            tipo_ficha_catastral,
+            numero_ficha_catastral,
+            linderos_especiales=None
+        )
+
+class DepositoCompraventaLeasing(Deposito):
+
+    def __init__(
+        self,
+        nombre: str,
+        numero: str,
+        direccion: str,
+        ciudad_y_o_departamento: str,
+        matricula: str,
+        tipo_ficha_catastral: str,
+        numero_ficha_catastral: str,
+        linderos_especiales: str
+    ):
+        super().__init__(
+            nombre,
+            numero,
+            direccion,
+            ciudad_y_o_departamento,
+            matricula,
+            tipo_ficha_catastral,
+            numero_ficha_catastral,
+            linderos_especiales
+        )
 
 class DepositoPoder(Deposito):
 
@@ -43,28 +93,7 @@ class DepositoPoder(Deposito):
             nombre,
             numero,
             direccion,
-            matricula,
-            tipo_ficha_catastral,
-            numero_ficha_catastral,
-            linderos_especiales=None
-        )
-
-
-class DepositoPromesaCompraventa(Deposito):
-
-    def __init__(
-        self,
-        nombre: str,
-        numero: str,
-        direccion: str,
-        matricula: str,
-        tipo_ficha_catastral: str,
-        numero_ficha_catastral: str,
-    ):
-        super().__init__(
-            nombre,
-            numero,
-            direccion,
+            '',
             matricula,
             tipo_ficha_catastral,
             numero_ficha_catastral,

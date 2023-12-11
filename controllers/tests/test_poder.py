@@ -1,7 +1,6 @@
 from unittest import TestCase
 from controllers.documentos import DocumentosController
 
-
 class TestPoder(TestCase):
     def test_create_documento_poder(self):
         '''Crear documento Poder'''

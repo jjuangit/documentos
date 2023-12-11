@@ -64,6 +64,34 @@ class InmueblePromesaCompraventa(Inmueble):
             linderos_especiales=None
         )
 
+class InmuebleCompraventaLeasing(Inmueble):
+
+    def __init__(
+        self,
+        nombre: str,
+        numero: str,
+        direccion: str,
+        ciudad_y_o_departamento: str,
+        matricula: str,
+        municipio_de_registro_orip: str,
+        tipo_ficha_catastral: str,
+        numero_ficha_catastral: str,
+        numero_chip: str,
+        linderos_especiales: str
+    ):
+        super().__init__(
+            nombre,
+            numero,
+            direccion,
+            ciudad_y_o_departamento,
+            matricula,
+            municipio_de_registro_orip,
+            tipo_ficha_catastral,
+            numero_ficha_catastral,
+            numero_chip,
+            linderos_especiales
+        )
+
 class InmueblePoder(Inmueble):
     departamento: Type[Text]
     ciudad: Type[Text]
