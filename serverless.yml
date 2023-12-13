@@ -1,5 +1,6 @@
-service: MINUTAS
+service: documentos
 frameworkVersion: '3'
+useDotenv: true
 provider:
   name: aws
   runtime: python3.11

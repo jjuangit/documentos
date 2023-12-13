@@ -1,0 +1,17 @@
+DocumentTable:
+  Type: AWS::DynamoDB::Table
+  Properties:
+    TableName: Document${opt:stage, self:provider.stage}
+    AttributeDefinitions:
+      - AttributeName: id
+        AttributeType: S
+      - AttributeName: user
+        AttributeType: S
+    KeySchema:
+      - AttributeName: id
+        KeyType: HASH
+      - AttributeName: user
+        KeyType: RANGE
+    ProvisionedThroughput:
+      ReadCapacityUnits: 1
+      WriteCapacityUnits: 1

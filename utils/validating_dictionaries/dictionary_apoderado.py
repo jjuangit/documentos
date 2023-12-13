@@ -65,6 +65,7 @@ dictionary_validator_apoderado_hipoteca = {
     ],
     'escritura': [
         Validator.validate_string,
+        Validator.validate_special_characters
     ],
     'fecha_autenticacion_poder': [
         Validator.validate_string,
