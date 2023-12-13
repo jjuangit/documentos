@@ -12,6 +12,7 @@ from models.apoderado_banco import ApoderadoBanco
 from models.representante_banco import RepresentanteBanco
 from models.banco import Banco
 from models.prestamo import Prestamo
+from models.regimen_propiedad import RegimenPropiedad
 from utils.strip_spaces import strip_dict_or_list
 from utils.exceptions import GeneracionDeMinutaError
 from catalogs.catalogos import apoderados_banco
@@ -35,6 +36,7 @@ class TestMinuta(TestCase):
             json_representante_banco = cases['representante_banco']
             json_banco = cases['banco']
             json_prestamo = cases['prestamo']
+            json_regimen = cases['regimen']
 
             try:
                 if json_apoderado is None:
@@ -70,8 +72,10 @@ class TestMinuta(TestCase):
                 else:
                     banco = Banco(**json_banco)
                 prestamo = Prestamo(**json_prestamo)
+                regimen = RegimenPropiedad(**json_regimen)
                 minuta = DocumentoHipoteca(apoderado, poderdantes, inmueble, depositos,
-                                         parqueaderos, apoderado_banco, representante_banco, banco, prestamo)
+                                         parqueaderos, apoderado_banco, representante_banco,
+                                           banco, prestamo, regimen)
             except Exception as error:
                 print(f'Error al crear la minuta: {error}')
                 raise GeneracionDeMinutaError(
@@ -82,4 +86,4 @@ class TestMinuta(TestCase):
             print('\n\n')
 
 # command line for run this test:
-# python -m unittest test.test_minuta_json.TestMinuta.test_init_minuta_success
+# python -m unittest tests.test_minuta_json.TestMinuta.test_init_minuta_success

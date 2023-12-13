@@ -38,6 +38,7 @@ class DocumentoPoder(Document):
         'generar_html_datos_inmueble',
         'generar_html_datos_parqueaderos',
         'generar_html_datos_depositos',
+        'generar_cedula_catastral_mayor_extension',
         'generar_html_parrafo_poderdantes',
         'generar_html_datos_apoderado',
         'generar_html_numerales',
@@ -186,7 +187,14 @@ class DocumentoPoder(Document):
         resultado += f'Matrícula No.</b> {self.inmueble.matricula}'
         if self.inmueble.tipo_ficha_catastral == "Individual":
             resultado += ' <b>Cédula Catastral Individual:</b> '
-            resultado += f'{self.inmueble.numero_ficha_catastral}</p>'
+            fichas = getattr(self.inmueble, 'numero_ficha_catastral')
+            if isinstance(fichas, list) and all(isinstance(ficha, dict) for ficha in fichas):
+                resultado += ', '.join([', '.join(ficha_values.values())
+                                       for ficha_values in fichas[:-1]])
+                if len(fichas) > 1:
+                    resultado += ' y ' + ', '.join(fichas[-1].values())
+                elif len(fichas) == 1:
+                    resultado += ', '.join(fichas[-1].values())
         return resultado
 
     def generar_html_datos_parqueaderos(self):
@@ -239,10 +247,21 @@ class DocumentoPoder(Document):
                     resultado += f' {deposito.numero_ficha_catastral}'
                     resultado += deposito_cierre_html
             resultado += ol
+        return resultado
 
+    def generar_cedula_catastral_mayor_extension(self):
+        resultado = ''
         if self.inmueble.tipo_ficha_catastral == "Mayor Extensión":
             resultado += '<p><b>CÉDULA CATASTRAL INDIVIDUAL O DE MAYOR EXTENSIÓN:</b> '
-            resultado += f'{self.inmueble.numero_ficha_catastral}</li></p></div>'
+            fichas = getattr(self.inmueble, 'numero_ficha_catastral')
+            if isinstance(fichas, list) and all(isinstance(ficha, dict) for ficha in fichas):
+                resultado += ' y ficha catastral No. <b><u>'
+                resultado += ', '.join([', '.join(ficha_values.values())
+                                       for ficha_values in fichas[:-1]])
+                if len(fichas) > 1:
+                    resultado += ' y ' + ', '.join(fichas[-1].values())
+                elif len(fichas) == 1:
+                    resultado += ', '.join(fichas[-1].values())
         return resultado
 
     def generar_html_parrafo_poderdantes(self):

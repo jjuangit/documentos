@@ -34,7 +34,7 @@ from .poderdantes import PoderdantePromesaCompraventa
 from .representante_banco import RepresentanteBancoPromesaCompraventa
 from .banco import BancoPromesaCompraventa
 from .aceptante import Aceptante
-from .compraventa import Compraventa
+from .compraventa import CompraventaCesionContrato
 from .representante_aceptante import RepresentanteAceptante
 from .organo_autorizador import OrganoAutorizador
 
@@ -50,7 +50,7 @@ class DocumentoPromesaCompraventa(Document):
     representante_aceptante: RepresentanteAceptante
     banco: BancoPromesaCompraventa
     aceptante: Aceptante
-    compraventa: Compraventa
+    compraventa: CompraventaCesionContrato
     organo_autorizador: OrganoAutorizador
 
     generate_html_functions = [
@@ -91,7 +91,7 @@ class DocumentoPromesaCompraventa(Document):
         representante_aceptante: RepresentanteAceptante,
         banco: BancoPromesaCompraventa,
         aceptante: Aceptante,
-        compraventa: Compraventa,
+        compraventa: CompraventaCesionContrato,
         organo_autorizador: OrganoAutorizador
     ):
         self.apoderado = apoderado
@@ -275,7 +275,8 @@ class DocumentoPromesaCompraventa(Document):
                 resultado += f'{self.apoderado.ellos} otorgado '
                 resultado += f'y debidamente autenticado el día <b><u>{dia} de {mes} del {anio} '
                 resultado += f'</u></b>ante {self.apoderado.dependencia} '
-                resultado += f'<b><u>{self.apoderado.nombre_dependencia.upper()} de '
+                resultado += f'<b><u>{self.apoderado.tipo_dependencia_autenticacion.upper()} '
+                resultado += f'{self.apoderado.nombre_dependencia.upper()} de '
                 resultado += f'{self.apoderado.ciudad_dependencia.upper()},</u></b> '
             elif self.apoderado.tipo_apoderado == 'General':
                 resultado += 'acorde con el Poder General amplio y suficiente, constituido '

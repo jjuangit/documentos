@@ -58,7 +58,11 @@ class TestPoder(TestCase):
             "ciudad": "Medellin",
             "matricula": "50C-2149874",
             "tipo_ficha_catastral": "Individual",
-            "numero_ficha_catastral": "006527452600000000"
+            "numero_ficha_catastral": [
+                {'ficha': "006527452600000000"},
+                {'ficha': "006527452600000000"},
+                {'ficha': "006527452600000000"},
+            ]
         }
 
         diccionarios_parqueaderos = [
@@ -93,7 +97,7 @@ class TestPoder(TestCase):
             "municipio_firma": "Envigado",
             "departamento_firma": "Antioquia",
             "pais_firma": "Colombia",
-            "fecha_firma": "08/12/2023"
+            "fecha_firma": "08/12/2024"
         }
 
         poderdantes = [PoderdantePoder(**poderdante)

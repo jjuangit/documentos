@@ -1,4 +1,4 @@
-class Transformers:
+class Cleaner:
     @staticmethod
     def delete_dot(value, key=None):
         '''Elimina los puntos de un valor de entrada'''
@@ -6,7 +6,7 @@ class Transformers:
             return value.replace('.', '')
         else:
             return None
-        
+
     @staticmethod
     def delete_hypen(value, key=None):
         '''Elimina los guionrd de un valor de entrada'''
@@ -14,7 +14,7 @@ class Transformers:
             return value.replace('-', '')
         else:
             return None
-        
+
     @staticmethod
     def delete_comma(value, key=None):
         '''Elimina los guionrd de un valor de entrada'''

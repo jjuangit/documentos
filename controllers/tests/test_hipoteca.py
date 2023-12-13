@@ -11,6 +11,12 @@ class TestHipoteca(TestCase):
                         'tipo_identificacion': 'Cédula de Ciudadanía',
                         'numero_identificacion': '24.931.325',
                         'ciudad_expedicion_identificacion': 'PEREIRA',
+                        'tipo_apoderado': 'Especial',
+                        'fecha_autenticacion_poder': '01/11/2023',
+                        'tipo_dependencia_autenticacion': 'Consulado',
+                        'nombre_dependencia': 'Consulado General Central de Colombia',
+                        'ciudad_dependencia': 'New York - Estados Unidos',
+                        'escritura': '',
                         'genero': 'Femenino'
                     },
                     'poderdantes': [{
@@ -70,6 +76,9 @@ class TestHipoteca(TestCase):
                         'cantidad_banco_a_hipotecante': 98150000,
                         'cantidad_dada_a_aceptante': 94830918,
                         'gastos_de_gestion': 3319082
+                    },
+                    'regimen': {
+                        'escritura': 'Escritura Pública No. 1516 Del 15 De Junio Del 2023 Notaría Décima De Cali'
                     }
                 }
         controller = DocumentosController(event, None)

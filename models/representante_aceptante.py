@@ -8,8 +8,8 @@ class RepresentanteAceptante:
     numero_identificacion: Optional[Text]
     ciudad_expedicion_identificacion: Optional[Text]
     ciudad_residencia: Optional[Text]
-    genero: Optional[Text]
     tipo_representante: Optional[Text]
+    genero: Optional[Text]
 
     def __init__(
         self,
@@ -18,16 +18,16 @@ class RepresentanteAceptante:
         numero_identificacion: str,
         ciudad_expedicion_identificacion: str,
         ciudad_residencia: str,
+        tipo_representante: str,
         genero: str,
-        tipo_representante: str
     ):
         self.nombre = nombre
         self.tipo_identificacion = tipo_identificacion
         self.numero_identificacion = numero_identificacion
         self.ciudad_expedicion_identificacion = ciudad_expedicion_identificacion
         self.ciudad_residencia = ciudad_residencia
-        self.genero = genero
         self.tipo_representante = tipo_representante
+        self.genero = genero
 
     @property
     def identificado(self):
@@ -84,8 +84,8 @@ class RepresentanteAceptantePromesaCompraventa(RepresentanteAceptante):
             numero_identificacion,
             ciudad_expedicion_identificacion,
             ciudad_residencia,
-            genero,
-            tipo_representante
+            tipo_representante,
+            genero
         )
 
     @property

@@ -19,6 +19,19 @@ class Compraventa:
         self.cuota_inicial = cuota_inicial
         self.fecha_compraventa = fecha_compraventa
 
+class CompraventaCesionContrato(Compraventa):
+    def __init__(
+        self,
+        cuota_inicial: int,
+        fecha_compraventa: str,
+    ):
+        # Llama al constructor de la clase padre usando super()
+        super().__init__(
+            '', 
+            '', 
+            cuota_inicial,
+            fecha_compraventa)
+
 class CompraventaLeasing:
     cantidad_compraventa: Optional[Text]
     cantidad_restante: Optional[Text]

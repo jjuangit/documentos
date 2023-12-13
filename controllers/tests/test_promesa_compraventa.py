@@ -66,18 +66,26 @@ class TestHipoteca(TestCase):
                     'genero': 'Masculino',
                     'tipo_representante': 'Suplente del Presidente',
                 },
-                "representante_aceptante": None,
                 "banco": {
                     'nombre': 'Banco unión s.a',
                     'nit': '860006797-9'
                 },
-                'aceptante': None,
                 'compraventa': {
                     'cantidad_compraventa': 190236667,
                     'cantidad_restante': 131444452,
                     'cuota_inicial': 58792215,
                     'fecha_compraventa': '03/08/2023'
                 },
+                'aceptante': {
+                    'nombre': 'Héctor Fabio Rodríguez Prado',
+                    'nit': 'Cédula de Ciudadanía',
+                    'numero_identificacion': '14650246',
+                    'ciudad_expedicion_identificacion': 'Ginebra',
+                    'ciudad_residencia': 'Cali',
+                    'genero': 'Masculino',
+                    'tipo_representante': 'Suplente del Presidente',
+                },
+                "representante_aceptante": None,
                 'organo_autorizador': {
                     'ciudad_ubicacion_camara_comercio': 'Santa Marta',
                     'numero_acta': '00002365 del Libro IX',

@@ -1,11 +1,12 @@
 from typing import List
 
+from datetime import datetime
 from num2words import num2words
 from utils.document import Document
 from utils.exceptions import ValidationError
 from utils.validators import Validator
 from utils.validating_dictionaries.dictionary_poderdantes import dictionary_validator_poderdantes
-from utils.validating_dictionaries.dictionary_apoderado import dictionary_validator_apoderado
+from utils.validating_dictionaries.dictionary_apoderado import dictionary_validator_apoderado_hipoteca
 from utils.validating_dictionaries.dictionary_representante_banco import dictionary_validator_representante_banco
 from utils.validating_dictionaries.dictionary_inmueble import dictionary_validator_inmueble
 from utils.validating_dictionaries.dictionary_parqueaderos import dictionary_validator_parqueaderos
@@ -17,8 +18,9 @@ from utils.validating_dictionaries.dictionary_prestamo import dictionary_validat
 from catalogs.catalogos import apoderados_banco
 from catalogs.catalogos import representantes_banco
 from catalogs.catalogos import bancos
+from catalogs.fechas import MESES_INGLES_ESPANOL
 
-from .apoderado import Apoderado
+from .apoderado import ApoderadoHipoteca
 from .apoderado_banco import ApoderadoBanco
 from .depositos import Deposito
 from .inmueble import Inmueble
@@ -27,10 +29,11 @@ from .poderdantes import Poderdante
 from .representante_banco import RepresentanteBanco
 from .banco import Banco
 from .prestamo import Prestamo
+from .regimen_propiedad import RegimenPropiedad
 
 
 class DocumentoHipoteca(Document):
-    apoderado: Apoderado
+    apoderado: ApoderadoHipoteca
     poderdantes: List[Poderdante]
     inmueble: Inmueble
     depositos: List[Deposito]
@@ -39,6 +42,7 @@ class DocumentoHipoteca(Document):
     representante_banco: RepresentanteBanco
     banco: Banco
     prestamo: Prestamo
+    regimen: RegimenPropiedad
 
     generate_html_functions = [
         'generar_titulo_documento',
@@ -82,7 +86,7 @@ class DocumentoHipoteca(Document):
 
     def __init__(
         self,
-        apoderado: Apoderado,
+        apoderado: ApoderadoHipoteca,
         poderdantes: List[Poderdante],
         inmueble: Inmueble,
         depositos: List[Deposito],
@@ -90,7 +94,8 @@ class DocumentoHipoteca(Document):
         apoderado_banco: ApoderadoBanco,
         representante_banco: RepresentanteBanco,
         banco: Banco,
-        prestamo: Prestamo
+        prestamo: Prestamo,
+        regimen: RegimenPropiedad
     ):
         self.apoderado = apoderado
         self.poderdantes = poderdantes
@@ -101,6 +106,7 @@ class DocumentoHipoteca(Document):
         self.representante_banco = representante_banco
         self.banco = banco
         self.prestamo = prestamo
+        self.regimen = regimen
         self.validate_data()
 
     def validate_data(self):
@@ -118,7 +124,7 @@ class DocumentoHipoteca(Document):
         if self.apoderado:
             atributos_apoderado = self.apoderado.__dict__
             Validator.validate_dict(
-                atributos_apoderado, dictionary_validator_apoderado, 'Apoderado')
+                atributos_apoderado, dictionary_validator_apoderado_hipoteca, 'Apoderado')
 
     def validar_poderdantes(self):
         if self.cantidad_poderdantes == 0 and self.cantidad_poderdantes > 2:
@@ -208,20 +214,33 @@ class DocumentoHipoteca(Document):
         resultado += 'CONTRATO DE HIPOTECA---------------------------------</b></p></div>'
         return resultado
 
-    # TODO Pendiente en relación a la escritura, de momento se queda abierto linea 523
     def generar_parrafo_apoderado(self):
+        if self.apoderado.tipo_apoderado == 'Especial':
+            fecha = datetime.strptime(
+                self.apoderado.fecha_autenticacion_poder, "%d/%m/%Y").date()
+            dia = fecha.day
+            mes = MESES_INGLES_ESPANOL[fecha.strftime('%B')]
+            anio = fecha.year
         resultado = '<div class="parrafos"><p>Presente nuevamente '
         if self.apoderado:
             resultado += f'<b><u>{self.apoderado.nombre}</u>,</b> mayor de edad, '
             resultado += f'{self.apoderado.identificado} con <b><u>'
             resultado += f'{self.apoderado.tipo_identificacion}</u></b> No. <b><u>'
             resultado += f'{self.apoderado.numero_identificacion}</u></b> de <b><u>'
-            resultado += f'{self.apoderado.ciudad_expedicion_identificacion}</u></b>, quien '
-            resultado += f'conforme al Poder General a {self.apoderado.el} otorgado por'
-            resultado += ' medio de la ________________ el cual se protocoliza con la '
-            resultado += 'presente escritura para los fines legales, cuya vigencia, '
-            resultado += 'autenticidad y alcance se hace responsable; actúa en nombre '
-            resultado += 'y representación de '
+            resultado += f'{self.apoderado.ciudad_expedicion_identificacion}</u></b>, '
+            resultado += 'quien conforme al Poder '
+            if self.apoderado.tipo_apoderado == 'Especial':
+                resultado += f'Especial a {self.apoderado.el} otorgado el <b><u>{dia} de '
+                resultado += f'{mes} del {anio}</u></b> y debidamente autenticado ante'
+                resultado += f'{self.apoderado.dependencia}  '
+                resultado += f'<b><u>{self.apoderado.nombre_dependencia.upper()} de '
+                resultado += f'{self.apoderado.ciudad_dependencia.upper()},</u></b> '
+            elif self.apoderado.tipo_apoderado == 'General':
+                resultado += f'General a {self.apoderado.el} otorgado '
+                resultado += f'por medio de la <b><u>{self.apoderado.escritura}, </u></b>'
+            resultado += 'el cual se protocoliza con la presente escritura para los fines '
+            resultado += 'legales, cuya vigencia, autenticidad y alcance se hace '
+            resultado += 'responsable; actúa en nombre y representación de '
         return resultado
 
     def generar_parrafo_poderdantes(self):
@@ -423,7 +442,7 @@ class DocumentoHipoteca(Document):
 
         resultado = f'<p><b>RÉGIMEN DE PROPIEDAD HORIZONTAL:</b> {t_inmuebles} al régimen '
         resultado += 'legal de propiedad horizontal, de conformidad con la Ley 675 de '
-        resultado += 'agosto 3 de 2001 por medio de _______________________________ , '
+        resultado += f'agosto 3 de 2001 por medio de la <b><u>{self.regimen.escritura},</u></b> '
         resultado += 'debidamente registrada '
         matriculas_parqueaderos = [
             parqueadero.matricula for parqueadero in self.parqueaderos if parqueadero.matricula]
@@ -839,7 +858,7 @@ class DocumentoHipoteca(Document):
         resultado = f'de <b>{self.banco.nombre.upper()}</b> antes <b>GIROS & FINANZAS COMPAÑÍA DE '
         resultado += 'FINANCIAMIENTO S.A.</b>, sociedad constituida legalmente mediante '
         resultado += 'Escritura Pública No. 5938 del 05 de diciembre de 1963, otorgada en la '
-        resultado += 'Notaria Cuarta (04) del Círculo de Bogotá, inscrita en la Cámara de '
+        resultado += 'Notaría Cuarta (04) del Círculo de Bogotá, inscrita en la Cámara de '
         resultado += 'Comercio de Cali, el 7 de noviembre de 2000, bajo el número 7516 del Libro '
         resultado += 'IX, sociedad convertida a establecimiento Bancario y modificada su razón '
         resultado += 'social mediante Escritura Pública No. 3140 del 16 de Junio de 2022, otorgada '
